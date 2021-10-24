@@ -1,0 +1,41 @@
+{
+  "name": "swc-repl",
+  "version": "0.0.0",
+  "description": "swc REPL",
+  "private": true,
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build --no-source-maps index.html",
+    "lint": "eslint --ext=tsx src",
+    "fmt": "prettier --write src"
+  },
+  "author": "Pig Fang <g-plane@hotmail.com>",
+  "license": "MIT",
+  "browserslist": [
+    "Chrome 79"
+  ],
+  "dependencies": {
+    "@chakra-ui/react": "^1.6.10",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@monaco-editor/react": "^4.3.1",
+    "@swc/wasm-web": "^1.2.102",
+    "framer-motion": "^4.1.17",
+    "jotai": "^1.4.0",
+    "monaco-editor": "^0.29.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "ts-results": "^3.3.0"
+  },
+  "devDependencies": {
+    "@gplane/tsconfig": "^5.0.0",
+    "@types/react": "^17.0.31",
+    "@types/react-dom": "^17.0.10",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "parcel": "^2.0.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  }
+}

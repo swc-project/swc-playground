@@ -1,0 +1,7 @@
+{
+  "extends": "@gplane/tsconfig",
+  "compilerOptions": {
+    "jsx": "react-jsxdev",
+    "declaration": false
+  }
+}
