@@ -48,6 +48,16 @@ export default function Configuration() {
     }))
   }
 
+  const handleModuleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSwcConfig((config) => ({
+      ...config,
+      module: {
+        ...config.module,
+        type: event.target.value,
+      },
+    }))
+  }
+
   const handleToggleJSX = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSwcConfig((config) => ({
       ...config,
@@ -114,6 +124,19 @@ export default function Configuration() {
             <option value="es2021">ES2021</option>
           </Select>
         </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="swc-module">Module</FormLabel>
+          <Select
+            id="swc-module"
+            value={swcConfig.module.type}
+            onChange={handleModuleChange}
+          >
+            <option value="es6">ES Modules</option>
+            <option value="commonjs">CommonJS</option>
+            <option value="amd">AMD</option>
+            <option value="umd">UMD</option>
+          </Select>
+        </FormControl>
         {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
           <FormControl display="flex" alignItems="center">
             <Switch
@@ -158,7 +181,6 @@ export default function Configuration() {
           </FormLabel>
         </FormControl>
       </VStack>
-      <div>{JSON.stringify(swcConfig)}</div>
     </Flex>
   )
 }
