@@ -56,6 +56,12 @@ export const transformationAtom = atom((get): TransformationResult => {
       })
     )
   } catch (error) {
-    return Err(error as string)
+    if (typeof error === 'string') {
+      return Err(error)
+    } else if (error instanceof Error) {
+      return Err(`${error.toString()}\n\n${error.stack}`)
+    } else {
+      return Err(String(error))
+    }
   }
 })
