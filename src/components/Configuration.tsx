@@ -94,7 +94,7 @@ export default function Configuration() {
       <Heading size="md" mb="8px">
         Configuration
       </Heading>
-      <VStack spacing="8px" p="8px" borderColor="gray.400" borderWidth="1px">
+      <VStack spacing="8px" p="8px" bg="white" borderColor="gray.400" borderWidth="1px">
         <FormControl>
           <FormLabel htmlFor="swc-syntax">Language</FormLabel>
           <Select

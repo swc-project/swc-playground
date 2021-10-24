@@ -10,9 +10,9 @@ export default function HeaderBar() {
       h="56px"
       px="5"
       py="1.5"
-      bg="gray.50"
+      bg="gray.100"
       borderBottomWidth="1px"
-      borderBottomColor="gray.200"
+      borderBottomColor="gray.300"
     >
       <img src={logoURL} alt="swc" />
       <Flex></Flex>
