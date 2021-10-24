@@ -3,12 +3,13 @@ import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
 import { Box, Flex, Heading } from '@chakra-ui/react'
-import { codeAtom, transformationAtom } from '../state'
+import { codeAtom, swcConfigAtom, transformationAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
 
 export default function InputEditor() {
   const [code, setCode] = useAtom(codeAtom)
   const [transformedOutput] = useAtom(transformationAtom)
+  const [swcConfig] = useAtom(swcConfigAtom)
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
 
@@ -60,6 +61,9 @@ export default function InputEditor() {
     }
   }
 
+  const language =
+    swcConfig.jsc.parser.syntax === 'ecmascript' ? 'javascript' : 'typescript'
+
   return (
     <Flex direction="column" width="40vw" height="full">
       <Heading size="md" mb="8px">
@@ -68,7 +72,8 @@ export default function InputEditor() {
       <Box width="full" height="full" borderColor="gray.400" borderWidth="1px">
         <Editor
           value={code}
-          defaultLanguage="typescript"
+          language={language}
+          defaultLanguage="javascript"
           options={editorOptions}
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
