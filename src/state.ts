@@ -22,6 +22,7 @@ export const swcConfigAtom = atom({
     type: 'es6',
   },
   minify: false,
+  isModule: true,
 })
 
 export const fileNameAtom = atom((get) => {

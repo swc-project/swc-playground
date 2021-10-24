@@ -58,6 +58,15 @@ export default function Configuration() {
     }))
   }
 
+  const handleSourceTypeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSwcConfig((config) => ({
+      ...config,
+      isModule: event.target.value === 'module',
+    }))
+  }
+
   const handleToggleJSX = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSwcConfig((config) => ({
       ...config,
@@ -94,7 +103,13 @@ export default function Configuration() {
       <Heading size="md" mb="8px">
         Configuration
       </Heading>
-      <VStack spacing="8px" p="8px" bg="white" borderColor="gray.400" borderWidth="1px">
+      <VStack
+        spacing="8px"
+        p="8px"
+        bg="white"
+        borderColor="gray.400"
+        borderWidth="1px"
+      >
         <FormControl>
           <FormLabel htmlFor="swc-syntax">Language</FormLabel>
           <Select
@@ -135,6 +150,17 @@ export default function Configuration() {
             <option value="commonjs">CommonJS</option>
             <option value="amd">AMD</option>
             <option value="umd">UMD</option>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
+          <Select
+            id="swc-source-type"
+            value={swcConfig.isModule ? 'module' : 'script'}
+            onChange={handleSourceTypeChange}
+          >
+            <option value="module">Module</option>
+            <option value="script">Script</option>
           </Select>
         </FormControl>
         {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
