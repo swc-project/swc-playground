@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build --no-source-maps index.html",
+    "build": "parcel build --no-source-maps --no-scope-hoist index.html",
     "lint": "eslint --ext=tsx src",
     "fmt": "prettier --write src"
   },
