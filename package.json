@@ -15,7 +15,6 @@
     "Chrome 79"
   ],
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.16",
     "@chakra-ui/react": "^1.6.10",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
@@ -23,13 +22,17 @@
     "@swc/wasm-web": "^1.2.102",
     "framer-motion": "^4.1.17",
     "jotai": "^1.4.0",
+    "js-base64": "^3.7.2",
     "monaco-editor": "^0.29.1",
+    "pako": "^2.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
     "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "@gplane/tsconfig": "^5.0.0",
+    "@types/pako": "^1.0.2",
     "@types/react": "^17.0.31",
     "@types/react-dom": "^17.0.10",
     "@typescript-eslint/parser": "^5.1.0",

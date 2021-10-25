@@ -1,13 +1,13 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@chakra-ui/icons': ^1.0.16
   '@chakra-ui/react': ^1.6.10
   '@emotion/react': ^11.5.0
   '@emotion/styled': ^11.3.0
   '@gplane/tsconfig': ^5.0.0
   '@monaco-editor/react': ^4.3.1
   '@swc/wasm-web': ^1.2.102
+  '@types/pako': ^1.0.2
   '@types/react': ^17.0.31
   '@types/react-dom': ^17.0.10
   '@typescript-eslint/parser': ^5.1.0
@@ -15,16 +15,18 @@ specifiers:
   eslint-plugin-react-hooks: ^4.2.0
   framer-motion: ^4.1.17
   jotai: ^1.4.0
+  js-base64: ^3.7.2
   monaco-editor: ^0.29.1
+  pako: ^2.0.4
   parcel: ^2.0.0
   prettier: ^2.4.1
   react: ^17.0.2
   react-dom: ^17.0.2
+  react-icons: ^4.3.1
   ts-results: ^3.3.0
   typescript: ^4.4.4
 
 dependencies:
-  '@chakra-ui/icons': 1.0.16_react@17.0.2
   '@chakra-ui/react': 1.6.10_ef216fd07ecfbd7a9aaa3879b655b45c
   '@emotion/react': 11.5.0_6d27d6abd5fcfff70e832fae7f4b0d02
   '@emotion/styled': 11.3.0_6c78da50cc6d8809f5c488fc50e3578b
@@ -32,13 +34,17 @@ dependencies:
   '@swc/wasm-web': 1.2.102
   framer-motion: 4.1.17_react-dom@17.0.2+react@17.0.2
   jotai: 1.4.0_react@17.0.2
+  js-base64: 3.7.2
   monaco-editor: 0.29.1
+  pako: 2.0.4
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  react-icons: 4.3.1_react@17.0.2
   ts-results: 3.3.0
 
 devDependencies:
   '@gplane/tsconfig': 5.0.0
+  '@types/pako': 1.0.2
   '@types/react': 17.0.31
   '@types/react-dom': 17.0.10
   '@typescript-eslint/parser': 5.1.0_eslint@7.32.0+typescript@4.4.4
@@ -530,27 +536,6 @@ packages:
     dependencies:
       '@chakra-ui/system': 1.7.4_5a47a31437ffba27a84f7efb2b21ce86
       '@chakra-ui/utils': 1.8.3
-      react: 17.0.2
-    dev: false
-
-  /@chakra-ui/icon/1.1.12_react@17.0.2:
-    resolution: {integrity: sha512-MVzsW+IqAYUGPjxOiEWu9kU3kl3gQ8tNONN77EyDEEcbqPOCgPOomitQ4/scmgSWWWOrAL+SvjlbykXtH8g6+Q==}
-    peerDependencies:
-      '@chakra-ui/system': '>=1.0.0'
-      react: '>=16.8.6'
-    dependencies:
-      '@chakra-ui/utils': 1.8.3
-      react: 17.0.2
-    dev: false
-
-  /@chakra-ui/icons/1.0.16_react@17.0.2:
-    resolution: {integrity: sha512-coxrM4ZYl103p4Y1cXQlDc2cvqRBbNmvccbwUBcB5lod2HKoaZIBhEbxoue5DbrRnNoWIOENnHFxe/ANffu6bw==}
-    peerDependencies:
-      '@chakra-ui/system': '>=1.0.0'
-      react: '>=16.8.6'
-    dependencies:
-      '@chakra-ui/icon': 1.1.12_react@17.0.2
-      '@types/react': 17.0.31
       react: 17.0.2
     dev: false
 
@@ -2143,11 +2128,16 @@ packages:
     resolution: {integrity: sha512-w34LtBB0OkDTs19FQHXy4Ig/TOXI4zqvXS2Kk1PAsRKZ0I+nik7LlMYxckW0tSNGtvWmzB+mrCTbuEjuB9DVsw==}
     dev: true
 
+  /@types/pako/1.0.2:
+    resolution: {integrity: sha512-8UJl2MjkqqS6ncpLZqRZ5LmGiFBkbYxocD4e4jmBqGvfRG1RS23gKsBQbdtV9O9GvRyjFTiRHRByjSlKCLlmZw==}
+    dev: true
+
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
 
   /@types/prop-types/15.7.4:
     resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
+    dev: true
 
   /@types/react-dom/17.0.10:
     resolution: {integrity: sha512-8oz3NAUId2z/zQdFI09IMhQPNgIbiP8Lslhv39DIDamr846/0spjZK0vnrMak0iB8EKb9QFTTIdg2Wj2zH5a3g==}
@@ -2161,9 +2151,11 @@ packages:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
       csstype: 3.0.9
+    dev: true
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: true
 
   /@types/warning/3.0.0:
     resolution: {integrity: sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=}
@@ -4233,6 +4225,10 @@ packages:
       react: 17.0.2
     dev: false
 
+  /js-base64/3.7.2:
+    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -4746,6 +4742,10 @@ packages:
   /pako/1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
     dev: true
+
+  /pako/2.0.4:
+    resolution: {integrity: sha512-v8tweI900AUkZN6heMU/4Uy4cXRc2AYNRggVmTR+dEncawDJgCdLMximOVA2p4qO57WMynangsfGRb5WD6L1Bg==}
+    dev: false
 
   /parcel/2.0.0:
     resolution: {integrity: sha512-vALKLDWz9DF3YD4oGcG1UpMR32TXHr3wj0OZTCo0nLuP8LqNNhG7Twf+ZIpVf2r1b5Glex5eUl0vcx/x2xY6pw==}
@@ -5470,6 +5470,14 @@ packages:
       use-sidecar: 1.0.5_react@17.0.2
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react-icons/4.3.1_react@17.0.2:
+    resolution: {integrity: sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 17.0.2
     dev: false
 
   /react-is/16.13.1:

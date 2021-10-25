@@ -1,5 +1,5 @@
-import { Flex, HStack, Link } from '@chakra-ui/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { Box, Flex, HStack, Link } from '@chakra-ui/react'
+import { HiExternalLink } from 'react-icons/hi'
 
 const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
 
@@ -17,11 +17,27 @@ export default function HeaderBar() {
     >
       <img src={logoURL} alt="swc" />
       <HStack spacing="4">
-        <Link href="https://swc.rs/" isExternal>
-          Docs <ExternalLinkIcon mb="1" />
+        <Link
+          href="https://swc.rs/"
+          isExternal
+          display="flex"
+          alignItems="center"
+        >
+          Docs
+          <Box display="inline-block" ml="1px">
+            <HiExternalLink />
+          </Box>
         </Link>
-        <Link href="https://github.com/swc-project/swc" isExternal>
-          GitHub <ExternalLinkIcon mb="1" />
+        <Link
+          href="https://github.com/swc-project/swc"
+          isExternal
+          display="flex"
+          alignItems="center"
+        >
+          GitHub
+          <Box display="inline-block" ml="1px">
+            <HiExternalLink />
+          </Box>
         </Link>
       </HStack>
     </Flex>

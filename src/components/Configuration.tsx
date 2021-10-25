@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type * as React from 'react'
 import { useAtom } from 'jotai'
 import {
@@ -9,11 +10,23 @@ import {
   Switch,
   VStack,
 } from '@chakra-ui/react'
+import { Base64 } from 'js-base64'
+import { ungzip } from 'pako'
 import { swcConfigAtom } from '../state'
 import type { SwcParserOptions } from '../state'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+
+  useEffect(() => {
+    const url = new URL(location.href)
+    const encodedConfig = url.searchParams.get('config')
+    if (encodedConfig) {
+      setSwcConfig(
+        JSON.parse(ungzip(Base64.toUint8Array(encodedConfig), { to: 'string' }))
+      )
+    }
+  }, [setSwcConfig])
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>

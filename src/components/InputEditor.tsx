@@ -2,7 +2,10 @@ import { useEffect, useRef } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
+import { HiShare } from 'react-icons/hi'
+import { Base64 } from 'js-base64'
+import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom, transformationAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
 
@@ -12,6 +15,7 @@ export default function InputEditor() {
   const [swcConfig] = useAtom(swcConfigAtom)
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const toast = useToast()
 
   useEffect(() => {
     monaco?.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
@@ -51,6 +55,32 @@ export default function InputEditor() {
     }
   }, [transformedOutput, monaco])
 
+  useEffect(() => {
+    const url = new URL(location.href)
+    const encodedInput = url.searchParams.get('code')
+    if (encodedInput) {
+      setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+    }
+  }, [setCode])
+
+  const handleShare = async () => {
+    const url = new URL(location.href)
+
+    const encodedInput = Base64.fromUint8Array(gzip(code))
+    url.searchParams.set('code', encodedInput)
+    const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
+    url.searchParams.set('config', encodedConfig)
+
+    const fullURL = url.toString()
+    window.history.replaceState(null, '', fullURL)
+    await navigator.clipboard.writeText(fullURL)
+    toast({
+      title: 'URL is copied to clipboard.',
+      duration: 3000,
+      position: 'top',
+    })
+  }
+
   const handleEditorDidMount = (instance: editor.IStandaloneCodeEditor) => {
     editorRef.current = instance
   }
@@ -66,9 +96,14 @@ export default function InputEditor() {
 
   return (
     <Flex direction="column" width="40vw" height="full">
-      <Heading size="md" mb="8px">
-        Input
-      </Heading>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Heading size="md" mb="8px">
+          Input
+        </Heading>
+        <Button size="xs" leftIcon={<HiShare />} onClick={handleShare}>
+          Share
+        </Button>
+      </Flex>
       <Box width="full" height="full" borderColor="gray.400" borderWidth="1px">
         <Editor
           value={code}
