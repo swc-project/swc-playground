@@ -1,7 +1,7 @@
 {
-  "name": "swc-repl",
+  "name": "swc-playground",
   "version": "0.0.0",
-  "description": "swc REPL",
+  "description": "swc playground",
   "private": true,
   "scripts": {
     "start": "parcel index.html",
