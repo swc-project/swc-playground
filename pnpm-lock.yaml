@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@chakra-ui/icons': ^1.0.16
   '@chakra-ui/react': ^1.6.10
   '@emotion/react': ^11.5.0
   '@emotion/styled': ^11.3.0
@@ -23,6 +24,7 @@ specifiers:
   typescript: ^4.4.4
 
 dependencies:
+  '@chakra-ui/icons': 1.0.16_react@17.0.2
   '@chakra-ui/react': 1.6.10_ef216fd07ecfbd7a9aaa3879b655b45c
   '@emotion/react': 11.5.0_6d27d6abd5fcfff70e832fae7f4b0d02
   '@emotion/styled': 11.3.0_6c78da50cc6d8809f5c488fc50e3578b
@@ -528,6 +530,27 @@ packages:
     dependencies:
       '@chakra-ui/system': 1.7.4_5a47a31437ffba27a84f7efb2b21ce86
       '@chakra-ui/utils': 1.8.3
+      react: 17.0.2
+    dev: false
+
+  /@chakra-ui/icon/1.1.12_react@17.0.2:
+    resolution: {integrity: sha512-MVzsW+IqAYUGPjxOiEWu9kU3kl3gQ8tNONN77EyDEEcbqPOCgPOomitQ4/scmgSWWWOrAL+SvjlbykXtH8g6+Q==}
+    peerDependencies:
+      '@chakra-ui/system': '>=1.0.0'
+      react: '>=16.8.6'
+    dependencies:
+      '@chakra-ui/utils': 1.8.3
+      react: 17.0.2
+    dev: false
+
+  /@chakra-ui/icons/1.0.16_react@17.0.2:
+    resolution: {integrity: sha512-coxrM4ZYl103p4Y1cXQlDc2cvqRBbNmvccbwUBcB5lod2HKoaZIBhEbxoue5DbrRnNoWIOENnHFxe/ANffu6bw==}
+    peerDependencies:
+      '@chakra-ui/system': '>=1.0.0'
+      react: '>=16.8.6'
+    dependencies:
+      '@chakra-ui/icon': 1.1.12_react@17.0.2
+      '@types/react': 17.0.31
       react: 17.0.2
     dev: false
 
@@ -2125,7 +2148,6 @@ packages:
 
   /@types/prop-types/15.7.4:
     resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
-    dev: true
 
   /@types/react-dom/17.0.10:
     resolution: {integrity: sha512-8oz3NAUId2z/zQdFI09IMhQPNgIbiP8Lslhv39DIDamr846/0spjZK0vnrMak0iB8EKb9QFTTIdg2Wj2zH5a3g==}
@@ -2139,11 +2161,9 @@ packages:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
       csstype: 3.0.9
-    dev: true
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: true
 
   /@types/warning/3.0.0:
     resolution: {integrity: sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=}
