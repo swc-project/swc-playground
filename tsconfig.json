@@ -3,5 +3,10 @@
   "compilerOptions": {
     "jsx": "react-jsxdev",
     "declaration": false
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }
