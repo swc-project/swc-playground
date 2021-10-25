@@ -1,6 +1,5 @@
 import * as path from 'node:path'
 import type { Configuration } from 'webpack'
-import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 import merge from 'webpack-merge'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
@@ -8,7 +7,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 export default (_: Record<string, string>, argv: Record<string, string>) => {
   const isDev = argv.mode === 'development'
 
-  const baseConfig: Configuration & { devServer?: DevServerConfiguration } = {
+  const baseConfig: Configuration = {
     entry: './src/main.tsx',
     output: {
       clean: true,
