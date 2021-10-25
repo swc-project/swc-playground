@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { Box, Center, ChakraProvider } from '@chakra-ui/react'
+import { Box, Center, ChakraProvider, CircularProgress } from '@chakra-ui/react'
 import initSWC from '@swc/wasm-web'
 import { loader } from '@monaco-editor/react'
 import HeaderBar from './components/HeaderBar'
@@ -11,8 +11,9 @@ const Workspace = lazy(async () => {
 
 export default function App() {
   const fallbackUI = (
-    <Center width="full" height="88vh">
-      Loading swc and editor...
+    <Center width="full" height="88vh" display="flex" flexDirection="column">
+      <CircularProgress isIndeterminate mb="3" />
+      <div>Loading swc and editor...</div>
     </Center>
   )
 
