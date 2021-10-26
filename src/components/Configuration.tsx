@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import type * as React from 'react'
 import { useAtom } from 'jotai'
 import {
+  Button,
   Flex,
   FormControl,
   FormLabel,
@@ -9,16 +10,23 @@ import {
   Select,
   Switch,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Base64 } from 'js-base64'
 import { ungzip } from 'pako'
-import { swcConfigAtom } from '../state'
+import { defaultMangleOptions, swcConfigAtom } from '../state'
 import type { SwcParserOptions } from '../state'
+import MangleOptionsModal from './MangleOptionsModal'
 
 const STORAGE_KEY = 'v1.config'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const {
+    isOpen: isMangleOptionsOpen,
+    onOpen: onMangleOptionsOpen,
+    onClose: onMangleOptionsClose,
+  } = useDisclosure()
 
   useEffect(() => {
     const url = new URL(location.href)
@@ -110,7 +118,18 @@ export default function Configuration() {
   }
 
   const handleToggleMinify = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSwcConfig((config) => ({ ...config, minify: event.target.checked }))
+    setSwcConfig((config) => ({
+      ...config,
+      minify: event.target.checked,
+    }))
+  }
+
+  const handleToggleMangle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const options = event.target.checked ? defaultMangleOptions : false
+    setSwcConfig((config) => ({
+      ...config,
+      jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } },
+    }))
   }
 
   const handleToggleLoose = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,8 +145,8 @@ export default function Configuration() {
         Configuration
       </Heading>
       <VStack
-        spacing="8px"
-        p="8px"
+        spacing="2"
+        p="2"
         bg="white"
         borderColor="gray.400"
         borderWidth="1px"
@@ -228,7 +247,26 @@ export default function Configuration() {
             Minify
           </FormLabel>
         </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <Switch
+            id="swc-mangle"
+            isChecked={!!swcConfig.jsc.minify.mangle}
+            onChange={handleToggleMangle}
+          />
+          <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
+            Mangle
+          </FormLabel>
+          {swcConfig.jsc.minify.mangle && (
+            <Button size="xs" onClick={onMangleOptionsOpen}>
+              More
+            </Button>
+          )}
+        </FormControl>
       </VStack>
+      <MangleOptionsModal
+        isOpen={isMangleOptionsOpen}
+        onClose={onMangleOptionsClose}
+      />
     </Flex>
   )
 }

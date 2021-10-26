@@ -7,6 +7,24 @@ export type SwcParserOptions =
   | { syntax: 'ecmascript'; jsx: boolean }
   | { syntax: 'typescript'; tsx: boolean }
 
+export interface MangleOptions {
+  toplevel: boolean
+  keep_classnames: boolean
+  keep_fnames: boolean
+  keep_private_props: boolean
+  ie8: boolean
+  safari10: boolean
+}
+
+export const defaultMangleOptions: MangleOptions = {
+  toplevel: false,
+  keep_classnames: false,
+  keep_fnames: false,
+  keep_private_props: false,
+  ie8: false,
+  safari10: false,
+}
+
 export const codeAtom = atom('')
 
 export const swcConfigAtom = atom({
@@ -17,6 +35,9 @@ export const swcConfigAtom = atom({
     } as SwcParserOptions,
     target: 'es5',
     loose: false,
+    minify: {
+      mangle: false as MangleOptions | false,
+    },
   },
   module: {
     type: 'es6',
