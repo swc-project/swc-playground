@@ -9,6 +9,8 @@ import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom, transformationAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
 
+const STORAGE_KEY = 'v1.code'
+
 export default function InputEditor() {
   const [code, setCode] = useAtom(codeAtom)
   const [transformedOutput] = useAtom(transformationAtom)
@@ -58,10 +60,17 @@ export default function InputEditor() {
   useEffect(() => {
     const url = new URL(location.href)
     const encodedInput = url.searchParams.get('code')
+    const storedInput = localStorage.getItem(STORAGE_KEY)
     if (encodedInput) {
       setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+    } else if (storedInput) {
+      setCode(storedInput)
     }
   }, [setCode])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, code)
+  }, [code])
 
   const handleShare = async () => {
     const url = new URL(location.href)

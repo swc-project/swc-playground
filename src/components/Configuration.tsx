@@ -15,18 +15,27 @@ import { ungzip } from 'pako'
 import { swcConfigAtom } from '../state'
 import type { SwcParserOptions } from '../state'
 
+const STORAGE_KEY = 'v1.config'
+
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
 
   useEffect(() => {
     const url = new URL(location.href)
     const encodedConfig = url.searchParams.get('config')
+    const storedConfig = localStorage.getItem(STORAGE_KEY)
     if (encodedConfig) {
       setSwcConfig(
         JSON.parse(ungzip(Base64.toUint8Array(encodedConfig), { to: 'string' }))
       )
+    } else if (storedConfig) {
+      setSwcConfig(JSON.parse(storedConfig))
     }
   }, [setSwcConfig])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(swcConfig))
+  }, [swcConfig])
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
