@@ -14,14 +14,24 @@ import {
 } from '@chakra-ui/react'
 import { Base64 } from 'js-base64'
 import { ungzip } from 'pako'
-import { defaultMangleOptions, swcConfigAtom } from '../state'
+import {
+  defaultCompressOptions,
+  defaultMangleOptions,
+  swcConfigAtom,
+} from '../state'
 import type { SwcParserOptions } from '../state'
+import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 
 const STORAGE_KEY = 'v1.config'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const {
+    isOpen: isCompressOptionsOpen,
+    onOpen: onCompressOptionsOpen,
+    onClose: onCompressOptionsClose,
+  } = useDisclosure()
   const {
     isOpen: isMangleOptionsOpen,
     onOpen: onMangleOptionsOpen,
@@ -121,6 +131,17 @@ export default function Configuration() {
     setSwcConfig((config) => ({
       ...config,
       minify: event.target.checked,
+    }))
+  }
+
+  const handleToggleCompress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const options = event.target.checked ? defaultCompressOptions : false
+    setSwcConfig((config) => ({
+      ...config,
+      jsc: {
+        ...config.jsc,
+        minify: { ...config.jsc.minify, compress: options },
+      },
     }))
   }
 
@@ -249,6 +270,21 @@ export default function Configuration() {
         </FormControl>
         <FormControl display="flex" alignItems="center">
           <Switch
+            id="swc-compress"
+            isChecked={!!swcConfig.jsc.minify.compress}
+            onChange={handleToggleCompress}
+          />
+          <FormLabel htmlFor="swc-copress" ml="2" mb="0">
+            Compress
+          </FormLabel>
+          {swcConfig.jsc.minify.compress && (
+            <Button size="xs" onClick={onCompressOptionsOpen}>
+              More
+            </Button>
+          )}
+        </FormControl>
+        <FormControl display="flex" alignItems="center">
+          <Switch
             id="swc-mangle"
             isChecked={!!swcConfig.jsc.minify.mangle}
             onChange={handleToggleMangle}
@@ -263,6 +299,10 @@ export default function Configuration() {
           )}
         </FormControl>
       </VStack>
+      <CompressOptionsModal
+        isOpen={isCompressOptionsOpen}
+        onClose={onCompressOptionsClose}
+      />
       <MangleOptionsModal
         isOpen={isMangleOptionsOpen}
         onClose={onMangleOptionsClose}
