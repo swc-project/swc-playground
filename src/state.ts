@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 import { Ok, Err } from 'ts-results'
 import type { Result } from 'ts-results'
-import { transformSync } from '@swc/wasm-web'
+import { transformSync } from './swc'
 
 export type SwcParserOptions =
   | { syntax: 'ecmascript'; jsx: boolean }
@@ -47,6 +47,10 @@ export type TransformationResult = Result<{ code: string }, string>
 
 export const transformationAtom = atom((get): TransformationResult => {
   const code = get(codeAtom)
+
+  if (!transformSync) {
+    return Err('Failed to load swc. Is version correct?')
+  }
 
   try {
     return Ok(

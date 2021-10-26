@@ -41,7 +41,6 @@ dependencies:
   '@emotion/react': 11.5.0_6d27d6abd5fcfff70e832fae7f4b0d02
   '@emotion/styled': 11.3.0_6c78da50cc6d8809f5c488fc50e3578b
   '@monaco-editor/react': 4.3.1_f0689466c0c38bde0d57c82418990dab
-  '@swc/wasm-web': 1.2.102
   framer-motion: 4.1.17_react-dom@17.0.2+react@17.0.2
   jotai: 1.4.0_react@17.0.2
   js-base64: 3.7.2
@@ -56,6 +55,7 @@ devDependencies:
   '@gplane/tsconfig': 5.0.0
   '@pmmmwh/react-refresh-webpack-plugin': 0.5.1_3648fa48d33d93ac8d1e59c9dcd197aa
   '@swc/core': 1.2.103
+  '@swc/wasm-web': 1.2.102
   '@types/pako': 1.0.2
   '@types/react': 17.0.31
   '@types/react-dom': 17.0.10
@@ -1370,7 +1370,7 @@ packages:
 
   /@swc/wasm-web/1.2.102:
     resolution: {integrity: sha512-OImXRFGonBZosrYFJ+h5vNRanJQkGItF6l/BhtmabnqFyBwtJTcvDlSElIo/7eKXtpKg+nMjHK35KiFCzJjPNQ==}
-    dev: false
+    dev: true
 
   /@tsconfig/node10/1.0.8:
     resolution: {integrity: sha512-6XFfSQmMgq0CFLY1MslA/CPUfhIL919M1rMsa5lP2P097N2Wd1sSX0tx1u4olM16fLNhtHZpRhedZJphNJqmZg==}

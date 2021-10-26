@@ -1,11 +1,11 @@
 import { Suspense, lazy } from 'react'
 import { Box, Center, ChakraProvider, CircularProgress } from '@chakra-ui/react'
-import initSWC from '@swc/wasm-web'
 import { loader } from '@monaco-editor/react'
+import { loadSwc } from './swc'
 import HeaderBar from './components/HeaderBar'
 
 const Workspace = lazy(async () => {
-  await Promise.all([initSWC(), loader.init()])
+  await Promise.all([loadSwc(), loader.init()])
   return import('./components/Workspace')
 })
 
