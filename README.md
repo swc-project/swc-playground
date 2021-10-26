@@ -10,9 +10,9 @@ The playground of swc.
 - [x] Configure swc with a friendly form.
 - [x] Share code and config by URL.
 - [ ] Choose different versions of swc with an option.
-- [ ] Show version of used swc.
 - [ ] Configure swc by editing JSON manually.
 - [ ] Show AST of input code.
+- [ ] Dark mode.
 
 ## 📜 License
 
