@@ -35,10 +35,6 @@ export default (_: Record<string, string>, argv: Record<string, string>) => {
             },
           },
         },
-        {
-          test: /\.tc$/,
-          type: 'asset/source',
-        },
       ],
     },
     plugins: [
