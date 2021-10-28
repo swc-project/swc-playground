@@ -161,7 +161,7 @@ export default function Configuration() {
   }
 
   return (
-    <Flex direction="column" width="16vw" height="full">
+    <Flex direction="column">
       <Heading size="md" mb="8px">
         Configuration
       </Heading>

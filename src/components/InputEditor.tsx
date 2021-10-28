@@ -6,14 +6,18 @@ import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
 import { HiShare } from 'react-icons/hi'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
-import { codeAtom, swcConfigAtom, transformationAtom } from '../state'
+import { codeAtom, swcConfigAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
+import type { TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
 
-export default function InputEditor() {
+interface Props {
+  output: TransformationResult
+}
+
+export default function InputEditor({ output }: Props) {
   const [code, setCode] = useAtom(codeAtom)
-  const [transformedOutput] = useAtom(transformationAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
@@ -33,10 +37,10 @@ export default function InputEditor() {
       return
     }
 
-    if (transformedOutput.ok) {
+    if (output.ok) {
       monaco.editor.setModelMarkers(model, 'swc', [])
     } else {
-      const markers = Array.from(parseSWCError(transformedOutput.val)).map(
+      const markers = Array.from(parseSWCError(output.val)).map(
         ([_, message, line, col]): editor.IMarkerData => {
           const lineNumber = Number.parseInt(line!),
             column = Number.parseInt(col!)
@@ -55,7 +59,7 @@ export default function InputEditor() {
 
       monaco.editor.setModelMarkers(model, 'swc', markers)
     }
-  }, [transformedOutput, monaco])
+  }, [output, monaco])
 
   useEffect(() => {
     const url = new URL(location.href)

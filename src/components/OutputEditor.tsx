@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
-import { useAtom } from 'jotai'
 import { Box, Flex, Heading } from '@chakra-ui/react'
-import { transformationAtom } from '../state'
 import { editorOptions as sharedEditorOptions } from '../utils'
+import type { TransformationResult } from '../swc'
+
+interface Props {
+  output: TransformationResult
+}
 
 const editorOptions: editor.IStandaloneEditorConstructionOptions = {
   ...sharedEditorOptions,
@@ -13,8 +16,7 @@ const editorOptions: editor.IStandaloneEditorConstructionOptions = {
   tabSize: 4, // this aligns with swc
 }
 
-export default function OutputEditor() {
-  const [transformedOutput] = useAtom(transformationAtom)
+export default function OutputEditor({ output }: Props) {
   const monaco = useMonaco()
 
   useEffect(() => {
@@ -25,9 +27,7 @@ export default function OutputEditor() {
     })
   }, [monaco])
 
-  const output = transformedOutput.ok
-    ? transformedOutput.val.code
-    : transformedOutput.val
+  const outputContent = output.ok ? output.val.code : output.val
 
   return (
     <Flex direction="column" width="40vw" height="full">
@@ -36,8 +36,8 @@ export default function OutputEditor() {
       </Heading>
       <Box height="full" borderColor="gray.400" borderWidth="1px">
         <Editor
-          value={output}
-          language={transformedOutput.ok ? 'javascript' : 'text'}
+          value={outputContent}
+          language={output.ok ? 'javascript' : 'text'}
           defaultLanguage="javascript"
           path="output.js"
           options={editorOptions}

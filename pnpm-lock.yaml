@@ -28,6 +28,7 @@ specifiers:
   react-icons: ^4.3.1
   react-refresh: ^0.10.0
   swc-loader: ^0.1.15
+  swr: ^1.0.1
   ts-node: ^10.4.0
   ts-results: ^3.3.0
   typescript: ^4.4.4
@@ -49,6 +50,7 @@ dependencies:
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-icons: 4.3.1_react@17.0.2
+  swr: 1.0.1_react@17.0.2
   ts-results: 3.3.0
 
 devDependencies:
@@ -2359,6 +2361,11 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
+  /dequal/2.0.2:
+    resolution: {integrity: sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==}
+    engines: {node: '>=6'}
+    dev: false
+
   /destroy/1.0.4:
     resolution: {integrity: sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=}
     dev: true
@@ -4535,6 +4542,15 @@ packages:
       loader-utils: 2.0.0
       webpack: 5.59.1_2bcbe92f7f2d750dc7bd654930945cb8
     dev: true
+
+  /swr/1.0.1_react@17.0.2:
+    resolution: {integrity: sha512-EPQAxSjoD4IaM49rpRHK0q+/NzcwoT8c0/Ylu/u3/6mFj/CWnQVjNJ0MV2Iuw/U+EJSd2TX5czdAwKPYZIG0YA==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0
+    dependencies:
+      dequal: 2.0.2
+      react: 17.0.2
+    dev: false
 
   /table/6.7.2:
     resolution: {integrity: sha512-UFZK67uvyNivLeQbVtkiUs8Uuuxv24aSL4/Vil2PJVtMgU8Lx0CYkP12uCGa3kjyQzOSgV1+z9Wkb82fCGsO0g==}
