@@ -22,13 +22,15 @@ interface Props {
 
 export default function VersionSelect({ isLoadingSwc }: Props) {
   const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
-  const { data } = useSWR('@swc/wasm-web', fetchSwcVersions)
+  const { data, error } = useSWR('@swc/wasm-web', fetchSwcVersions)
 
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>
   ) => {
     setSwcVersion(event.target.value)
   }
+
+  const isLoading = isLoadingSwc || (!data && !error)
 
   return (
     <Flex direction="column">
@@ -56,10 +58,10 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
           </Select>
         )}
         <Flex alignItems="center" my="2" height="8">
-          {isLoadingSwc && (
+          {isLoading && (
             <>
               <CircularProgress size="7" isIndeterminate />
-              <Text ml="2">Switching version...</Text>
+              <Text ml="2">Please wait...</Text>
             </>
           )}
         </Flex>
