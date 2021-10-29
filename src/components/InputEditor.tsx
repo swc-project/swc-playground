@@ -8,6 +8,7 @@ import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
+import { swcVersionAtom } from '../swc'
 import type { TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
@@ -19,6 +20,7 @@ interface Props {
 export default function InputEditor({ output }: Props) {
   const [code, setCode] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
+  const [swcVersion] = useAtom(swcVersionAtom)
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const toast = useToast()
@@ -78,7 +80,7 @@ export default function InputEditor({ output }: Props) {
 
   const handleShare = async () => {
     const url = new URL(location.href)
-
+    url.searchParams.set('version', swcVersion)
     const encodedInput = Base64.fromUint8Array(gzip(code))
     url.searchParams.set('code', encodedInput)
     const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
