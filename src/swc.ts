@@ -32,12 +32,8 @@ export function transform({
   code: string
   fileName: string
   config: SwcConfig
-  swc: swc | undefined
+  swc: swc
 }): TransformationResult {
-  if (!swc) {
-    return Err('Loading swc...')
-  }
-
   try {
     return Ok(swc.transformSync(code, { ...config, filename: fileName }))
   } catch (error) {
@@ -56,12 +52,8 @@ export function parse({
 }: {
   code: string
   config: SwcConfig
-  swc: swc | undefined
+  swc: swc
 }): ParserResult {
-  if (!swc) {
-    return Err('Loading swc...')
-  }
-
   try {
     return Ok(swc.parseSync(code, config.jsc.parser))
   } catch (error) {

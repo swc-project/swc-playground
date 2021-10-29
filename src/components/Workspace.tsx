@@ -9,6 +9,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { loader } from '@monaco-editor/react'
+import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
 import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
 import Configuration from './Configuration'
@@ -25,6 +26,14 @@ export default function Workspace() {
   const [fileName] = useAtom(fileNameAtom)
   const [viewMode, setViewMode] = useState('code')
   const output = useMemo(() => {
+    if (error) {
+      return Err(String(error))
+    }
+
+    if (!swc) {
+      return Err('Loading swc...')
+    }
+
     switch (viewMode) {
       case 'ast':
         return parse({ code, config: swcConfig, swc })
@@ -32,7 +41,7 @@ export default function Workspace() {
       default:
         return transform({ code, fileName, config: swcConfig, swc })
     }
-  }, [code, fileName, swc, swcConfig, viewMode])
+  }, [code, fileName, swc, error, swcConfig, viewMode])
   const toast = useToast()
 
   useEffect(() => {
