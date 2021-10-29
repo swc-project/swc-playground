@@ -1,7 +1,17 @@
 import type { ChangeEvent } from 'react'
 import useSWR from 'swr'
 import { useAtom } from 'jotai'
-import { CircularProgress, Flex, Heading, Select, Text } from '@chakra-ui/react'
+import {
+  Box,
+  CircularProgress,
+  Flex,
+  Heading,
+  HStack,
+  Link,
+  Select,
+  Text,
+} from '@chakra-ui/react'
+import { HiExternalLink } from 'react-icons/hi'
 import { swcVersionAtom } from '../swc'
 
 type PackageInfo = {
@@ -64,6 +74,33 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
               <Text ml="2">Please wait...</Text>
             </>
           )}
+        </Flex>
+        <Flex px="2">
+          <Text>Official links:</Text>
+          <HStack spacing="4" ml="1">
+            <Link
+              href="https://swc.rs/"
+              isExternal
+              display="flex"
+              alignItems="center"
+            >
+              Docs
+              <Box display="inline-block" ml="1px">
+                <HiExternalLink />
+              </Box>
+            </Link>
+            <Link
+              href="https://github.com/swc-project/swc"
+              isExternal
+              display="flex"
+              alignItems="center"
+            >
+              GitHub
+              <Box display="inline-block" ml="1px">
+                <HiExternalLink />
+              </Box>
+            </Link>
+          </HStack>
         </Flex>
       </Flex>
     </Flex>
