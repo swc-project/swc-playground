@@ -39,9 +39,7 @@ export default function InputEditor({ output }: Props) {
       return
     }
 
-    if (output.ok) {
-      monaco.editor.setModelMarkers(model, 'swc', [])
-    } else {
+    if (output.err) {
       const markers = Array.from(parseSWCError(output.val)).map(
         ([_, message, line, col]): editor.IMarkerData => {
           const lineNumber = Number.parseInt(line!),
@@ -58,9 +56,10 @@ export default function InputEditor({ output }: Props) {
           }
         }
       )
-
       monaco.editor.setModelMarkers(model, 'swc', markers)
     }
+
+    return () => monaco.editor.setModelMarkers(model, 'swc', [])
   }, [output, monaco])
 
   useEffect(() => {
