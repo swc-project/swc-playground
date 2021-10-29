@@ -9,9 +9,9 @@ The playground of swc.
 - [x] Two editors powered by [Monaco Editor](https://github.com/microsoft/monaco-editor) for editing input code and showing output code.
 - [x] Configure swc with a friendly form.
 - [x] Share code and config by URL.
-- [ ] Choose different versions of swc with an option.
+- [x] Choose different versions of swc with an option.
 - [ ] Configure swc by editing JSON manually.
-- [ ] Show AST of input code.
+- [x] Show AST of input code.
 - [ ] Dark mode.
 
 ## 📜 License
