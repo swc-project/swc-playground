@@ -9,12 +9,12 @@ import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom } from '../state'
 import { editorOptions, parseSWCError } from '../utils'
 import { swcVersionAtom } from '../swc'
-import type { TransformationResult } from '../swc'
+import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
 
 interface Props {
-  output: TransformationResult
+  output: TransformationResult | ParserResult
 }
 
 export default function InputEditor({ output }: Props) {

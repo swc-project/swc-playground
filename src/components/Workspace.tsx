@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import useSWR from 'swr'
 import {
@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { loader } from '@monaco-editor/react'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
-import { loadSwc, swcVersionAtom, transform } from '../swc'
+import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
 import Configuration from './Configuration'
 import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
@@ -23,9 +23,16 @@ export default function Workspace() {
   const [code] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
-  const transformedOutput = useMemo(() => {
-    return transform({ code, fileName, config: swcConfig, swc })
-  }, [code, fileName, swc, swcConfig])
+  const [viewMode, setViewMode] = useState('code')
+  const output = useMemo(() => {
+    switch (viewMode) {
+      case 'ast':
+        return parse({ code, config: swcConfig, swc })
+      case 'code':
+      default:
+        return transform({ code, fileName, config: swcConfig, swc })
+    }
+  }, [code, fileName, swc, swcConfig, viewMode])
   const toast = useToast()
 
   useEffect(() => {
@@ -60,8 +67,12 @@ export default function Workspace() {
         <Configuration />
         <VersionSelect isLoadingSwc={!swc && !error} />
       </VStack>
-      <InputEditor output={transformedOutput} />
-      <OutputEditor output={transformedOutput} />
+      <InputEditor output={output} />
+      <OutputEditor
+        output={output}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
     </HStack>
   )
 }

@@ -19,7 +19,9 @@ export async function loadSwc(version: string): Promise<swc> {
   return module
 }
 
-export type TransformationResult = Result<{ code: string }, string>
+export type TransformationOutput = { code: string }
+
+export type TransformationResult = Result<TransformationOutput, string>
 
 export function transform({
   code,
@@ -39,12 +41,40 @@ export function transform({
   try {
     return Ok(swc.transformSync(code, { ...config, filename: fileName }))
   } catch (error) {
-    if (typeof error === 'string') {
-      return Err(error)
-    } else if (error instanceof Error) {
-      return Err(`${error.toString()}\n\n${error.stack}`)
-    } else {
-      return Err(String(error))
-    }
+    return handleSwcError(error)
+  }
+}
+
+export type AST = { type: 'Module' | 'Script'; body: unknown }
+
+export type ParserResult = Result<AST, string>
+
+export function parse({
+  code,
+  config,
+  swc,
+}: {
+  code: string
+  config: SwcConfig
+  swc: swc | undefined
+}): ParserResult {
+  if (!swc) {
+    return Err('Loading swc...')
+  }
+
+  try {
+    return Ok(swc.parseSync(code, config.jsc.parser))
+  } catch (error) {
+    return handleSwcError(error)
+  }
+}
+
+function handleSwcError(error: unknown): Err<string> {
+  if (typeof error === 'string') {
+    return Err(error)
+  } else if (error instanceof Error) {
+    return Err(`${error.toString()}\n\n${error.stack}`)
+  } else {
+    return Err(String(error))
   }
 }
