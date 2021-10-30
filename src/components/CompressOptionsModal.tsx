@@ -63,14 +63,24 @@ export default function CompressOptionsModal() {
       <Button size="xs" onClick={handleOpen}>
         More
       </Button>
-      <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
+      <Modal
+        isCentered
+        scrollBehavior="inside"
+        size="xl"
+        isOpen={isOpen}
+        onClose={handleClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Compress Options</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <Grid templateColumns="repeat(3, 1fr)" rowGap="2" columnGap="2">
+            <Grid
+              templateColumns={['1fr', '1fr', 'repeat(3, 1fr)']}
+              rowGap="2"
+              columnGap="2"
+            >
               {Object.entries(options).map(([key, value]) => (
                 <Checkbox
                   key={key}

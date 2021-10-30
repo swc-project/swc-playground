@@ -9,13 +9,13 @@ export default function HeaderBar() {
       as="header"
       justifyContent="space-between"
       h="56px"
-      px="5"
+      px={[2, 2, 5]}
       py="2"
       bg="gray.100"
       borderBottomWidth="1px"
       borderBottomColor="gray.300"
     >
-      <img src={logoURL} alt="swc" />
+      <img src={logoURL} alt="swc" width="120" />
       <Link
         href="https://github.com/g-plane/swc-playground"
         isExternal

@@ -64,7 +64,11 @@ export default function OutputEditor({
     : 'json'
 
   return (
-    <Flex direction="column" width="40vw" height="full">
+    <Flex
+      direction="column"
+      width={['full', 'full', '40vw']}
+      height={['45vh', '45vh', 'full']}
+    >
       <Flex justifyContent="space-between" alignItems="center">
         <Heading size="md" mb="8px">
           Output

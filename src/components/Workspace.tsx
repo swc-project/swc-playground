@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import {
   Center,
   CircularProgress,
-  HStack,
+  Stack,
   VStack,
   useToast,
 } from '@chakra-ui/react'
@@ -71,8 +71,14 @@ export default function Workspace() {
   }
 
   return (
-    <HStack spacing="24px" height="88vh" mt="3" px="8">
-      <VStack spacing="4" alignItems="unset" width="16vw" height="full">
+    <Stack
+      direction={['column', 'column', 'row']}
+      spacing="6"
+      height="88vh"
+      mt="3"
+      mx={[4, 4, 8]}
+    >
+      <VStack spacing="4" alignItems="unset" width={['full', 'full', '16vw']}>
         <Configuration />
         <VersionSelect isLoadingSwc={!swc && !error} />
       </VStack>
@@ -82,6 +88,6 @@ export default function Workspace() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
-    </HStack>
+    </Stack>
   )
 }
