@@ -22,6 +22,7 @@ import {
 import type { SwcParserOptions } from '../state'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
+import ConfigEditorModal from './ConfigEditorModal'
 
 const STORAGE_KEY = 'v1.config'
 
@@ -36,6 +37,11 @@ export default function Configuration() {
     isOpen: isMangleOptionsOpen,
     onOpen: onMangleOptionsOpen,
     onClose: onMangleOptionsClose,
+  } = useDisclosure()
+  const {
+    isOpen: isConfigEditorOpen,
+    onOpen: onConfigEditorOpen,
+    onClose: onConfigEditorClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -165,140 +171,138 @@ export default function Configuration() {
       <Heading size="md" mb="8px">
         Configuration
       </Heading>
-      <VStack
-        spacing="2"
-        p="2"
-        bg="white"
-        borderColor="gray.400"
-        borderWidth="1px"
-      >
-        <FormControl>
-          <FormLabel htmlFor="swc-syntax">Language</FormLabel>
-          <Select
-            id="swc-syntax"
-            value={swcConfig.jsc.parser.syntax}
-            onInput={handleLanguageChange}
-          >
-            <option value="ecmascript">JavaScript</option>
-            <option value="typescript">TypeScript</option>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="swc-target">Target</FormLabel>
-          <Select
-            id="swc-target"
-            value={swcConfig.jsc.target}
-            onChange={handleTargetChange}
-          >
-            <option value="es3">ES3</option>
-            <option value="es5">ES5</option>
-            <option value="es2015">ES2015</option>
-            <option value="es2016">ES2016</option>
-            <option value="es2017">ES2017</option>
-            <option value="es2018">ES2018</option>
-            <option value="es2019">ES2019</option>
-            <option value="es2020">ES2020</option>
-            <option value="es2021">ES2021</option>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="swc-module">Module</FormLabel>
-          <Select
-            id="swc-module"
-            value={swcConfig.module.type}
-            onChange={handleModuleChange}
-          >
-            <option value="es6">ES Modules</option>
-            <option value="commonjs">CommonJS</option>
-            <option value="amd">AMD</option>
-            <option value="umd">UMD</option>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
-          <Select
-            id="swc-source-type"
-            value={swcConfig.isModule ? 'module' : 'script'}
-            onChange={handleSourceTypeChange}
-          >
-            <option value="module">Module</option>
-            <option value="script">Script</option>
-          </Select>
-        </FormControl>
-        {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
+      <Flex direction="column" p="2" bg="white" borderColor="gray.400" borderWidth="1px">
+        <VStack spacing="2">
+          <FormControl>
+            <FormLabel htmlFor="swc-syntax">Language</FormLabel>
+            <Select
+              id="swc-syntax"
+              value={swcConfig.jsc.parser.syntax}
+              onInput={handleLanguageChange}
+            >
+              <option value="ecmascript">JavaScript</option>
+              <option value="typescript">TypeScript</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="swc-target">Target</FormLabel>
+            <Select
+              id="swc-target"
+              value={swcConfig.jsc.target}
+              onChange={handleTargetChange}
+            >
+              <option value="es3">ES3</option>
+              <option value="es5">ES5</option>
+              <option value="es2015">ES2015</option>
+              <option value="es2016">ES2016</option>
+              <option value="es2017">ES2017</option>
+              <option value="es2018">ES2018</option>
+              <option value="es2019">ES2019</option>
+              <option value="es2020">ES2020</option>
+              <option value="es2021">ES2021</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="swc-module">Module</FormLabel>
+            <Select
+              id="swc-module"
+              value={swcConfig.module.type}
+              onChange={handleModuleChange}
+            >
+              <option value="es6">ES Modules</option>
+              <option value="commonjs">CommonJS</option>
+              <option value="amd">AMD</option>
+              <option value="umd">UMD</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
+            <Select
+              id="swc-source-type"
+              value={swcConfig.isModule ? 'module' : 'script'}
+              onChange={handleSourceTypeChange}
+            >
+              <option value="module">Module</option>
+              <option value="script">Script</option>
+            </Select>
+          </FormControl>
+          {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
+            <FormControl display="flex" alignItems="center">
+              <Switch
+                id="swc-jsx"
+                isChecked={swcConfig.jsc.parser.jsx}
+                onChange={handleToggleJSX}
+              />
+              <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
+                JSX
+              </FormLabel>
+            </FormControl>
+          ) : (
+            <FormControl display="flex" alignItems="center">
+              <Switch
+                id="swc-tsx"
+                isChecked={swcConfig.jsc.parser.tsx}
+                onChange={handleToggleTSX}
+              />
+              <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
+                TSX
+              </FormLabel>
+            </FormControl>
+          )}
           <FormControl display="flex" alignItems="center">
             <Switch
-              id="swc-jsx"
-              isChecked={swcConfig.jsc.parser.jsx}
-              onChange={handleToggleJSX}
+              id="swc-loose"
+              isChecked={swcConfig.jsc.loose}
+              onChange={handleToggleLoose}
             />
-            <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
-              JSX
+            <FormLabel htmlFor="swc-loose" ml="2" mb="0">
+              Loose
             </FormLabel>
           </FormControl>
-        ) : (
           <FormControl display="flex" alignItems="center">
             <Switch
-              id="swc-tsx"
-              isChecked={swcConfig.jsc.parser.tsx}
-              onChange={handleToggleTSX}
+              id="swc-minify"
+              isChecked={swcConfig.minify}
+              onChange={handleToggleMinify}
             />
-            <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
-              TSX
+            <FormLabel htmlFor="swc-minify" ml="2" mb="0">
+              Minify
             </FormLabel>
           </FormControl>
-        )}
-        <FormControl display="flex" alignItems="center">
-          <Switch
-            id="swc-loose"
-            isChecked={swcConfig.jsc.loose}
-            onChange={handleToggleLoose}
-          />
-          <FormLabel htmlFor="swc-loose" ml="2" mb="0">
-            Loose
-          </FormLabel>
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <Switch
-            id="swc-minify"
-            isChecked={swcConfig.minify}
-            onChange={handleToggleMinify}
-          />
-          <FormLabel htmlFor="swc-minify" ml="2" mb="0">
-            Minify
-          </FormLabel>
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <Switch
-            id="swc-compress"
-            isChecked={!!swcConfig.jsc.minify.compress}
-            onChange={handleToggleCompress}
-          />
-          <FormLabel htmlFor="swc-copress" ml="2" mb="0">
-            Compress
-          </FormLabel>
-          {swcConfig.jsc.minify.compress && (
-            <Button size="xs" onClick={onCompressOptionsOpen}>
-              More
-            </Button>
-          )}
-        </FormControl>
-        <FormControl display="flex" alignItems="center">
-          <Switch
-            id="swc-mangle"
-            isChecked={!!swcConfig.jsc.minify.mangle}
-            onChange={handleToggleMangle}
-          />
-          <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
-            Mangle
-          </FormLabel>
-          {swcConfig.jsc.minify.mangle && (
-            <Button size="xs" onClick={onMangleOptionsOpen}>
-              More
-            </Button>
-          )}
-        </FormControl>
-      </VStack>
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="swc-compress"
+              isChecked={!!swcConfig.jsc.minify.compress}
+              onChange={handleToggleCompress}
+            />
+            <FormLabel htmlFor="swc-copress" ml="2" mb="0">
+              Compress
+            </FormLabel>
+            {swcConfig.jsc.minify.compress && (
+              <Button size="xs" onClick={onCompressOptionsOpen}>
+                More
+              </Button>
+            )}
+          </FormControl>
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="swc-mangle"
+              isChecked={!!swcConfig.jsc.minify.mangle}
+              onChange={handleToggleMangle}
+            />
+            <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
+              Mangle
+            </FormLabel>
+            {swcConfig.jsc.minify.mangle && (
+              <Button size="xs" onClick={onMangleOptionsOpen}>
+                More
+              </Button>
+            )}
+          </FormControl>
+        </VStack>
+        <Button mt="3" onClick={onConfigEditorOpen}>Edit as JSON</Button>
+      </Flex>
+
       <CompressOptionsModal
         isOpen={isCompressOptionsOpen}
         onClose={onCompressOptionsClose}
@@ -306,6 +310,10 @@ export default function Configuration() {
       <MangleOptionsModal
         isOpen={isMangleOptionsOpen}
         onClose={onMangleOptionsClose}
+      />
+      <ConfigEditorModal
+        isOpen={isConfigEditorOpen}
+        onClose={onConfigEditorClose}
       />
     </Flex>
   )

@@ -9,6 +9,7 @@ specifiers:
   '@pmmmwh/react-refresh-webpack-plugin': ^0.5.1
   '@swc/core': ^1.2.103
   '@swc/wasm-web': ^1.2.102
+  '@types/json-schema': ^7.0.9
   '@types/pako': ^1.0.2
   '@types/react': ^17.0.31
   '@types/react-dom': ^17.0.10
@@ -58,6 +59,7 @@ devDependencies:
   '@pmmmwh/react-refresh-webpack-plugin': 0.5.1_3648fa48d33d93ac8d1e59c9dcd197aa
   '@swc/core': 1.2.103
   '@swc/wasm-web': 1.2.102
+  '@types/json-schema': 7.0.9
   '@types/pako': 1.0.2
   '@types/react': 17.0.31
   '@types/react-dom': 17.0.10

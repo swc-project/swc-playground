@@ -1,0 +1,113 @@
+import { useEffect, useState } from 'react'
+import {
+  Button,
+  Code,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Text,
+  useToast,
+} from '@chakra-ui/react'
+import type { editor } from 'monaco-editor'
+import type { ModalProps } from '@chakra-ui/react'
+import Editor, { useMonaco } from '@monaco-editor/react'
+import { useAtom } from 'jotai'
+import { editorOptions as sharedEditorOptions } from '../utils'
+import { swcConfigAtom } from '../state'
+import { configSchema } from '../swc'
+
+const editorOptions: editor.IEditorConstructionOptions = {
+  ...sharedEditorOptions,
+  scrollBeyondLastLine: false,
+}
+
+type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
+
+export default function ConfigEditorModal({ isOpen, onClose }: Props) {
+  const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const [editingConfig, setEditingConfig] = useState(
+    JSON.stringify(swcConfig, null, 2)
+  )
+  const monaco = useMonaco()
+  const toast = useToast()
+
+  useEffect(() => {
+    if (!monaco) {
+      return
+    }
+
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      schemas: [
+        {
+          uri: 'http://server/swcrc-schema.json',
+          fileMatch: ['.swcrc'],
+          schema: configSchema,
+        },
+      ],
+    })
+  }, [monaco])
+
+  const handleClose = () => {
+    setEditingConfig(JSON.stringify(swcConfig, null, 2))
+    onClose()
+  }
+
+  const handleApply = () => {
+    try {
+      setSwcConfig(JSON.parse(editingConfig))
+      onClose()
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: String(error),
+        status: 'error',
+        duration: 5000,
+        position: 'top',
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleEditorChange = (value: string | undefined) => {
+    if (value != null) {
+      setEditingConfig(value)
+    }
+  }
+
+  return (
+    <Modal size="3xl" isCentered isOpen={isOpen} onClose={handleClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          SWC Configuration (<Code>.swcrc</Code>)
+        </ModalHeader>
+        <ModalCloseButton />
+
+        <ModalBody>
+          <Text mb="4">
+            You can paste your config here, or just manually type directly.
+          </Text>
+          <Editor
+            value={editingConfig}
+            defaultLanguage="json"
+            path=".swcrc"
+            options={editorOptions}
+            height="40vh"
+            onChange={handleEditorChange}
+          />
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={handleApply}>
+            Apply
+          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  )
+}
