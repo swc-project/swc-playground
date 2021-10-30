@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
@@ -76,6 +77,10 @@ export default function CompressOptionsModal() {
           <ModalCloseButton />
 
           <ModalBody>
+            <Text mb="4">
+              Not all options are shown here. You can also configure by closing
+              this dialog then clicking the "Edit as JSON" button.
+            </Text>
             <Grid
               templateColumns={['1fr', '1fr', 'repeat(3, 1fr)']}
               rowGap="2"

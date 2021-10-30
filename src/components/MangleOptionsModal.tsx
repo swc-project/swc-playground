@@ -10,6 +10,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -67,6 +68,10 @@ export default function MangleOptionsModal() {
           <ModalCloseButton />
 
           <ModalBody>
+            <Text mb="4">
+              Not all options are shown here. You can also configure by closing
+              this dialog then clicking the "Edit as JSON" button.
+            </Text>
             <VStack align="flex-start">
               {Object.entries(options).map(([key, value]) => (
                 <Checkbox
