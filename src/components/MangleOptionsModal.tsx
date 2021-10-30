@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import {
   Button,
@@ -11,23 +11,18 @@ import {
   ModalBody,
   ModalCloseButton,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react'
-import type { ModalProps } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { swcConfigAtom } from '../state'
 import type { MangleOptions } from '../state'
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
-
-export default function MangleOptionsModal({ isOpen, onClose }: Props) {
+export default function MangleOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [options, setOptions] = useState<MangleOptions | false>(
     swcConfig.jsc.minify.mangle
   )
-
-  useEffect(() => {
-    setOptions(swcConfig.jsc.minify.mangle)
-  }, [swcConfig])
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleApply = () => {
     setSwcConfig((config) => ({
@@ -35,6 +30,11 @@ export default function MangleOptionsModal({ isOpen, onClose }: Props) {
       jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } },
     }))
     onClose()
+  }
+
+  const handleOpen = () => {
+    setOptions(swcConfig.jsc.minify.mangle)
+    onOpen()
   }
 
   const handleClose = () => {
@@ -56,35 +56,40 @@ export default function MangleOptionsModal({ isOpen, onClose }: Props) {
   }
 
   return (
-    <Modal isCentered isOpen={isOpen} onClose={handleClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Mangle Options</ModalHeader>
-        <ModalCloseButton />
+    <>
+      <Button size="xs" onClick={handleOpen}>
+        More
+      </Button>
+      <Modal isCentered isOpen={isOpen} onClose={handleClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Mangle Options</ModalHeader>
+          <ModalCloseButton />
 
-        <ModalBody>
-          <VStack align="flex-start">
-            {Object.entries(options).map(([key, value]) => (
-              <Checkbox
-                key={key}
-                isChecked={value}
-                onChange={(event) =>
-                  handleOptionChange(key as keyof MangleOptions, event)
-                }
-              >
-                {key}
-              </Checkbox>
-            ))}
-          </VStack>
-        </ModalBody>
+          <ModalBody>
+            <VStack align="flex-start">
+              {Object.entries(options).map(([key, value]) => (
+                <Checkbox
+                  key={key}
+                  isChecked={value}
+                  onChange={(event) =>
+                    handleOptionChange(key as keyof MangleOptions, event)
+                  }
+                >
+                  {key}
+                </Checkbox>
+              ))}
+            </VStack>
+          </ModalBody>
 
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleApply}>
-            Apply
-          </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleApply}>
+              Apply
+            </Button>
+            <Button onClick={handleClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }

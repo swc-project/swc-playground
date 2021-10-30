@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import {
   Button,
@@ -11,23 +11,18 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react'
-import type { ModalProps } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { swcConfigAtom } from '../state'
 import type { CompressOptions } from '../state'
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
-
-export default function CompressOptionsModal({ isOpen, onClose }: Props) {
+export default function CompressOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [options, setOptions] = useState<CompressOptions | false>(
     swcConfig.jsc.minify.compress
   )
-
-  useEffect(() => {
-    setOptions(swcConfig.jsc.minify.compress)
-  }, [swcConfig])
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleApply = () => {
     setSwcConfig((config) => ({
@@ -38,6 +33,11 @@ export default function CompressOptionsModal({ isOpen, onClose }: Props) {
       },
     }))
     onClose()
+  }
+
+  const handleOpen = () => {
+    setOptions(swcConfig.jsc.minify.compress)
+    onOpen()
   }
 
   const handleClose = () => {
@@ -59,35 +59,40 @@ export default function CompressOptionsModal({ isOpen, onClose }: Props) {
   }
 
   return (
-    <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Compress Options</ModalHeader>
-        <ModalCloseButton />
+    <>
+      <Button size="xs" onClick={handleOpen}>
+        More
+      </Button>
+      <Modal isCentered size="xl" isOpen={isOpen} onClose={handleClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Compress Options</ModalHeader>
+          <ModalCloseButton />
 
-        <ModalBody>
-          <Grid templateColumns="repeat(3, 1fr)" rowGap="2" columnGap="2">
-            {Object.entries(options).map(([key, value]) => (
-              <Checkbox
-                key={key}
-                isChecked={value}
-                onChange={(event) =>
-                  handleOptionChange(key as keyof CompressOptions, event)
-                }
-              >
-                {key}
-              </Checkbox>
-            ))}
-          </Grid>
-        </ModalBody>
+          <ModalBody>
+            <Grid templateColumns="repeat(3, 1fr)" rowGap="2" columnGap="2">
+              {Object.entries(options).map(([key, value]) => (
+                <Checkbox
+                  key={key}
+                  isChecked={value}
+                  onChange={(event) =>
+                    handleOptionChange(key as keyof CompressOptions, event)
+                  }
+                >
+                  {key}
+                </Checkbox>
+              ))}
+            </Grid>
+          </ModalBody>
 
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleApply}>
-            Apply
-          </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleApply}>
+              Apply
+            </Button>
+            <Button onClick={handleClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }

@@ -10,10 +10,10 @@ import {
   ModalBody,
   ModalCloseButton,
   Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
 import type { editor } from 'monaco-editor'
-import type { ModalProps } from '@chakra-ui/react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
 import { editorOptions as sharedEditorOptions } from '../utils'
@@ -25,14 +25,13 @@ const editorOptions: editor.IEditorConstructionOptions = {
   scrollBeyondLastLine: false,
 }
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
-
-export default function ConfigEditorModal({ isOpen, onClose }: Props) {
+export default function ConfigEditorModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [editingConfig, setEditingConfig] = useState(
     JSON.stringify(swcConfig, null, 2)
   )
   const monaco = useMonaco()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
   useEffect(() => {
@@ -50,6 +49,11 @@ export default function ConfigEditorModal({ isOpen, onClose }: Props) {
       ],
     })
   }, [monaco])
+
+  const handleOpen = () => {
+    setEditingConfig(JSON.stringify(swcConfig, null, 2))
+    onOpen()
+  }
 
   const handleClose = () => {
     setEditingConfig(JSON.stringify(swcConfig, null, 2))
@@ -79,35 +83,40 @@ export default function ConfigEditorModal({ isOpen, onClose }: Props) {
   }
 
   return (
-    <Modal size="3xl" isCentered isOpen={isOpen} onClose={handleClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          SWC Configuration (<Code>.swcrc</Code>)
-        </ModalHeader>
-        <ModalCloseButton />
+    <>
+      <Button mt="3" onClick={handleOpen}>
+        Edit as JSON
+      </Button>
+      <Modal size="3xl" isCentered isOpen={isOpen} onClose={handleClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            SWC Configuration (<Code>.swcrc</Code>)
+          </ModalHeader>
+          <ModalCloseButton />
 
-        <ModalBody>
-          <Text mb="4">
-            You can paste your config here, or just manually type directly.
-          </Text>
-          <Editor
-            value={editingConfig}
-            defaultLanguage="json"
-            path=".swcrc"
-            options={editorOptions}
-            height="40vh"
-            onChange={handleEditorChange}
-          />
-        </ModalBody>
+          <ModalBody>
+            <Text mb="4">
+              You can paste your config here, or just manually type directly.
+            </Text>
+            <Editor
+              value={editingConfig}
+              defaultLanguage="json"
+              path=".swcrc"
+              options={editorOptions}
+              height="40vh"
+              onChange={handleEditorChange}
+            />
+          </ModalBody>
 
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleApply}>
-            Apply
-          </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleApply}>
+              Apply
+            </Button>
+            <Button onClick={handleClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }

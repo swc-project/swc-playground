@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import type * as React from 'react'
 import { useAtom } from 'jotai'
 import {
-  Button,
   Flex,
   FormControl,
   FormLabel,
@@ -10,7 +9,6 @@ import {
   Select,
   Switch,
   VStack,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { Base64 } from 'js-base64'
 import { ungzip } from 'pako'
@@ -28,21 +26,6 @@ const STORAGE_KEY = 'v1.config'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
-  const {
-    isOpen: isCompressOptionsOpen,
-    onOpen: onCompressOptionsOpen,
-    onClose: onCompressOptionsClose,
-  } = useDisclosure()
-  const {
-    isOpen: isMangleOptionsOpen,
-    onOpen: onMangleOptionsOpen,
-    onClose: onMangleOptionsClose,
-  } = useDisclosure()
-  const {
-    isOpen: isConfigEditorOpen,
-    onOpen: onConfigEditorOpen,
-    onClose: onConfigEditorClose,
-  } = useDisclosure()
 
   useEffect(() => {
     const url = new URL(location.href)
@@ -171,7 +154,13 @@ export default function Configuration() {
       <Heading size="md" mb="8px">
         Configuration
       </Heading>
-      <Flex direction="column" p="2" bg="white" borderColor="gray.400" borderWidth="1px">
+      <Flex
+        direction="column"
+        p="2"
+        bg="white"
+        borderColor="gray.400"
+        borderWidth="1px"
+      >
         <VStack spacing="2">
           <FormControl>
             <FormLabel htmlFor="swc-syntax">Language</FormLabel>
@@ -278,11 +267,7 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-copress" ml="2" mb="0">
               Compress
             </FormLabel>
-            {swcConfig.jsc.minify.compress && (
-              <Button size="xs" onClick={onCompressOptionsOpen}>
-                More
-              </Button>
-            )}
+            {swcConfig.jsc.minify.compress && <CompressOptionsModal />}
           </FormControl>
           <FormControl display="flex" alignItems="center">
             <Switch
@@ -293,28 +278,11 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
               Mangle
             </FormLabel>
-            {swcConfig.jsc.minify.mangle && (
-              <Button size="xs" onClick={onMangleOptionsOpen}>
-                More
-              </Button>
-            )}
+            {swcConfig.jsc.minify.mangle && <MangleOptionsModal />}
           </FormControl>
         </VStack>
-        <Button mt="3" onClick={onConfigEditorOpen}>Edit as JSON</Button>
+        <ConfigEditorModal />
       </Flex>
-
-      <CompressOptionsModal
-        isOpen={isCompressOptionsOpen}
-        onClose={onCompressOptionsClose}
-      />
-      <MangleOptionsModal
-        isOpen={isMangleOptionsOpen}
-        onClose={onMangleOptionsClose}
-      />
-      <ConfigEditorModal
-        isOpen={isConfigEditorOpen}
-        onClose={onConfigEditorClose}
-      />
     </Flex>
   )
 }
