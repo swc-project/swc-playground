@@ -78,6 +78,18 @@ export default function InputEditor({ output }: Props) {
   }, [code])
 
   const handleShare = async () => {
+    if (!navigator.clipboard) {
+      toast({
+        title: 'Error',
+        description: 'Clipboard is not supported in your environment.',
+        status: 'error',
+        duration: 3000,
+        position: 'top',
+        isClosable: true,
+      })
+      return
+    }
+
     const url = new URL(location.href)
     url.searchParams.set('version', swcVersion)
     const encodedInput = Base64.fromUint8Array(gzip(code))
