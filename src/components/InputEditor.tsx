@@ -102,8 +102,10 @@ export default function InputEditor({ output }: Props) {
     await navigator.clipboard.writeText(fullURL)
     toast({
       title: 'URL is copied to clipboard.',
+      status: 'success',
       duration: 3000,
       position: 'top',
+      isClosable: true,
     })
   }
 
