@@ -8,7 +8,7 @@ The playground of swc.
 - Configure swc with a friendly form.
 - Share code and config by URL.
 - Choose different versions of swc with an option.
-- Configure swc by editing JSON manually.
+- Configure swc by editing JSON manually with IntelliSense.
 - Show AST of input code.
 - Dark mode. (Not implemented yet.)
 
