@@ -8,7 +8,6 @@ specifiers:
   '@monaco-editor/react': ^4.3.1
   '@pmmmwh/react-refresh-webpack-plugin': ^0.5.1
   '@swc/core': ^1.2.103
-  '@swc/wasm-web': ^1.2.102
   '@types/json-schema': ^7.0.9
   '@types/pako': ^1.0.2
   '@types/react': ^17.0.31
@@ -58,7 +57,6 @@ devDependencies:
   '@gplane/tsconfig': 5.0.0
   '@pmmmwh/react-refresh-webpack-plugin': 0.5.1_3648fa48d33d93ac8d1e59c9dcd197aa
   '@swc/core': 1.2.103
-  '@swc/wasm-web': 1.2.102
   '@types/json-schema': 7.0.9
   '@types/pako': 1.0.2
   '@types/react': 17.0.31
@@ -1370,10 +1368,6 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.2.103
       '@swc/core-win32-ia32-msvc': 1.2.103
       '@swc/core-win32-x64-msvc': 1.2.103
-    dev: true
-
-  /@swc/wasm-web/1.2.102:
-    resolution: {integrity: sha512-OImXRFGonBZosrYFJ+h5vNRanJQkGItF6l/BhtmabnqFyBwtJTcvDlSElIo/7eKXtpKg+nMjHK35KiFCzJjPNQ==}
     dev: true
 
   /@tsconfig/node10/1.0.8:
