@@ -17,7 +17,7 @@ import {
   defaultMangleOptions,
   swcConfigAtom,
 } from '../state'
-import type { SwcParserOptions } from '../state'
+import type { JscTarget, ModuleOptions, ParserOptions } from '../swc'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
@@ -52,7 +52,7 @@ export default function Configuration() {
         config.jsc.parser.syntax === 'typescript'
           ? config.jsc.parser.tsx
           : config.jsc.parser.jsx
-      const parserOptions: SwcParserOptions =
+      const parserOptions: ParserOptions =
         event.target.value === 'typescript'
           ? { syntax: 'typescript', tsx: jsxOrTsx }
           : { syntax: 'ecmascript', jsx: jsxOrTsx }
@@ -72,7 +72,7 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        target: event.target.value,
+        target: event.target.value as JscTarget,
       },
     }))
   }
@@ -82,7 +82,7 @@ export default function Configuration() {
       ...config,
       module: {
         ...config.module,
-        type: event.target.value,
+        type: event.target.value as ModuleOptions['type'],
       },
     }))
   }
@@ -195,7 +195,7 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-module">Module</FormLabel>
             <Select
               id="swc-module"
-              value={swcConfig.module.type}
+              value={swcConfig.module?.type}
               onChange={handleModuleChange}
             >
               <option value="es6">ES Modules</option>
@@ -261,24 +261,24 @@ export default function Configuration() {
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-compress"
-              isChecked={!!swcConfig.jsc.minify.compress}
+              isChecked={!!swcConfig.jsc?.minify?.compress}
               onChange={handleToggleCompress}
             />
             <FormLabel htmlFor="swc-copress" ml="2" mb="0">
               Compress
             </FormLabel>
-            {swcConfig.jsc.minify.compress && <CompressOptionsModal />}
+            {swcConfig.jsc?.minify?.compress && <CompressOptionsModal />}
           </FormControl>
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-mangle"
-              isChecked={!!swcConfig.jsc.minify.mangle}
+              isChecked={!!swcConfig.jsc?.minify?.mangle}
               onChange={handleToggleMangle}
             />
             <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
               Mangle
             </FormLabel>
-            {swcConfig.jsc.minify.mangle && <MangleOptionsModal />}
+            {swcConfig.jsc?.minify?.mangle && <MangleOptionsModal />}
           </FormControl>
         </VStack>
         <ConfigEditorModal />

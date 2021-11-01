@@ -1,53 +1,5 @@
 import { atom } from 'jotai'
-
-export type SwcParserOptions =
-  | { syntax: 'ecmascript'; jsx: boolean }
-  | { syntax: 'typescript'; tsx: boolean }
-
-export interface CompressOptions {
-  arguments: boolean
-  arrows: boolean
-  booleans: boolean
-  booleans_as_integers: boolean
-  collapse_vars: boolean
-  comparisons: boolean
-  computed_props: boolean
-  conditionals: boolean
-  dead_code: boolean
-  directives: boolean
-  drop_console: boolean
-  drop_debugger: boolean
-  evaluate: boolean
-  expression: boolean
-  hoist_funs: boolean
-  hoist_props: boolean
-  hoist_vars: boolean
-  if_return: boolean
-  join_vars: boolean
-  keep_classnames: boolean
-  keep_fargs: boolean
-  keep_fnames: boolean
-  keep_infinity: boolean
-  loops: boolean
-  negate_iife: boolean
-  properties: boolean
-  reduce_funcs: boolean
-  reduce_vars: boolean
-  side_effects: boolean
-  switches: boolean
-  typeofs: boolean
-  unsafe: boolean
-  unsafe_arrows: boolean
-  unsafe_comps: boolean
-  unsafe_Function: boolean
-  unsafe_math: boolean
-  unsafe_symbols: boolean
-  unsafe_methods: boolean
-  unsafe_proto: boolean
-  unsafe_regexp: boolean
-  unsafe_undefined: boolean
-  unused: boolean
-}
+import type { CompressOptions, Config, MangleOptions } from './swc'
 
 export const defaultCompressOptions: CompressOptions = {
   arguments: false,
@@ -94,15 +46,6 @@ export const defaultCompressOptions: CompressOptions = {
   unused: true,
 }
 
-export interface MangleOptions {
-  toplevel: boolean
-  keep_classnames: boolean
-  keep_fnames: boolean
-  keep_private_props: boolean
-  ie8: boolean
-  safari10: boolean
-}
-
 export const defaultMangleOptions: MangleOptions = {
   toplevel: false,
   keep_classnames: false,
@@ -114,24 +57,7 @@ export const defaultMangleOptions: MangleOptions = {
 
 export const codeAtom = atom('')
 
-export type SwcConfig = {
-  jsc: {
-    parser: SwcParserOptions
-    target: string
-    loose: boolean
-    minify: {
-      compress: CompressOptions | false
-      mangle: MangleOptions | false
-    }
-  }
-  module: {
-    type: string
-  }
-  minify: boolean
-  isModule: boolean
-}
-
-export const swcConfigAtom = atom<SwcConfig>({
+export const swcConfigAtom = atom<Config>({
   jsc: {
     parser: {
       syntax: 'ecmascript',

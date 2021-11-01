@@ -16,12 +16,12 @@ import {
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { swcConfigAtom } from '../state'
-import type { MangleOptions } from '../state'
+import type { MangleOptions } from '../swc'
 
 export default function MangleOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
-  const [options, setOptions] = useState<MangleOptions | false>(
-    swcConfig.jsc.minify.mangle
+  const [options, setOptions] = useState<MangleOptions | boolean | undefined>(
+    swcConfig.jsc?.minify?.mangle
   )
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -34,12 +34,12 @@ export default function MangleOptionsModal() {
   }
 
   const handleOpen = () => {
-    setOptions(swcConfig.jsc.minify.mangle)
+    setOptions(swcConfig.jsc?.minify?.mangle)
     onOpen()
   }
 
   const handleClose = () => {
-    setOptions(swcConfig.jsc.minify.mangle)
+    setOptions(swcConfig.jsc?.minify?.mangle)
     onClose()
   }
 
@@ -52,7 +52,9 @@ export default function MangleOptionsModal() {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     setOptions((options) =>
-      options ? { ...options, [key]: event.target.checked } : options
+      options && typeof options === 'object'
+        ? { ...options, [key]: event.target.checked }
+        : options
     )
   }
 

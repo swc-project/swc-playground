@@ -1,26 +1,250 @@
-import type * as swc from '@swc/wasm-web'
 import { atom } from 'jotai'
 import { Ok, Err } from 'ts-results'
 import type { Result } from 'ts-results'
 import type { JSONSchema6 } from 'json-schema'
-import type { SwcConfig } from './state'
 
-type swc = typeof swc
+interface SwcModule {
+  default(): Promise<unknown>
+  parseSync(code: string, options: ParserOptions): AST
+  transformSync(code: string, options: Config): TransformationOutput
+}
+
+export interface Config {
+  jsc: {
+    parser: ParserOptions
+    target?: JscTarget
+    loose?: boolean
+    minify?: {
+      compress?: boolean | CompressOptions
+      mangle?: boolean | MangleOptions
+      format?: Record<string, unknown>
+      ecma?: number | string
+      keepClassnames?: boolean
+      keepFnames?: boolean
+      module?: boolean
+      safari10?: boolean
+      toplevel?: boolean
+      sourceMap?: {
+        filename?: string
+        url?: string
+        root?: string
+        content?: string
+      }
+      outputPath?: string
+      inlineSourcesContent?: boolean
+    }
+    transform?: TransformOptions
+    externalHelpers?: boolean
+    keepClassNames?: boolean
+    baseUrl?: string
+    paths?: Record<string, string[]>
+  }
+  module?: ModuleOptions
+  minify?: boolean
+  isModule?: boolean
+  sourceMaps?: boolean | 'inline'
+  inlineSourcesContent?: boolean
+  experimental?: Record<never, never>
+  filename?: string
+}
+
+export type ParserOptions =
+  | {
+      syntax: 'ecmascript'
+      jsx?: boolean
+      numericSeparator?: boolean
+      classPrivateProperty?: boolean
+      privateMethod?: boolean
+      classProperty?: boolean
+      functionBind?: boolean
+      decorators?: boolean
+      decoratorsBeforeExport?: boolean
+      exportDefaultFrom?: boolean
+      exportNamespaceFrom?: boolean
+      dynamicImport?: boolean
+      nullishCoalescing?: boolean
+      optionalChaining?: boolean
+      importMeta?: boolean
+      topLevelAwait?: boolean
+      importAssertions?: boolean
+      staticBlocks?: boolean
+      privateInObject?: boolean
+    }
+  | {
+      syntax: 'typescript'
+      tsx?: boolean
+      decorators?: boolean
+      dynamicImport?: boolean
+      importAssertions?: boolean
+    }
+
+export type JscTarget =
+  | 'es5'
+  | 'es2015'
+  | 'es2016'
+  | 'es2017'
+  | 'es2018'
+  | 'es2019'
+  | 'es2020'
+  | 'es2021'
+
+export type ModuleOptions =
+  | {
+      type: 'es6'
+      strict?: boolean
+      strictMode?: boolean
+      lazy?: boolean
+      noInterop?: boolean
+    }
+  | {
+      type: 'commonjs'
+      strict?: boolean
+      strictMode?: boolean
+      lazy?: boolean
+      noInterop?: boolean
+    }
+  | {
+      type: 'amd'
+      moduleId?: string
+      strict?: boolean
+      strictMode?: boolean
+      lazy?: boolean
+      noInterop?: boolean
+    }
+  | {
+      type: 'umd'
+      globals?: Record<string, string>
+      strict?: boolean
+      strictMode?: boolean
+      lazy?: boolean
+      noInterop?: boolean
+    }
+
+export interface CompressOptions {
+  arguments?: boolean
+  arrows?: boolean
+  booleans?: boolean
+  booleans_as_integers?: boolean
+  collapse_vars?: boolean
+  comparisons?: boolean
+  computed_props?: boolean
+  conditionals?: boolean
+  dead_code?: boolean
+  defaults?: boolean
+  directives?: boolean
+  drop_console?: boolean
+  drop_debugger?: boolean
+  ecma?: number | string
+  evaluate?: boolean
+  expression?: boolean
+  global_defs?: Record<string, unknown>
+  hoist_funs?: boolean
+  hoist_props?: boolean
+  hoist_vars?: boolean
+  ie8?: boolean
+  if_return?: boolean
+  inline?: boolean | number
+  join_vars?: boolean
+  keep_classnames?: boolean
+  keep_fargs?: boolean
+  keep_fnames?: boolean
+  keep_infinity?: boolean
+  loops?: boolean
+  negate_iife?: boolean
+  passes?: number
+  properties?: boolean
+  pure_getters?: boolean | 'strict' | string
+  pure_funcs?: string[]
+  reduce_funcs?: boolean
+  reduce_vars?: boolean
+  sequences?: boolean | number
+  side_effects?: boolean
+  switches?: boolean
+  top_retain?: string[] | string | null
+  toplevel?: boolean | string
+  typeofs?: boolean
+  unsafe?: boolean
+  unsafe_arrows?: boolean
+  unsafe_comps?: boolean
+  unsafe_Function?: boolean
+  unsafe_math?: boolean
+  unsafe_symbols?: boolean
+  unsafe_methods?: boolean
+  unsafe_proto?: boolean
+  unsafe_regexp?: boolean
+  unsafe_undefined?: boolean
+  unused?: boolean
+  module?: boolean
+}
+
+export interface MangleOptions {
+  props?: {
+    reserved?: string[]
+    undeclared?: boolean
+    regex?: null | string
+  }
+  toplevel?: boolean
+  keep_classnames?: boolean
+  keep_fnames?: boolean
+  keep_private_props?: boolean
+  ie8?: boolean
+  safari10?: boolean
+}
+
+export interface TransformOptions {
+  react?: {
+    runtime?: 'automatic' | 'classic'
+    importSource?: string
+    pragma?: string
+    pragmaFrag?: string
+    throwIfNamespace?: boolean
+    development?: boolean
+    useSpread?: boolean
+    refresh?: {
+      refreshReg?: string
+      refreshSig?: string
+      emitFullSignatures?: boolean
+    }
+  }
+  constModules?: {
+    globals?: Record<string, Record<string, string>>
+  }
+  optimizer?: {
+    globals?: {
+      vars?: Record<string, string>
+      envs?: string[] | Record<string, string>
+      typeofs?: Record<string, string>
+    }
+    simplify?: boolean
+    jsonify?: {
+      minCost?: number
+    }
+  }
+  legacyDecorator?: boolean
+  decoratorMetadata?: boolean
+}
+
+export interface AST {
+  type: 'Module' | 'Script'
+  body: unknown
+}
+
+export interface TransformationOutput {
+  code: string
+}
 
 export const swcVersionAtom = atom(
   new URLSearchParams(location.search).get('version') ?? '1.2.102'
 )
 
-export async function loadSwc(version: string): Promise<swc> {
-  const module: swc = await import(
+export async function loadSwc(version: string): Promise<SwcModule> {
+  const module: SwcModule = await import(
     /* webpackIgnore: true */
     `https://cdn.jsdelivr.net/npm/@swc/wasm-web@${version}/wasm.js`
   )
   await module.default()
   return module
 }
-
-export type TransformationOutput = { code: string }
 
 export type TransformationResult = Result<TransformationOutput, string>
 
@@ -32,8 +256,8 @@ export function transform({
 }: {
   code: string
   fileName: string
-  config: SwcConfig
-  swc: swc
+  config: Config
+  swc: SwcModule
 }): TransformationResult {
   try {
     return Ok(swc.transformSync(code, { ...config, filename: fileName }))
@@ -41,8 +265,6 @@ export function transform({
     return handleSwcError(error)
   }
 }
-
-export type AST = { type: 'Module' | 'Script'; body: unknown }
 
 export type ParserResult = Result<AST, string>
 
@@ -52,8 +274,8 @@ export function parse({
   swc,
 }: {
   code: string
-  config: SwcConfig
-  swc: swc
+  config: Config
+  swc: SwcModule
 }): ParserResult {
   try {
     return Ok(swc.parseSync(code, config.jsc.parser))
@@ -330,6 +552,7 @@ export const configSchema: JSONSchema6 = {
                   },
                 },
               },
+              additionalProperties: false,
             },
             optimizer: {
               type: 'object',
@@ -386,6 +609,7 @@ export const configSchema: JSONSchema6 = {
       anyOf: [
         {
           type: 'object',
+          required: ['type'],
           properties: {
             type: {
               type: 'string',
@@ -400,6 +624,7 @@ export const configSchema: JSONSchema6 = {
         },
         {
           type: 'object',
+          required: ['type'],
           properties: {
             type: {
               type: 'string',
@@ -414,6 +639,7 @@ export const configSchema: JSONSchema6 = {
         },
         {
           type: 'object',
+          required: ['type'],
           properties: {
             type: {
               type: 'string',
@@ -429,6 +655,7 @@ export const configSchema: JSONSchema6 = {
         },
         {
           type: 'object',
+          required: ['type'],
           properties: {
             type: {
               type: 'string',

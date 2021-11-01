@@ -16,12 +16,12 @@ import {
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { swcConfigAtom } from '../state'
-import type { CompressOptions } from '../state'
+import type { CompressOptions } from '../swc'
 
 export default function CompressOptionsModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
-  const [options, setOptions] = useState<CompressOptions | false>(
-    swcConfig.jsc.minify.compress
+  const [options, setOptions] = useState<CompressOptions | boolean | undefined>(
+    swcConfig.jsc?.minify?.compress
   )
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -37,12 +37,12 @@ export default function CompressOptionsModal() {
   }
 
   const handleOpen = () => {
-    setOptions(swcConfig.jsc.minify.compress)
+    setOptions(swcConfig.jsc?.minify?.compress)
     onOpen()
   }
 
   const handleClose = () => {
-    setOptions(swcConfig.jsc.minify.compress)
+    setOptions(swcConfig.jsc?.minify?.compress)
     onClose()
   }
 
@@ -55,7 +55,9 @@ export default function CompressOptionsModal() {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     setOptions((options) =>
-      options ? { ...options, [key]: event.target.checked } : options
+      options && typeof options === 'object'
+        ? { ...options, [key]: event.target.checked }
+        : options
     )
   }
 
