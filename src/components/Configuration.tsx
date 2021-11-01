@@ -17,7 +17,7 @@ import {
   defaultMangleOptions,
   swcConfigAtom,
 } from '../state'
-import type { JscTarget, ModuleOptions, ParserOptions } from '../swc'
+import type { EsVersion, ModuleOptions, ParserOptions } from '../swc'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
@@ -72,7 +72,7 @@ export default function Configuration() {
       ...config,
       jsc: {
         ...config.jsc,
-        target: event.target.value as JscTarget,
+        target: event.target.value as EsVersion,
       },
     }))
   }

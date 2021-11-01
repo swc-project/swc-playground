@@ -12,7 +12,7 @@ interface SwcModule {
 export interface Config {
   jsc: {
     parser: ParserOptions
-    target?: JscTarget
+    target?: EsVersion
     loose?: boolean
     minify?: {
       compress?: boolean | CompressOptions
@@ -78,7 +78,7 @@ export type ParserOptions =
       importAssertions?: boolean
     }
 
-export type JscTarget =
+export type EsVersion =
   | 'es5'
   | 'es2015'
   | 'es2016'
