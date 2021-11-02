@@ -17,7 +17,7 @@ export default function HeaderBar() {
     >
       <img src={logoURL} alt="swc" width="120" />
       <Link
-        href="https://github.com/g-plane/swc-playground"
+        href="https://github.com/swc-project/swc-playground"
         isExternal
         display="flex"
         alignItems="center"
