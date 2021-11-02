@@ -1,6 +1,6 @@
 # 🎲 swc playground
 
-The playground of swc.
+The playground of swc. Visit [https://play.swc.rs/](https://play.swc.rs/) to try it out.
 
 ## ✨ Features
 
@@ -16,4 +16,4 @@ The playground of swc.
 
 MIT License
 
-Copyright (c) 2021-present Pig Fang
+Copyright (c) 2021-present [Pig Fang](https://github.com/g-plane)
