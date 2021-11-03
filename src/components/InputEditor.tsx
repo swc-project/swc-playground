@@ -2,14 +2,8 @@ import { useEffect, useRef } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  useToast,
-} from '@chakra-ui/react'
-import { HiShare } from 'react-icons/hi'
+import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
+import { CgShare } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom } from '../state'
@@ -145,7 +139,7 @@ export default function InputEditor({ output }: Props) {
         <Heading size="md" mb="8px">
           Input
         </Heading>
-        <Button size="xs" leftIcon={<HiShare />} onClick={handleShare}>
+        <Button size="xs" leftIcon={<CgShare />} onClick={handleShare}>
           Share
         </Button>
       </Flex>

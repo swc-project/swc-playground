@@ -7,8 +7,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { HiExternalLink } from 'react-icons/hi'
-import { CgMoon, CgSun } from 'react-icons/cg'
+import { CgExternal, CgMoon, CgSun } from 'react-icons/cg'
 
 const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
 
@@ -41,7 +40,7 @@ export default function HeaderBar() {
         >
           GitHub
           <Box display="inline-block" ml="1px">
-            <HiExternalLink />
+            <CgExternal />
           </Box>
         </Link>
       </HStack>
