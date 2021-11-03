@@ -40,6 +40,7 @@ export default (_: Record<string, string>, argv: Record<string, string>) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
+        favicon: path.join(__dirname, 'assets', 'swc.svg'),
       }),
     ],
     resolve: {
