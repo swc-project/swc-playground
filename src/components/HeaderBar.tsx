@@ -13,7 +13,7 @@ const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
 
 export default function HeaderBar() {
   const { colorMode, toggleColorMode } = useColorMode()
-  const bg = useColorModeValue('gary.100', 'gray.900')
+  const bg = useColorModeValue('gray.100', 'gray.900')
   const borderColor = useColorModeValue('gray.300', 'gray.700')
 
   return (
