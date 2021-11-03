@@ -10,7 +10,7 @@ The playground of swc. Visit [https://play.swc.rs/](https://play.swc.rs/) to try
 - Choose different versions of swc with an option.
 - Configure swc by editing JSON manually with IntelliSense.
 - Show AST of input code.
-- Dark mode. (Not implemented yet.)
+- Dark mode.
 
 ## 📜 License
 
