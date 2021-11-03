@@ -21,11 +21,14 @@ import type { EsVersion, ModuleOptions, ParserOptions } from '../swc'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
+import { useBgColor, useBorderColor } from '../utils'
 
 const STORAGE_KEY = 'v1.config'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const bg = useBgColor()
+  const borderColor = useBorderColor()
 
   useEffect(() => {
     const url = new URL(location.href)
@@ -157,8 +160,8 @@ export default function Configuration() {
       <Flex
         direction="column"
         p="2"
-        bg="white"
-        borderColor="gray.400"
+        bg={bg}
+        borderColor={borderColor}
         borderWidth="1px"
       >
         <VStack spacing="2">

@@ -1,14 +1,14 @@
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import HeaderBar from './components/HeaderBar'
 import Workspace from './components/Workspace'
 
 export default function App() {
+  const bg = useColorModeValue('gray.50', 'gray.800')
+
   return (
-    <ChakraProvider>
-      <Box minHeight="100vh" bg="gray.50">
-        <HeaderBar />
-        <Workspace />
-      </Box>
-    </ChakraProvider>
+    <Box minHeight="100vh" bg={bg}>
+      <HeaderBar />
+      <Workspace />
+    </Box>
   )
 }

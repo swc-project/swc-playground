@@ -2,12 +2,23 @@ import { useEffect, useRef } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  useToast,
+} from '@chakra-ui/react'
 import { HiShare } from 'react-icons/hi'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom } from '../state'
-import { editorOptions, parseSWCError } from '../utils'
+import {
+  editorOptions,
+  parseSWCError,
+  useBorderColor,
+  useMonacoThemeValue,
+} from '../utils'
 import { swcVersionAtom } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
 
@@ -21,6 +32,8 @@ export default function InputEditor({ output }: Props) {
   const [code, setCode] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
   const [swcVersion] = useAtom(swcVersionAtom)
+  const monacoTheme = useMonacoThemeValue()
+  const borderColor = useBorderColor()
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const toast = useToast()
@@ -136,11 +149,17 @@ export default function InputEditor({ output }: Props) {
           Share
         </Button>
       </Flex>
-      <Box width="full" height="full" borderColor="gray.400" borderWidth="1px">
+      <Box
+        width="full"
+        height="full"
+        borderColor={borderColor}
+        borderWidth="1px"
+      >
         <Editor
           value={code}
           language={language}
           defaultLanguage="javascript"
+          theme={monacoTheme}
           options={editorOptions}
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}

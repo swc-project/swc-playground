@@ -3,7 +3,12 @@ import type { ChangeEvent } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { Box, Flex, Heading, Select } from '@chakra-ui/react'
-import { editorOptions as sharedEditorOptions } from '../utils'
+import {
+  editorOptions as sharedEditorOptions,
+  useBgColor,
+  useBorderColor,
+  useMonacoThemeValue,
+} from '../utils'
 import type {
   ParserResult,
   TransformationOutput,
@@ -42,6 +47,9 @@ export default function OutputEditor({
   viewMode,
   onViewModeChange,
 }: Props) {
+  const borderColor = useBorderColor()
+  const bg = useBgColor()
+  const monacoTheme = useMonacoThemeValue()
   const monaco = useMonaco()
 
   useEffect(() => {
@@ -78,7 +86,7 @@ export default function OutputEditor({
           <Select
             size="xs"
             ml="1"
-            bg="white"
+            bg={bg}
             value={viewMode}
             onChange={handleViewModeChange}
           >
@@ -87,12 +95,13 @@ export default function OutputEditor({
           </Select>
         </Flex>
       </Flex>
-      <Box height="full" borderColor="gray.400" borderWidth="1px">
+      <Box height="full" borderColor={borderColor} borderWidth="1px">
         <Editor
           value={outputContent}
           language={editorLanguage}
           defaultLanguage="javascript"
           path={viewMode === 'code' ? 'output.js' : 'output.json'}
+          theme={monacoTheme}
           options={editorOptions}
         />
       </Box>

@@ -77,6 +77,7 @@ export default function Workspace() {
       height="88vh"
       mt="3"
       mx={[4, 4, 8]}
+      as="main"
     >
       <VStack spacing="4" alignItems="unset" width={['full', 'full', '16vw']}>
         <Configuration />

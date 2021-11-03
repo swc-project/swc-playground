@@ -1,9 +1,22 @@
-import { Box, Flex, Link } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Link,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import { HiExternalLink } from 'react-icons/hi'
+import { CgMoon, CgSun } from 'react-icons/cg'
 
 const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
 
 export default function HeaderBar() {
+  const { colorMode, toggleColorMode } = useColorMode()
+  const bg = useColorModeValue('gary.100', 'gray.900')
+  const borderColor = useColorModeValue('gray.300', 'gray.700')
+
   return (
     <Flex
       as="header"
@@ -11,22 +24,27 @@ export default function HeaderBar() {
       h="56px"
       px={[2, 2, 5]}
       py="2"
-      bg="gray.100"
+      bg={bg}
       borderBottomWidth="1px"
-      borderBottomColor="gray.300"
+      borderBottomColor={borderColor}
     >
       <img src={logoURL} alt="swc" width="120" />
-      <Link
-        href="https://github.com/swc-project/swc-playground"
-        isExternal
-        display="flex"
-        alignItems="center"
-      >
-        GitHub
-        <Box display="inline-block" ml="1px">
-          <HiExternalLink />
-        </Box>
-      </Link>
+      <HStack spacing="4">
+        <Button variant="ghost" onClick={toggleColorMode}>
+          {colorMode === 'dark' ? <CgMoon /> : <CgSun />}
+        </Button>
+        <Link
+          href="https://github.com/swc-project/swc-playground"
+          isExternal
+          display="flex"
+          alignItems="center"
+        >
+          GitHub
+          <Box display="inline-block" ml="1px">
+            <HiExternalLink />
+          </Box>
+        </Link>
+      </HStack>
     </Flex>
   )
 }

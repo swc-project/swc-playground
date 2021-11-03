@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { HiExternalLink } from 'react-icons/hi'
 import { swcVersionAtom } from '../swc'
+import { useBgColor, useBorderColor } from '../utils'
 
 type PackageInfo = {
   tags: {
@@ -33,6 +34,8 @@ interface Props {
 export default function VersionSelect({ isLoadingSwc }: Props) {
   const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
   const { data, error } = useSWR('@swc/wasm-web', fetchSwcVersions)
+  const bg = useBgColor()
+  const borderColor = useBorderColor()
 
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>
@@ -50,8 +53,8 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
       <Flex
         direction="column"
         p="2"
-        bg="white"
-        borderColor="gray.400"
+        bg={bg}
+        borderColor={borderColor}
         borderWidth="1px"
       >
         {data ? (

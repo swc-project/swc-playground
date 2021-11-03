@@ -16,7 +16,10 @@ import {
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { editorOptions as sharedEditorOptions } from '../utils'
+import {
+  editorOptions as sharedEditorOptions,
+  useMonacoThemeValue,
+} from '../utils'
 import { swcConfigAtom } from '../state'
 import { configSchema } from '../swc'
 
@@ -30,6 +33,7 @@ export default function ConfigEditorModal() {
   const [editingConfig, setEditingConfig] = useState(
     JSON.stringify(swcConfig, null, 2)
   )
+  const monacoTheme = useMonacoThemeValue()
   const monaco = useMonaco()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
@@ -104,6 +108,7 @@ export default function ConfigEditorModal() {
               defaultLanguage="json"
               path=".swcrc"
               options={editorOptions}
+              theme={monacoTheme}
               height="40vh"
               onChange={handleEditorChange}
             />
