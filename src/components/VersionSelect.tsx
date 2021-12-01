@@ -79,7 +79,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
           )}
         </Flex>
         <Flex px="2">
-          <Text>Official links:</Text>
+          <Text>More links:</Text>
           <HStack spacing="4" ml="1">
             <Link
               href="https://swc.rs/"
