@@ -41,6 +41,7 @@ export interface Config {
   }
   module?: ModuleOptions
   minify?: boolean
+  env?: EnvOptions
   isModule?: boolean
   sourceMaps?: boolean | 'inline'
   inlineSourcesContent?: boolean
@@ -222,6 +223,34 @@ export interface TransformOptions {
   }
   legacyDecorator?: boolean
   decoratorMetadata?: boolean
+}
+
+export interface EnvOptions {
+  targets?:
+    | string
+    | string[]
+    | Record<
+        | 'chrome'
+        | 'opera'
+        | 'edge'
+        | 'firefox'
+        | 'safari'
+        | 'ie'
+        | 'ios'
+        | 'android'
+        | 'node'
+        | 'electron',
+        string
+      >
+  mode?: 'usage' | 'entry'
+  skip?: string[]
+  dynamicImport?: boolean
+  loose?: boolean
+  include?: string[]
+  exclude?: string[]
+  coreJs?: 2 | 3
+  shippedProposals?: boolean
+  forceAllTransforms?: boolean
 }
 
 export interface AST {
@@ -679,6 +708,42 @@ export const configSchema: JSONSchema6 = {
     },
     isModule: {
       type: 'boolean',
+    },
+    env: {
+      type: 'object',
+      properties: {
+        targets: {
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' } },
+            {
+              type: 'object',
+              properties: {
+                chrome: { type: 'string' },
+                opera: { type: 'string' },
+                edge: { type: 'string' },
+                firefox: { type: 'string' },
+                safari: { type: 'string' },
+                ie: { type: 'string' },
+                ios: { type: 'string' },
+                android: { type: 'string' },
+                node: { type: 'string' },
+                electron: { type: 'string' },
+              },
+            },
+          ],
+        },
+        mode: { type: 'string', enum: ['usage', 'entry'] },
+        skip: { type: 'array', items: { type: 'string' } },
+        dynamicImport: { type: 'boolean' },
+        loose: { type: 'boolean' },
+        include: { type: 'array', items: { type: 'string' } },
+        exclude: { type: 'array', items: { type: 'string' } },
+        coreJs: { type: 'integer', enum: [2, 3] },
+        shippedProposals: { type: 'boolean' },
+        forceAllTransforms: { type: 'boolean' },
+      },
+      additionalProperties: false,
     },
     sourceMaps: {
       anyOf: [{ type: 'boolean' }, { type: 'string', enum: ['inline'] }],
