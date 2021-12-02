@@ -30,7 +30,7 @@
   "devDependencies": {
     "@gplane/tsconfig": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
-    "@swc/core": "^1.2.103",
+    "@swc/core": "^1.2.117",
     "@types/json-schema": "^7.0.9",
     "@types/pako": "^1.0.2",
     "@types/react": "^17.0.31",
