@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import type { CompressOptions, Config, MangleOptions } from './swc'
+import type { CompressOptions, Config, EnvOptions, MangleOptions } from './swc'
 
 export const defaultCompressOptions: CompressOptions = {
   arguments: false,
@@ -53,6 +53,10 @@ export const defaultMangleOptions: MangleOptions = {
   keep_private_props: false,
   ie8: false,
   safari10: false,
+}
+
+export const defaultEnvOptions: EnvOptions = {
+  targets: '',
 }
 
 export const codeAtom = atom('')

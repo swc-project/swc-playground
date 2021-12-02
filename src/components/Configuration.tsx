@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Input,
   Select,
   Switch,
   VStack,
@@ -14,6 +15,7 @@ import { Base64 } from 'js-base64'
 import { ungzip } from 'pako'
 import {
   defaultCompressOptions,
+  defaultEnvOptions,
   defaultMangleOptions,
   swcConfigAtom,
 } from '../state'
@@ -152,6 +154,22 @@ export default function Configuration() {
     }))
   }
 
+  const handleToggleEnvTargets = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const options = event.target.checked ? defaultEnvOptions : undefined
+    setSwcConfig((config) => ({ ...config, env: options }))
+  }
+
+  const handleEnvTargetsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSwcConfig((config) => ({
+      ...config,
+      env: { ...config.env, targets: event.target.value },
+    }))
+  }
+
   return (
     <Flex direction="column">
       <Heading size="md" mb="8px">
@@ -176,7 +194,7 @@ export default function Configuration() {
               <option value="typescript">TypeScript</option>
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isDisabled={swcConfig.env?.targets != null}>
             <FormLabel htmlFor="swc-target">Target</FormLabel>
             <Select
               id="swc-target"
@@ -283,6 +301,25 @@ export default function Configuration() {
             </FormLabel>
             {swcConfig.jsc?.minify?.mangle && <MangleOptionsModal />}
           </FormControl>
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="swc-env-targets"
+              isChecked={swcConfig.env?.targets != null}
+              onChange={handleToggleEnvTargets}
+            />
+            <FormLabel htmlFor="swc-env-targets" ml="2" mb="0">
+              Env Targets
+            </FormLabel>
+          </FormControl>
+          {typeof swcConfig.env?.targets === 'string' && (
+            <FormControl display="flex" alignItems="center">
+              <Input
+                display="block"
+                value={swcConfig.env.targets}
+                onChange={handleEnvTargetsChange}
+              />
+            </FormControl>
+          )}
         </VStack>
         <ConfigEditorModal />
       </Flex>
