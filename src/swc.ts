@@ -53,20 +53,10 @@ export type ParserOptions =
   | {
       syntax: 'ecmascript'
       jsx?: boolean
-      numericSeparator?: boolean
-      classPrivateProperty?: boolean
-      privateMethod?: boolean
-      classProperty?: boolean
       functionBind?: boolean
       decorators?: boolean
       decoratorsBeforeExport?: boolean
       exportDefaultFrom?: boolean
-      exportNamespaceFrom?: boolean
-      dynamicImport?: boolean
-      nullishCoalescing?: boolean
-      optionalChaining?: boolean
-      importMeta?: boolean
-      topLevelAwait?: boolean
       importAssertions?: boolean
       staticBlocks?: boolean
       privateInObject?: boolean
@@ -75,8 +65,6 @@ export type ParserOptions =
       syntax: 'typescript'
       tsx?: boolean
       decorators?: boolean
-      dynamicImport?: boolean
-      importAssertions?: boolean
     }
 
 export type EsVersion =
@@ -332,7 +320,7 @@ export const configSchema: JSONSchema6 = {
         parser: {
           type: 'object',
           required: ['syntax'],
-          anyOf: [
+          oneOf: [
             {
               type: 'object',
               properties: {
@@ -341,20 +329,10 @@ export const configSchema: JSONSchema6 = {
                   enum: ['ecmascript'],
                 },
                 jsx: { type: 'boolean' },
-                numericSeparator: { type: 'boolean' },
-                classPrivateProperty: { type: 'boolean' },
-                privateMethod: { type: 'boolean' },
-                classProperty: { type: 'boolean' },
                 functionBind: { type: 'boolean' },
                 decorators: { type: 'boolean' },
                 decoratorsBeforeExport: { type: 'boolean' },
                 exportDefaultFrom: { type: 'boolean' },
-                exportNamespaceFrom: { type: 'boolean' },
-                dynamicImport: { type: 'boolean' },
-                nullishCoalescing: { type: 'boolean' },
-                optionalChaining: { type: 'boolean' },
-                importMeta: { type: 'boolean' },
-                topLevelAwait: { type: 'boolean' },
                 importAssertions: { type: 'boolean' },
                 staticBlocks: { type: 'boolean' },
                 privateInObject: { type: 'boolean' },
@@ -370,8 +348,6 @@ export const configSchema: JSONSchema6 = {
                 },
                 tsx: { type: 'boolean' },
                 decorators: { type: 'boolean' },
-                dynamicImport: { type: 'boolean' },
-                importAssertions: { type: 'boolean' },
               },
               additionalProperties: false,
             },
