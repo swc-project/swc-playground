@@ -210,6 +210,7 @@ export default function Configuration() {
               <option value="es2019">ES2019</option>
               <option value="es2020">ES2020</option>
               <option value="es2021">ES2021</option>
+              <option value="es2022">ES2022</option>
             </Select>
           </FormControl>
           <FormControl>
