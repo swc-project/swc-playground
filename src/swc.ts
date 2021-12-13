@@ -76,6 +76,7 @@ export type EsVersion =
   | 'es2019'
   | 'es2020'
   | 'es2021'
+  | 'es2022'
 
 export type ModuleOptions =
   | {
@@ -364,6 +365,7 @@ export const configSchema: JSONSchema6 = {
             'es2019',
             'es2020',
             'es2021',
+            'es2022',
           ],
         },
         loose: { type: 'boolean' },
