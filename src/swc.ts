@@ -68,6 +68,7 @@ export type ParserOptions =
     }
 
 export type EsVersion =
+  | 'es3'
   | 'es5'
   | 'es2015'
   | 'es2016'
@@ -357,6 +358,7 @@ export const configSchema: JSONSchema6 = {
         target: {
           type: 'string',
           enum: [
+            'es3',
             'es5',
             'es2015',
             'es2016',
