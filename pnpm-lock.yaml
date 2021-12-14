@@ -22,7 +22,7 @@ specifiers:
   js-base64: ^3.7.2
   monaco-editor: ^0.29.1
   pako: ^2.0.4
-  prettier: ^2.4.1
+  prettier: ^2.5.1
   react: ^17.0.2
   react-dom: ^17.0.2
   react-icons: ^4.3.1
@@ -66,7 +66,7 @@ devDependencies:
   eslint: 7.32.0
   eslint-plugin-react-hooks: 4.2.0_eslint@7.32.0
   html-webpack-plugin: 5.5.0_webpack@5.59.1
-  prettier: 2.4.1
+  prettier: 2.5.1
   react-refresh: 0.10.0
   swc-loader: 0.1.15_@swc+core@1.2.117+webpack@5.59.1
   ts-node: 10.4.0_47db9001f14e4ace9b34241ab320dd3a
@@ -3920,8 +3920,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier/2.4.1:
-    resolution: {integrity: sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==}
+  /prettier/2.5.1:
+    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
