@@ -268,8 +268,7 @@ async function getSwcVersion() {
     } else {
       throw new Error("can't get the latest version of @swc/wasm-web")
     }
-  } catch (err) {
-    console.error(err)
+  } catch {
     return '1.2.115'
   }
 }
