@@ -258,11 +258,11 @@ export const swcVersionAtom = atom((async () => {
 
 async function getSwcVersion() {
   try {
-    const versionFromUrl = new URLSearchParams(location.search).get('version');
+    const versionFromUrl = new URLSearchParams(location.search).get('version')
     if (versionFromUrl) {
       return versionFromUrl
     }
-  const latestVersion = await getLatestVersion();
+  const latestVersion = await getLatestVersion()
   if (latestVersion) {
     return latestVersion
   } else {
@@ -283,7 +283,7 @@ export async function loadSwc(version: string): Promise<SwcModule> {
 }
 
 export async function getLatestVersion() {
-  const res = await fetch('https://data.jsdelivr.com/v1/package/npm/@swc/wasm-web');
+  const res = await fetch('https://data.jsdelivr.com/v1/package/npm/@swc/wasm-web')
   const data = await res.json()
   return data.tags.latest ?? ''
 }
