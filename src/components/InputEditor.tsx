@@ -29,21 +29,21 @@ function getReportIssueUrl({
   config: string
   playgroundLink: string
 }): string {
-  let reportUrl = `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
-
-  const inputCodeMarkdown = encodeURIComponent(
-    '```tsx\n' + inputCode + '\n```\n'
+  const reportUrl = new URL(
+    `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
   )
-  reportUrl += `&code=${inputCodeMarkdown}`
 
-  const configMarkdown = encodeURIComponent('```json\n' + config + '\n```\n')
-  reportUrl += `&config=${configMarkdown}`
+  const inputCodeMarkdown = '```tsx\n' + inputCode + '\n```\n'
+  reportUrl.searchParams.set('code', inputCodeMarkdown)
 
-  reportUrl += `&repro-link=${encodeURIComponent(playgroundLink)}`
+  const configMarkdown = '```json\n' + config + '\n```\n'
+  reportUrl.searchParams.set('config', configMarkdown)
 
-  reportUrl += `&version=${version}`
+  reportUrl.searchParams.set('repro-link', playgroundLink)
 
-  return reportUrl
+  reportUrl.searchParams.set('version', version)
+
+  return reportUrl.toString()
 }
 
 interface Props {
