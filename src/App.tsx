@@ -1,4 +1,5 @@
 import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Suspense } from 'react'
 import HeaderBar from './components/HeaderBar'
 import Workspace from './components/Workspace'
 
@@ -8,7 +9,9 @@ export default function App() {
   return (
     <Box minHeight="100vh" bg={bg}>
       <HeaderBar />
-      <Workspace />
+      <Suspense fallback={<div></div>}>
+        <Workspace />
+      </Suspense>
     </Box>
   )
 }

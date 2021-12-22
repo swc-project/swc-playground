@@ -252,10 +252,27 @@ export interface TransformationOutput {
   code: string
 }
 
-export const swcVersionAtom = atom(
-  new URLSearchParams(location.search).get('version') ?? '1.2.115'
-)
+export const swcVersionAtom = atom((async () => {
+  return await getSwcVersion()
+}))
 
+async function getSwcVersion() {
+  try {
+    const versionFromUrl = new URLSearchParams(location.search).get('version');
+    if (versionFromUrl) {
+      return versionFromUrl
+    }
+  const latestVersion = await getLatestVersion();
+  if (latestVersion) {
+    return latestVersion
+  } else {
+    throw new Error("can't get the latest version of @swc/wasm-web")
+  }
+  } catch (err) {
+    console.error(err)
+    return  '1.2.115'
+  }
+}
 export async function loadSwc(version: string): Promise<SwcModule> {
   const module: SwcModule = await import(
     /* webpackIgnore: true */
@@ -263,6 +280,12 @@ export async function loadSwc(version: string): Promise<SwcModule> {
   )
   await module.default()
   return module
+}
+
+export async function getLatestVersion() {
+  const res = await fetch('https://data.jsdelivr.com/v1/package/npm/@swc/wasm-web');
+  const data = await res.json()
+  return data.tags.latest ?? ''
 }
 
 export type TransformationResult = Result<TransformationOutput, string>
