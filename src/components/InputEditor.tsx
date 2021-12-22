@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react'
-import { CgShare } from 'react-icons/cg'
+import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
+import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
 import { codeAtom, swcConfigAtom } from '../state'
@@ -17,6 +17,34 @@ import { swcVersionAtom } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
+
+function getReportIssueUrl({
+  inputCode,
+  version,
+  config,
+  playgroundLink,
+}: {
+  inputCode: string
+  version: string
+  config: string
+  playgroundLink: string
+}): string {
+  const reportUrl = new URL(
+    `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
+  )
+
+  const inputCodeMarkdown = '```tsx\n' + inputCode + '\n```\n'
+  reportUrl.searchParams.set('code', inputCodeMarkdown)
+
+  const configMarkdown = '```json\n' + config + '\n```\n'
+  reportUrl.searchParams.set('config', configMarkdown)
+
+  reportUrl.searchParams.set('repro-link', playgroundLink)
+
+  reportUrl.searchParams.set('version', version)
+
+  return reportUrl.toString()
+}
 
 interface Props {
   output: TransformationResult | ParserResult
@@ -84,6 +112,16 @@ export default function InputEditor({ output }: Props) {
     localStorage.setItem(STORAGE_KEY, code)
   }, [code])
 
+  const shareUrl = useMemo(() => {
+    const url = new URL(location.href)
+    url.searchParams.set('version', swcVersion)
+    const encodedInput = Base64.fromUint8Array(gzip(code))
+    url.searchParams.set('code', encodedInput)
+    const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
+    url.searchParams.set('config', encodedConfig)
+    return url.toString()
+  }, [code, swcConfig, swcVersion])
+
   const handleShare = async () => {
     if (!navigator.clipboard) {
       toast({
@@ -97,16 +135,8 @@ export default function InputEditor({ output }: Props) {
       return
     }
 
-    const url = new URL(location.href)
-    url.searchParams.set('version', swcVersion)
-    const encodedInput = Base64.fromUint8Array(gzip(code))
-    url.searchParams.set('code', encodedInput)
-    const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
-    url.searchParams.set('config', encodedConfig)
-
-    const fullURL = url.toString()
-    window.history.replaceState(null, '', fullURL)
-    await navigator.clipboard.writeText(fullURL)
+    window.history.replaceState(null, '', shareUrl)
+    await navigator.clipboard.writeText(shareUrl)
     toast({
       title: 'URL is copied to clipboard.',
       status: 'success',
@@ -114,6 +144,19 @@ export default function InputEditor({ output }: Props) {
       position: 'top',
       isClosable: true,
     })
+  }
+
+  const handleOpenIssue = () => {
+    window.open(
+      getReportIssueUrl({
+        inputCode: code,
+        version: swcVersion,
+        config: JSON.stringify(swcConfig, null, 2),
+        playgroundLink: shareUrl,
+      }),
+      '_blank',
+      'noopener'
+    )
   }
 
   const handleEditorDidMount = (instance: editor.IStandaloneCodeEditor) => {
@@ -139,9 +182,18 @@ export default function InputEditor({ output }: Props) {
         <Heading size="md" mb="8px">
           Input
         </Heading>
-        <Button size="xs" leftIcon={<CgShare />} onClick={handleShare}>
-          Share
-        </Button>
+        <HStack spacing="10px">
+          <Button
+            size="xs"
+            leftIcon={<CgFileDocument />}
+            onClick={handleOpenIssue}
+          >
+            Report Issue
+          </Button>
+          <Button size="xs" leftIcon={<CgShare />} onClick={handleShare}>
+            Share
+          </Button>
+        </HStack>
       </Flex>
       <Box
         width="full"
