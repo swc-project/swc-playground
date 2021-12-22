@@ -287,7 +287,7 @@ export async function getLatestVersion() {
     'https://data.jsdelivr.com/v1/package/npm/@swc/wasm-web'
   )
   const data = await res.json()
-  return data.tags.latest ?? ''
+  return data.tags.latest
 }
 
 export type TransformationResult = Result<TransformationOutput, string>
