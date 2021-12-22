@@ -1,4 +1,4 @@
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Box, CircularProgress, useColorModeValue } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import HeaderBar from './components/HeaderBar'
 import Workspace from './components/Workspace'
@@ -9,7 +9,7 @@ export default function App() {
   return (
     <Box minHeight="100vh" bg={bg}>
       <HeaderBar />
-      <Suspense fallback={<div></div>}>
+      <Suspense fallback={<CircularProgress isIndeterminate mb="3" />}>
         <Workspace />
       </Suspense>
     </Box>
