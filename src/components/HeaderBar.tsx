@@ -27,7 +27,9 @@ export default function HeaderBar() {
       borderBottomWidth="1px"
       borderBottomColor={borderColor}
     >
-      <img src={logoURL} alt="swc" width="120" />
+      <a href="http://swc.rs" target="_blank" rel="noopener noreferrer">
+        <img src={logoURL} alt="swc" width="120" />
+      </a>
       <HStack spacing="4">
         <Button variant="ghost" onClick={toggleColorMode}>
           {colorMode === 'dark' ? <CgMoon /> : <CgSun />}
