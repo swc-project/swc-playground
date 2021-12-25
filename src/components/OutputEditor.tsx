@@ -32,7 +32,7 @@ function stringifyOutput(output: TransformationResult | ParserResult): string {
 interface Props {
   output: TransformationResult | ParserResult
   viewMode: string
-  onViewModeChange(viewMode: string): void
+  onViewModeChange(viewMode: 'ast' | 'code'): void
 }
 
 const editorOptions: editor.IStandaloneEditorConstructionOptions = {
@@ -61,7 +61,7 @@ export default function OutputEditor({
   }, [monaco])
 
   const handleViewModeChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    onViewModeChange(event.target.value)
+    onViewModeChange(event.target.value as 'ast' | 'code')
   }
 
   const outputContent = stringifyOutput(output)
