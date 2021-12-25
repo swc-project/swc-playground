@@ -13,34 +13,28 @@ import {
   useBorderColor,
   useMonacoThemeValue,
 } from '../utils'
-import { swcVersionAtom } from '../swc'
+import { swcVersionAtom, type Config } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
 
-function getReportIssueUrl({
-  inputCode,
+function getIssueReportUrl({
+  code,
   version,
   config,
   playgroundLink,
 }: {
-  inputCode: string
+  code: string
   version: string
-  config: string
+  config: Config
   playgroundLink: string
 }): string {
   const reportUrl = new URL(
     `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
   )
-
-  const inputCodeMarkdown = '```tsx\n' + inputCode + '\n```\n'
-  reportUrl.searchParams.set('code', inputCodeMarkdown)
-
-  const configMarkdown = '```json\n' + config + '\n```\n'
-  reportUrl.searchParams.set('config', configMarkdown)
-
+  reportUrl.searchParams.set('code', code)
+  reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
   reportUrl.searchParams.set('repro-link', playgroundLink)
-
   reportUrl.searchParams.set('version', version)
 
   return reportUrl.toString()
@@ -122,6 +116,17 @@ export default function InputEditor({ output }: Props) {
     return url.toString()
   }, [code, swcConfig, swcVersion])
 
+  const issueReportUrl = useMemo(
+    () =>
+      getIssueReportUrl({
+        code,
+        config: swcConfig,
+        version: swcVersion,
+        playgroundLink: shareUrl
+      }),
+    [code, swcConfig, swcVersion, shareUrl]
+  )
+
   const handleShare = async () => {
     if (!navigator.clipboard) {
       toast({
@@ -144,19 +149,6 @@ export default function InputEditor({ output }: Props) {
       position: 'top',
       isClosable: true,
     })
-  }
-
-  const handleOpenIssue = () => {
-    window.open(
-      getReportIssueUrl({
-        inputCode: code,
-        version: swcVersion,
-        config: JSON.stringify(swcConfig, null, 2),
-        playgroundLink: shareUrl,
-      }),
-      '_blank',
-      'noopener'
-    )
   }
 
   const handleEditorDidMount = (instance: editor.IStandaloneCodeEditor) => {
@@ -186,7 +178,10 @@ export default function InputEditor({ output }: Props) {
           <Button
             size="xs"
             leftIcon={<CgFileDocument />}
-            onClick={handleOpenIssue}
+            as="a"
+            href={issueReportUrl}
+            target="_blank"
+            rel="noopener"
           >
             Report Issue
           </Button>
