@@ -256,7 +256,6 @@ export const swcVersionAtom = atom(
   new URLSearchParams(location.search).get('version') ?? '1.2.115'
 )
 
-
 export async function loadSwc(version: string): Promise<SwcModule> {
   const module: SwcModule = await import(
     /* webpackIgnore: true */
