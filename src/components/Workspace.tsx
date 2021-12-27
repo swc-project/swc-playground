@@ -11,7 +11,7 @@ import {
 import { loader } from '@monaco-editor/react'
 import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
-import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
+import { AST, loadSwc, parse, swcVersionAtom, transform } from '../swc'
 import Configuration from './Configuration'
 import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
@@ -70,6 +70,11 @@ export default function Workspace() {
     )
   }
 
+  if (output.ok === true && viewMode === 'ast') {
+    const val = output.val as AST
+    adjustOffsetOfAst(val, val.span.start)
+  }
+
   return (
     <Stack
       direction={['column', 'column', 'row']}
@@ -91,4 +96,25 @@ export default function Workspace() {
       />
     </Stack>
   )
+}
+
+function adjustOffsetOfAst(obj: unknown, start_offset: number) {
+  if (Array.isArray(obj)) {
+    obj.forEach((item) => adjustOffsetOfAst(item, start_offset))
+  } else if (isRecord(obj)) {
+    const keys = Object.keys(obj)
+
+    keys.forEach((key) => {
+      if (key === 'span' && obj[key]) {
+        obj[key].start -= start_offset
+        obj[key].end -= start_offset
+      } else {
+        adjustOffsetOfAst(obj[key], start_offset)
+      }
+    })
+  }
+}
+
+function isRecord(obj: unknown): obj is Record<string, any> {
+  return typeof obj === 'object' && obj !== null
 }

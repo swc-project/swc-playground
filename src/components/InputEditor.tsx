@@ -122,7 +122,7 @@ export default function InputEditor({ output }: Props) {
         code,
         config: swcConfig,
         version: swcVersion,
-        playgroundLink: shareUrl
+        playgroundLink: shareUrl,
       }),
     [code, swcConfig, swcVersion, shareUrl]
   )
