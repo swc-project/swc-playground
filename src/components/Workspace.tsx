@@ -104,10 +104,11 @@ function adjustOffsetOfAst(obj: unknown, startOffset: number) {
   if (Array.isArray(obj)) {
     obj.forEach((item) => adjustOffsetOfAst(item, startOffset))
   } else if (isRecord(obj)) {
-    Object.entries(obj).forEach(([key, unknown]) => {
-      if (key === 'span' && obj[key] && isSpan(obj['span'])) {
-        obj['span'].start -= startOffset
-        obj['span'].end -= startOffset
+    Object.entries(obj).forEach(([key, value]) => {
+      if (key === 'span' && value && isSpan(value)) {
+        const span = value
+        span.start -= startOffset
+        span.end -= startOffset
       } else {
         adjustOffsetOfAst(obj[key], startOffset)
       }
