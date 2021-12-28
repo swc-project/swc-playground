@@ -11,7 +11,9 @@ import {
 import { loader } from '@monaco-editor/react'
 import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
-import { AST, loadSwc, parse, swcVersionAtom, transform } from '../swc'
+import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
+import type { AST } from '../swc'
+
 import Configuration from './Configuration'
 import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
@@ -98,23 +100,29 @@ export default function Workspace() {
   )
 }
 
-function adjustOffsetOfAst(obj: unknown, start_offset: number) {
+function adjustOffsetOfAst(obj: unknown, startOffset: number) {
   if (Array.isArray(obj)) {
-    obj.forEach((item) => adjustOffsetOfAst(item, start_offset))
+    obj.forEach((item) => adjustOffsetOfAst(item, startOffset))
   } else if (isRecord(obj)) {
     const keys = Object.keys(obj)
 
     keys.forEach((key) => {
-      if (key === 'span' && obj[key]) {
-        obj[key].start -= start_offset
-        obj[key].end -= start_offset
+      if (key === 'span' && obj[key] && isSpan(obj['span'])) {
+        obj['span'].start -= startOffset
+        obj['span'].end -= startOffset
       } else {
-        adjustOffsetOfAst(obj[key], start_offset)
+        adjustOffsetOfAst(obj[key], startOffset)
       }
     })
   }
 }
 
-function isRecord(obj: unknown): obj is Record<string, any> {
+function isRecord(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === 'object' && obj !== null
+}
+
+function isSpan(obj: unknown): obj is { start: number; end: number } {
+  return (
+    typeof obj === 'object' && obj !== null && 'start' in obj && 'end' in obj
+  )
 }
