@@ -246,6 +246,7 @@ export interface EnvOptions {
 export interface AST {
   type: 'Module' | 'Script'
   body: unknown
+  span: { start: number; end: number; ctxt: number }
 }
 
 export interface TransformationOutput {
