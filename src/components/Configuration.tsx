@@ -316,6 +316,7 @@ export default function Configuration() {
             <FormControl display="flex" alignItems="center">
               <Input
                 display="block"
+                placeholder="Browserslist query"
                 value={swcConfig.env.targets}
                 onChange={handleEnvTargetsChange}
               />
