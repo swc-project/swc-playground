@@ -1,5 +1,4 @@
 {
-  "root": true,
-  "extends": ["plugin:react-hooks/recommended"],
-  "parser": "@typescript-eslint/parser"
+  "extends": "next",
+  "root": true
 }
