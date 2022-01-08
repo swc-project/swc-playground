@@ -1,6 +1,10 @@
 import { Box, useColorModeValue } from '@chakra-ui/react'
-import HeaderBar from './components/HeaderBar'
-import Workspace from './components/Workspace'
+import dynamic from 'next/dynamic'
+import HeaderBar from '../components/HeaderBar'
+
+const Workspace = dynamic(() => import('../components/Workspace'), {
+  ssr: false,
+})
 
 export default function App() {
   const bg = useColorModeValue('gray.50', 'gray.800')

@@ -7,6 +7,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import { CgExternal, CgMoon, CgSun } from 'react-icons/cg'
 
 const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
@@ -28,7 +29,7 @@ export default function HeaderBar() {
       borderBottomColor={borderColor}
     >
       <a href="http://swc.rs" target="_blank" rel="noopener noreferrer">
-        <img src={logoURL} alt="swc" width="120" />
+        <Image src={logoURL} alt="swc" width="120" height="43" />
       </a>
       <HStack spacing="4">
         <Button variant="ghost" onClick={toggleColorMode}>

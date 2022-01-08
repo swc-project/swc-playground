@@ -72,7 +72,7 @@ export default function MangleOptionsModal() {
           <ModalBody>
             <Text mb="4">
               Not all options are shown here. You can also configure by closing
-              this dialog then clicking the "Edit as JSON" button.
+              this dialog then clicking the &quot;Edit as JSON&quot; button.
             </Text>
             <VStack align="flex-start">
               {Object.entries(options).map(([key, value]) => (
