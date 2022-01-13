@@ -241,6 +241,7 @@ export interface EnvOptions {
   coreJs?: 2 | 3
   shippedProposals?: boolean
   forceAllTransforms?: boolean
+  bugfixes?: boolean
 }
 
 export interface AST {
@@ -723,6 +724,7 @@ export const configSchema: JSONSchema6 = {
         coreJs: { type: 'integer', enum: [2, 3] },
         shippedProposals: { type: 'boolean' },
         forceAllTransforms: { type: 'boolean' },
+        bugfixes: { type: 'boolean' },
       },
       additionalProperties: false,
     },
