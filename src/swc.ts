@@ -255,7 +255,7 @@ export interface TransformationOutput {
 }
 
 export const swcVersionAtom = atom(
-  new URLSearchParams(location.search).get('version') ?? '1.2.124'
+  new URLSearchParams(location.search).get('version') ?? '1.2.133'
 )
 
 export async function loadSwc(version: string): Promise<SwcModule> {
