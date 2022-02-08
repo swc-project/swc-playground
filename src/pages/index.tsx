@@ -10,7 +10,7 @@ export default function App() {
   const bg = useColorModeValue('gray.50', 'gray.800')
 
   return (
-    <Box minHeight="100vh" bg={bg}>
+    <Box minHeight="100vh" pb={[8, 8, 0]} bg={bg}>
       <HeaderBar />
       <Workspace />
     </Box>

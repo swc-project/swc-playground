@@ -81,7 +81,7 @@ export default function Workspace() {
     <Stack
       direction={['column', 'column', 'row']}
       spacing="6"
-      height="88vh"
+      height={['full', 'full', '88vh']}
       mt="3"
       mx={[4, 4, 8]}
       as="main"
