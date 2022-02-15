@@ -170,6 +170,15 @@ export default function Configuration() {
     }))
   }
 
+  const handleToggleEnvBugfixes = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSwcConfig((config) => ({
+      ...config,
+      env: { ...config.env, bugfixes: event.target.checked ? true : undefined },
+    }))
+  }
+
   return (
     <Flex direction="column">
       <Heading size="md" mb="8px">
@@ -313,14 +322,26 @@ export default function Configuration() {
             </FormLabel>
           </FormControl>
           {typeof swcConfig.env?.targets === 'string' && (
-            <FormControl display="flex" alignItems="center">
-              <Input
-                display="block"
-                placeholder="Browserslist query"
-                value={swcConfig.env.targets}
-                onChange={handleEnvTargetsChange}
-              />
-            </FormControl>
+            <>
+              <FormControl display="flex" alignItems="center">
+                <Input
+                  display="block"
+                  placeholder="Browserslist query"
+                  value={swcConfig.env.targets}
+                  onChange={handleEnvTargetsChange}
+                />
+              </FormControl>
+              <FormControl display="flex" alignItems="center">
+                <Switch
+                  id="swc-env-bugfixes"
+                  isChecked={swcConfig.env?.bugfixes == true}
+                  onChange={handleToggleEnvBugfixes}
+                />
+                <FormLabel htmlFor="swc-env-bugfixes" ml="2" mb="0">
+                  Bugfixes
+                </FormLabel>
+              </FormControl>
+            </>
           )}
         </VStack>
         <ConfigEditorModal />
