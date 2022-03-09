@@ -199,7 +199,7 @@ export default function InputEditor({ output }: Props) {
         <Editor
           value={code}
           language={language}
-          defaultLanguage="javascript"
+          defaultLanguage={language}
           theme={monacoTheme}
           options={editorOptions}
           onMount={handleEditorDidMount}
