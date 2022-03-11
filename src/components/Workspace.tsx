@@ -4,10 +4,11 @@ import useSWR from 'swr'
 import {
   Center,
   CircularProgress,
-  Stack,
-  VStack,
   useToast,
+  Flex,
+  VStack,
 } from '@chakra-ui/react'
+import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
 import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
@@ -18,6 +19,28 @@ import Configuration from './Configuration'
 import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
+
+const Main = styled.main`
+  display: grid;
+  margin: 1em;
+  gap: 1em;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-areas: 'sidebar' 'input' 'output';
+
+  @media screen and (min-width: 600px) {
+    grid-template-columns: 256px 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: 'sidebar input' 'sidebar output';
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 256px repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas: 'sidebar input output';
+  }
+`
 
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
@@ -78,15 +101,8 @@ export default function Workspace() {
   }
 
   return (
-    <Stack
-      direction={['column', 'column', 'row']}
-      spacing="6"
-      height={['full', 'full', '88vh']}
-      mt="3"
-      mx={[4, 4, 8]}
-      as="main"
-    >
-      <VStack spacing="4" alignItems="unset" width={['full', 'full', '16vw']}>
+    <Main>
+      <VStack spacing={4} alignItems="unset" gridArea="sidebar">
         <Configuration />
         <VersionSelect isLoadingSwc={!swc && !error} />
       </VStack>
@@ -96,7 +112,7 @@ export default function Workspace() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
-    </Stack>
+    </Main>
   )
 }
 

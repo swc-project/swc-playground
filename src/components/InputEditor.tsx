@@ -165,11 +165,7 @@ export default function InputEditor({ output }: Props) {
     swcConfig.jsc.parser.syntax === 'ecmascript' ? 'javascript' : 'typescript'
 
   return (
-    <Flex
-      direction="column"
-      width={['full', 'full', '40vw']}
-      height={['45vh', '45vh', 'full']}
-    >
+    <Flex direction="column" gridArea="input" minW={0} minH={0}>
       <Flex justifyContent="space-between" alignItems="center">
         <Heading size="md" mb="8px">
           Input
