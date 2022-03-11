@@ -8,14 +8,30 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import { CgExternal, CgMoon, CgSun } from 'react-icons/cg'
 
 const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
 
 export default function HeaderBar() {
-  const { colorMode, toggleColorMode } = useColorMode()
+  const { colorMode, toggleColorMode, setColorMode } = useColorMode()
   const bg = useColorModeValue('gray.100', 'gray.900')
   const borderColor = useColorModeValue('gray.300', 'gray.700')
+
+  useEffect(() => {
+    const query = window.matchMedia?.('(prefers-color-scheme: dark)')
+    if (query?.matches) {
+      setColorMode('dark')
+    }
+
+    const listener = (event: MediaQueryListEvent) => {
+      setColorMode(event.matches ? 'dark' : 'light')
+    }
+
+    query?.addEventListener('change', listener)
+
+    return () => query?.removeEventListener('change', listener)
+  }, [setColorMode])
 
   return (
     <Flex
