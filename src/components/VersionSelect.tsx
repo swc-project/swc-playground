@@ -46,7 +46,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const isLoading = isLoadingSwc || (!data && !error)
 
   return (
-    <Flex direction="column" mt={2}>
+    <Flex direction="column">
       <Heading size="md" mb="8px">
         Version
       </Heading>
