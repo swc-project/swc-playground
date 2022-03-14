@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import useSWR from 'swr'
-import {
-  Center,
-  CircularProgress,
-  useToast,
-  Flex,
-  VStack,
-} from '@chakra-ui/react'
+import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
 import { Err } from 'ts-results'
@@ -22,23 +16,29 @@ import OutputEditor from './OutputEditor'
 
 const Main = styled.main`
   display: grid;
-  margin: 1em;
+  padding: 1em;
   gap: 1em;
 
   grid-template-columns: 1fr;
   grid-template-rows: repeat(3, 1fr);
   grid-template-areas: 'sidebar' 'input' 'output';
 
+  min-height: 88vh;
+
   @media screen and (min-width: 600px) {
     grid-template-columns: 256px 1fr;
     grid-template-rows: repeat(2, 1fr);
     grid-template-areas: 'sidebar input' 'sidebar output';
+
+    min-height: calc(100vh - 80px);
   }
 
   @media screen and (min-width: 1200px) {
     grid-template-columns: 256px repeat(2, 1fr);
     grid-template-rows: 1fr;
     grid-template-areas: 'sidebar input output';
+
+    min-height: calc(100vh - 80px);
   }
 `
 
