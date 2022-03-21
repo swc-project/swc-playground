@@ -153,6 +153,13 @@ export default function Configuration() {
       jsc: { ...config.jsc, loose: event.target.checked },
     }))
   }
+  
+  const handleToggleExternalHelpers = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSwcConfig((config) => ({
+      ...config,
+      jsc: { ...config.jsc, externalHelpers: event.target.checked },
+    }))
+  }
 
   const handleToggleEnvTargets = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -277,6 +284,16 @@ export default function Configuration() {
             />
             <FormLabel htmlFor="swc-loose" ml="2" mb="0">
               Loose
+            </FormLabel>
+          </FormControl>
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="swc-external-helpers"
+              isChecked={swcConfig.jsc.externalHelpers}
+              onChange={handleToggleExternalHelpers}
+            />
+            <FormLabel htmlFor="swc-external-helpers" ml="2" mb="0">
+              External Helpers
             </FormLabel>
           </FormControl>
           <FormControl display="flex" alignItems="center">
