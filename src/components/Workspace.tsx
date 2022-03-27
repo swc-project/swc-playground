@@ -84,8 +84,9 @@ export default function Workspace() {
             console.error('Executed JavaScript Failed. Please see the following error messages.')
             console.error(error)
           }
+          return Ok(result)
         }
-        return Ok(result)
+        return transformedCode
       case 'code':
       default:
         return transform({ code, fileName, config: swcConfig, swc })
