@@ -269,6 +269,13 @@ export async function loadSwc(version: string): Promise<SwcModule> {
 
 export type TransformationResult = Result<TransformationOutput, string>
 
+export interface LogOutput {
+  type: 'LOG' | 'DBG' | 'WRN' | 'ERR',
+  content: string
+}
+
+export type LogResult = Result<LogOutput[], string>
+
 export function transform({
   code,
   config,
