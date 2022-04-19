@@ -27,6 +27,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "semver": "^7.3.7",
     "swr": "^1.0.1",
     "ts-results": "^3.3.0"
   },
@@ -37,6 +38,7 @@
     "@types/pako": "^1.0.2",
     "@types/react": "^17.0.31",
     "@types/react-dom": "^17.0.10",
+    "@types/semver": "^7.3.9",
     "eslint": "^8.6.0",
     "prettier": "^2.5.1",
     "react-refresh": "^0.10.0",

@@ -2,6 +2,7 @@ import { atom } from 'jotai'
 import { Ok, Err } from 'ts-results'
 import type { Result } from 'ts-results'
 import type { JSONSchema6 } from 'json-schema'
+import semver from 'semver'
 
 interface SwcModule {
   default(): Promise<unknown>
@@ -259,10 +260,20 @@ export const swcVersionAtom = atom(
     process.env.NEXT_PUBLIC_SWC_VERSION
 )
 
+/** SWC renamed npm package since v1.2.166. */
+export function getPackageName(version: string) {
+  return semver.gt(version, '1.2.165')
+    ? '@swc/binding_core_wasm'
+    : '@swc/wasm-web'
+}
+
 export async function loadSwc(version: string): Promise<SwcModule> {
+  const packageName = getPackageName(version)
+  const entryFileName =
+    packageName === '@swc/binding_core_wasm' ? 'wasm-web.js' : 'wasm.js'
   const module: SwcModule = await import(
     /* webpackIgnore: true */
-    `https://cdn.jsdelivr.net/npm/@swc/wasm-web@${version}/wasm.js`
+    `https://cdn.jsdelivr.net/npm/${packageName}@${version}/${entryFileName}`
   )
   await module.default()
   return module

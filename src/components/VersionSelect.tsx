@@ -33,7 +33,14 @@ interface Props {
 
 export default function VersionSelect({ isLoadingSwc }: Props) {
   const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
-  const { data, error } = useSWR('@swc/wasm-web', fetchSwcVersions)
+  const { data: oldSWC, error: errorOfOld } = useSWR(
+    '@swc/wasm-web',
+    fetchSwcVersions
+  )
+  const { data: newSWC, error: errorOfNew } = useSWR(
+    '@swc/binding_core_wasm',
+    fetchSwcVersions
+  )
   const bg = useBgColor()
   const borderColor = useBorderColor()
 
@@ -43,7 +50,8 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
     setSwcVersion(event.target.value)
   }
 
-  const isLoading = isLoadingSwc || (!data && !error)
+  const isLoading =
+    isLoadingSwc || (!oldSWC && !errorOfOld) || (!newSWC && !errorOfNew)
 
   return (
     <Flex direction="column">
@@ -57,13 +65,15 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
         borderColor={borderColor}
         borderWidth="1px"
       >
-        {data ? (
+        {oldSWC && newSWC ? (
           <Select value={swcVersion} onChange={handleCurrentVersionChange}>
-            {data.versions.map((version) => (
-              <option key={version} value={version}>
-                {version}
-              </option>
-            ))}
+            {[...newSWC.versions.slice(0, -1), ...oldSWC.versions].map(
+              (version) => (
+                <option key={version} value={version}>
+                  {version}
+                </option>
+              )
+            )}
           </Select>
         ) : (
           <Select>
