@@ -8,7 +8,7 @@
     "start": "next start",
     "build": "next build",
     "dev": "next dev",
-    "lint": "tsc -p . && eslint --ext=tsx src",
+    "lint": "tsc -p . && eslint --ext=ts,tsx src",
     "fmt": "prettier --write src"
   },
   "author": "Pig Fang <g-plane@hotmail.com>",
