@@ -11,8 +11,8 @@ const {
 const envFile = await fs.readFile('.env', 'utf8')
 const current = /NEXT_PUBLIC_SWC_VERSION=(?<current>\d+\.\d+\.\d+)/.exec(
   envFile
-).groups.current
-if (current !== latest) {
+)?.groups?.current
+if (current && current !== latest) {
   await fs.writeFile(
     '.env',
     envFile.replace(
