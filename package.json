@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "swc playground",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "next start",
     "build": "next build",
@@ -42,6 +43,8 @@
     "eslint": "^8.6.0",
     "prettier": "^2.5.1",
     "react-refresh": "^0.10.0",
-    "typescript": "^4.5.4"
+    "ts-node": "^10.7.0",
+    "typescript": "^4.5.4",
+    "undici": "^5.0.0"
   }
 }
