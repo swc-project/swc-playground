@@ -6,7 +6,7 @@ import semver from 'semver'
 
 interface SwcModule {
   default(): Promise<unknown>
-  parseSync(code: string, options: ParserOptions): AST
+  parseSync(code: string, options: ParseOnlyOptions): AST
   transformSync(code: string, options: Config): TransformationOutput
 }
 
@@ -245,6 +245,12 @@ export interface EnvOptions {
   bugfixes?: boolean
 }
 
+export type ParseOnlyOptions = ParserOptions & {
+  comments?: boolean
+  is_module?: boolean
+  target?: EsVersion
+}
+
 export interface AST {
   type: 'Module' | 'Script'
   body: unknown
@@ -311,7 +317,9 @@ export function parse({
   swc: SwcModule
 }): ParserResult {
   try {
-    return Ok(swc.parseSync(code, config.jsc.parser))
+    return Ok(
+      swc.parseSync(code, { ...config.jsc.parser, target: config.jsc.target })
+    )
   } catch (error) {
     return handleSwcError(error)
   }
