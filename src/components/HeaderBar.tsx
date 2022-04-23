@@ -11,8 +11,6 @@ import Image from 'next/image'
 import { useEffect } from 'react'
 import { CgExternal, CgMoon, CgSun } from 'react-icons/cg'
 
-const logoURL = new URL('../../assets/swc.svg', import.meta.url).toString()
-
 export default function HeaderBar() {
   const { colorMode, toggleColorMode, setColorMode } = useColorMode()
   const bg = useColorModeValue('gray.100', 'gray.900')
@@ -45,7 +43,7 @@ export default function HeaderBar() {
       borderBottomColor={borderColor}
     >
       <a href="http://swc.rs" target="_blank" rel="noopener noreferrer">
-        <Image src={logoURL} alt="swc" width="120" height="43" />
+        <Image src="/swc.svg" alt="swc" width="120" height="43" />
       </a>
       <HStack spacing="4">
         <Button variant="ghost" onClick={toggleColorMode}>
