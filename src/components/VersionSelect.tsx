@@ -12,6 +12,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { HiExternalLink } from 'react-icons/hi'
+import semver from 'semver'
 import { swcVersionAtom } from '../swc'
 import { useBgColor, useBorderColor } from '../utils'
 
@@ -26,6 +27,10 @@ const fetchSwcVersions = (packageName: string): Promise<PackageInfo> =>
   fetch(`https://data.jsdelivr.com/v1/package/npm/${packageName}`).then(
     (response) => response.json()
   )
+
+function mergeVersions(...versions: string[][]): string[] {
+  return [...new Set(versions.flat())].sort(semver.rcompare)
+}
 
 interface Props {
   isLoadingSwc: boolean
@@ -67,13 +72,11 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
       >
         {oldSWC && newSWC ? (
           <Select value={swcVersion} onChange={handleCurrentVersionChange}>
-            {[...newSWC.versions.slice(0, -1), ...oldSWC.versions].map(
-              (version) => (
-                <option key={version} value={version}>
-                  {version}
-                </option>
-              )
-            )}
+            {mergeVersions(oldSWC.versions, newSWC.versions).map((version) => (
+              <option key={version} value={version}>
+                {version}
+              </option>
+            ))}
           </Select>
         ) : (
           <Select>

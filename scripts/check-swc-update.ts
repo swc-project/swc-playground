@@ -2,7 +2,7 @@ import * as fs from 'node:fs/promises'
 import { fetch } from 'undici'
 
 const response = await fetch(
-  'https://data.jsdelivr.com/v1/package/npm/@swc/binding_core_wasm'
+  'https://data.jsdelivr.com/v1/package/npm/@swc/wasm-web'
 )
 const {
   tags: { latest },

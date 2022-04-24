@@ -268,15 +268,16 @@ export const swcVersionAtom = atom(
 
 /** SWC renamed npm package since v1.2.166. */
 export function getPackageName(version: string) {
-  return semver.gt(version, '1.2.165')
+  return semver.gt(version, '1.2.165') && semver.lte(version, '1.2.170')
     ? '@swc/binding_core_wasm'
     : '@swc/wasm-web'
 }
 
 export async function loadSwc(version: string): Promise<SwcModule> {
   const packageName = getPackageName(version)
-  const entryFileName =
-    packageName === '@swc/binding_core_wasm' ? 'wasm-web.js' : 'wasm.js'
+  const entryFileName = semver.gt(version, '1.2.165')
+    ? 'wasm-web.js'
+    : 'wasm.js'
   const module: SwcModule = await import(
     /* webpackIgnore: true */
     `https://cdn.jsdelivr.net/npm/${packageName}@${version}/${entryFileName}`
