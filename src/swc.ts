@@ -191,7 +191,7 @@ export interface TransformOptions {
     pragmaFrag?: string
     throwIfNamespace?: boolean
     development?: boolean
-    useSpread?: boolean
+    useBuiltins?: boolean
     refresh?: {
       refreshReg?: string
       refreshSig?: string
@@ -558,7 +558,7 @@ export const configSchema: JSONSchema6 = {
                 pragmaFrag: { type: 'string' },
                 throwIfNamespace: { type: 'boolean' },
                 development: { type: 'boolean' },
-                useSpread: { type: 'boolean' },
+                useBuiltins: { type: 'boolean' },
                 refresh: {
                   type: 'object',
                   properties: {
