@@ -233,6 +233,7 @@ export default function Configuration() {
               <option value="commonjs">CommonJS</option>
               <option value="amd">AMD</option>
               <option value="umd">UMD</option>
+              <option value="systemjs">SystemJS</option>
             </Select>
           </FormControl>
           <FormControl>

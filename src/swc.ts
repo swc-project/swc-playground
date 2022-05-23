@@ -111,6 +111,10 @@ export type ModuleOptions =
       lazy?: boolean
       noInterop?: boolean
     }
+  | {
+      type: 'systemjs'
+      allowTopLevelThis: boolean
+    }
 
 export interface CompressOptions {
   arguments?: boolean
@@ -701,6 +705,18 @@ export const configSchema: JSONSchema6 = {
             strictMode: { type: 'boolean', default: true },
             lazy: { type: 'boolean', default: false },
             noInterop: { type: 'boolean', default: false },
+          },
+          additionalProperties: false,
+        },
+        {
+          type: 'object',
+          required: ['type'],
+          properties: {
+            type: {
+              type: 'string',
+              enum: ['systemjs'],
+            },
+            allowTopLevelThis: { type: 'boolean' },
           },
           additionalProperties: false,
         },
