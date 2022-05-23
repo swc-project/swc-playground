@@ -86,7 +86,6 @@ export default function Configuration() {
     setSwcConfig((config) => ({
       ...config,
       module: {
-        ...config.module,
         type: event.target.value as ModuleOptions['type'],
       },
     }))

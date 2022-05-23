@@ -113,7 +113,7 @@ export type ModuleOptions =
     }
   | {
       type: 'systemjs'
-      allowTopLevelThis: boolean
+      allowTopLevelThis?: boolean
     }
 
 export interface CompressOptions {
