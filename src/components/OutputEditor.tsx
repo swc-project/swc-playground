@@ -14,6 +14,7 @@ import type {
   TransformationOutput,
   TransformationResult,
 } from '../swc'
+import stripAnsi from 'strip-ansi';
 
 function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'
@@ -21,7 +22,7 @@ function isTransformedCode(value: unknown): value is TransformationOutput {
 
 function stringifyOutput(output: TransformationResult | ParserResult): string {
   if (output.err) {
-    return output.val
+    return stripAnsi(output.val)
   } else if (isTransformedCode(output.val)) {
     return output.val.code
   } else {
@@ -39,6 +40,7 @@ const editorOptions: editor.IStandaloneEditorConstructionOptions = {
   ...sharedEditorOptions,
   readOnly: true,
   wordWrap: 'on',
+  renderControlCharacters: false,
   tabSize: 4, // this aligns with swc
 }
 
