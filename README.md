@@ -12,6 +12,10 @@ The playground of swc. Visit [https://play.swc.rs/](https://play.swc.rs/) to try
 - Show AST of input code.
 - Dark mode.
 
+## 🙌 Related
+
+- [SWC CSS Playground](http://github.com/g-plane/swc-css-playground) - Playground for SWC CSS.
+
 ## 📜 License
 
 MIT License
