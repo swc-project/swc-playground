@@ -14,7 +14,7 @@ import type {
   TransformationOutput,
   TransformationResult,
 } from '../swc'
-import stripAnsi from 'strip-ansi';
+import stripAnsi from 'strip-ansi'
 
 function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'
