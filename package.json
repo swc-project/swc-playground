@@ -13,7 +13,7 @@
   "author": "Pig Fang <g-plane@hotmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@chakra-ui/react": "^2.1.0",
+    "@chakra-ui/react": "^2.2.4",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@monaco-editor/react": "^4.4.5",
@@ -22,7 +22,7 @@
     "jotai": "^1.6.7",
     "js-base64": "^3.7.2",
     "monaco-editor": "^0.33.0",
-    "next": "^12.1.6",
+    "next": "^12.2.3",
     "pako": "^2.0.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -40,10 +40,10 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "@types/semver": "^7.3.9",
-    "eslint": "^8.16.0",
-    "prettier": "^2.6.2",
+    "eslint": "^8.20.0",
+    "prettier": "^2.7.1",
     "ts-node": "^10.8.0",
-    "typescript": "^4.6.4",
+    "typescript": "^4.7.4",
     "undici": "^5.2.0"
   },
   "pnpm": {
