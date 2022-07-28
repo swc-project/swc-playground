@@ -287,12 +287,12 @@ export async function loadSwc(version: string): Promise<SwcModule> {
   const entryFileName = semver.gt(version, '1.2.165')
     ? 'wasm-web.js'
     : 'wasm.js'
-  const module: SwcModule = await import(
+  const swcModule: SwcModule = await import(
     /* webpackIgnore: true */
     `https://cdn.jsdelivr.net/npm/${packageName}@${version}/${entryFileName}`
   )
-  await module.default()
-  return module
+  await swcModule.default()
+  return swcModule
 }
 
 export type TransformationResult = Result<TransformationOutput, string>
