@@ -25,14 +25,10 @@ export interface Config {
       module?: boolean
       safari10?: boolean
       toplevel?: boolean
-      sourceMap?: {
-        filename?: string
-        url?: string
-        root?: string
-        content?: string
-      }
+      sourceMap?: boolean | TerserSourceMapOption
       outputPath?: string
       inlineSourcesContent?: boolean
+      emitSourceMapColumns?: boolean
     }
     transform?: TransformOptions
     externalHelpers?: boolean
@@ -171,6 +167,8 @@ export interface CompressOptions {
   unsafe_undefined?: boolean
   unused?: boolean
   module?: boolean
+  const_to_let?: boolean
+  pristine_globals?: boolean
 }
 
 export interface MangleOptions {
@@ -185,6 +183,13 @@ export interface MangleOptions {
   keep_private_props?: boolean
   ie8?: boolean
   safari10?: boolean
+}
+
+export interface TerserSourceMapOption {
+  filename?: string
+  url?: string
+  root?: string
+  content?: string
 }
 
 export interface TransformOptions {
@@ -490,6 +495,8 @@ export const configSchema: JSONSchema6 = {
                     unsafe_undefined: { type: 'boolean' },
                     unused: { type: 'boolean' },
                     module: { type: 'boolean' },
+                    const_to_let: { type: 'boolean' },
+                    pristine_globals: { type: 'boolean' },
                   },
                   additionalProperties: false,
                 },
@@ -544,6 +551,7 @@ export const configSchema: JSONSchema6 = {
             },
             outputPath: { type: 'string' },
             inlineSourcesContent: { type: 'boolean', default: true },
+            emitSourceMapColumns: { type: 'boolean', default: true },
           },
           additionalProperties: false,
         },

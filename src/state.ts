@@ -1,6 +1,7 @@
 import { atom } from 'jotai'
 import type { CompressOptions, Config, EnvOptions, MangleOptions } from './swc'
 
+/** @see https://github.com/swc-project/swc/blob/dada2d7d554fa0733a3c65c512777f1548d41a35/crates/swc_ecma_minifier/src/option/mod.rs#L114 */
 export const defaultCompressOptions: CompressOptions = {
   arguments: false,
   arrows: true,
@@ -8,10 +9,10 @@ export const defaultCompressOptions: CompressOptions = {
   booleans_as_integers: false,
   collapse_vars: true,
   comparisons: true,
-  computed_props: false,
-  conditionals: false,
-  dead_code: false,
-  directives: false,
+  computed_props: true,
+  conditionals: true,
+  dead_code: true,
+  directives: true,
   drop_console: false,
   drop_debugger: true,
   evaluate: true,
@@ -31,7 +32,7 @@ export const defaultCompressOptions: CompressOptions = {
   reduce_funcs: false,
   reduce_vars: false,
   side_effects: true,
-  switches: false,
+  switches: true,
   typeofs: true,
   unsafe: false,
   unsafe_arrows: false,
@@ -44,6 +45,8 @@ export const defaultCompressOptions: CompressOptions = {
   unsafe_regexp: false,
   unsafe_undefined: false,
   unused: true,
+  const_to_let: true,
+  pristine_globals: true,
 }
 
 export const defaultMangleOptions: MangleOptions = {
