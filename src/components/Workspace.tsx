@@ -4,9 +4,9 @@ import useSWR from 'swr'
 import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
-import { Err } from 'ts-results'
+import { Err, Ok } from 'ts-results'
 import { codeAtom, fileNameAtom, swcConfigAtom } from '../state'
-import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
+import { loadSwc, LogOutput, parse, swcVersionAtom, transform } from '../swc'
 import type { AST } from '../swc'
 
 import Configuration from './Configuration'
@@ -62,6 +62,31 @@ export default function Workspace() {
     switch (viewMode) {
       case 'ast':
         return parse({ code, config: swcConfig, swc })
+      case 'log':
+        const transformedCode = transform({ code, fileName, config: swcConfig, swc })
+        const result: LogOutput[] = []
+        console.log = ((log) => {
+          result.push({ type: 'LOG', content: log })
+        })
+        console.debug = ((log) => {
+          result.push({ type: 'DBG', content: log })
+        })
+        console.warn = ((log) => {
+          result.push({ type: 'WRN', content: log })
+        })
+        console.error = ((log) => {
+          result.push({ type: 'ERR', content: log })
+        })
+        if (transformedCode.ok) {
+          try {
+            eval(transformedCode.val.code)
+          } catch (error) {
+            console.error('Executed JavaScript Failed. Please see the following error messages.')
+            console.error(error)
+          }
+          return Ok(result)
+        }
+        return transformedCode
       case 'code':
       default:
         return transform({ code, fileName, config: swcConfig, swc })

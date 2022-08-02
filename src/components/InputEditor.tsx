@@ -13,7 +13,7 @@ import {
   useBorderColor,
   useMonacoThemeValue,
 } from '../utils'
-import { swcVersionAtom, type Config } from '../swc'
+import { swcVersionAtom, type Config, LogResult } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
@@ -41,7 +41,7 @@ function getIssueReportUrl({
 }
 
 interface Props {
-  output: TransformationResult | ParserResult
+  output: TransformationResult | ParserResult | LogResult
 }
 
 export default function InputEditor({ output }: Props) {
