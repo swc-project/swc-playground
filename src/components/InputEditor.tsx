@@ -113,7 +113,7 @@ export default function InputEditor({ output }: Props) {
   const shareUrl = useMemo(() => {
     const url = new URL(location.href)
     url.searchParams.set('version', swcVersion)
-    let encodedInput = Base64.fromUint8Array(gzip(code))
+    const encodedInput = Base64.fromUint8Array(gzip(code))
     url.searchParams.set('code', encodedInput)
     const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
     url.searchParams.set('config', encodedConfig)
