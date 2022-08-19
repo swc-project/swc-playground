@@ -32,6 +32,10 @@ function getIssueReportUrl({
   const reportUrl = new URL(
     `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
   )
+  if (code.length > 2000)
+    code =
+      'Your input is too large to share. Please copy the code and paste it in the issue.'
+
   reportUrl.searchParams.set('code', code)
   reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
   reportUrl.searchParams.set('repro-link', playgroundLink)
@@ -109,7 +113,7 @@ export default function InputEditor({ output }: Props) {
   const shareUrl = useMemo(() => {
     const url = new URL(location.href)
     url.searchParams.set('version', swcVersion)
-    const encodedInput = Base64.fromUint8Array(gzip(code))
+    let encodedInput = Base64.fromUint8Array(gzip(code))
     url.searchParams.set('code', encodedInput)
     const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
     url.searchParams.set('config', encodedConfig)
