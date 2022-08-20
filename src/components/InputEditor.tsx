@@ -33,7 +33,7 @@ function getIssueReportUrl({
     `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
   )
 
-  reportUrl.searchParams.set('code', code.length > 2000 ? '' : code)
+  reportUrl.searchParams.set('code', code)
   reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
   reportUrl.searchParams.set('repro-link', playgroundLink)
   reportUrl.searchParams.set('version', version)
@@ -129,8 +129,6 @@ export default function InputEditor({ output }: Props) {
   )
 
   const handleIssueReportClick = () => {
-    window.open(issueReportUrl, '_blank')
-
     if (code.length > 2000) {
       toast({
         title: 'Code too long',
@@ -142,6 +140,7 @@ export default function InputEditor({ output }: Props) {
       })
       return
     }
+    window.open(issueReportUrl, '_blank')
   }
 
   const handleShare = async () => {
