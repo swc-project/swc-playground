@@ -190,10 +190,6 @@ export default function InputEditor({ output }: Props) {
           <Button
             size="xs"
             leftIcon={<CgFileDocument />}
-            // as="a"
-            // href={issueReportUrl}
-            // target="_blank"
-            // rel="noopener"
             onClick={handleIssueReportClick}
           >
             Report Issue
