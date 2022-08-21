@@ -32,6 +32,7 @@ function getIssueReportUrl({
   const reportUrl = new URL(
     `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
   )
+
   reportUrl.searchParams.set('code', code)
   reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
   reportUrl.searchParams.set('repro-link', playgroundLink)
@@ -127,6 +128,21 @@ export default function InputEditor({ output }: Props) {
     [code, swcConfig, swcVersion, shareUrl]
   )
 
+  const handleIssueReportClick = () => {
+    if (code.length > 2000) {
+      toast({
+        title: 'Code too long',
+        description:
+          'Your input is too large to share. Please copy the code and paste it into the issue.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
+    window.open(issueReportUrl, '_blank')
+  }
+
   const handleShare = async () => {
     if (!navigator.clipboard) {
       toast({
@@ -174,10 +190,7 @@ export default function InputEditor({ output }: Props) {
           <Button
             size="xs"
             leftIcon={<CgFileDocument />}
-            as="a"
-            href={issueReportUrl}
-            target="_blank"
-            rel="noopener"
+            onClick={handleIssueReportClick}
           >
             Report Issue
           </Button>
