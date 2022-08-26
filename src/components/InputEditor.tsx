@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState, startTransition } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
@@ -54,6 +54,7 @@ export default function InputEditor({ output }: Props) {
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const toast = useToast()
+  const [deferredCode, setDeferredCode] = useState(code)
 
   useEffect(() => {
     monaco?.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
@@ -97,9 +98,15 @@ export default function InputEditor({ output }: Props) {
     const encodedInput = url.searchParams.get('code')
     const storedInput = localStorage.getItem(STORAGE_KEY)
     if (encodedInput) {
-      setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+      setDeferredCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+      startTransition(() => {
+        setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+      })
     } else if (storedInput) {
-      setCode(storedInput)
+      setDeferredCode(storedInput)
+      startTransition(() => {
+        setCode(storedInput)
+      })
     }
   }, [setCode])
 
@@ -173,7 +180,10 @@ export default function InputEditor({ output }: Props) {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value != null) {
-      setCode(value)
+      setDeferredCode(value)
+      startTransition(() => {
+        setCode(value)
+      })
     }
   }
 
@@ -206,7 +216,7 @@ export default function InputEditor({ output }: Props) {
         borderWidth="1px"
       >
         <Editor
-          value={code}
+          value={deferredCode}
           language={language}
           defaultLanguage={language}
           theme={monacoTheme}
