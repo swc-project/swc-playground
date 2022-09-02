@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useCallback } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
@@ -143,29 +143,37 @@ export default function InputEditor({ output }: Props) {
     window.open(issueReportUrl, '_blank')
   }
 
-  const handleShare = async () => {
-    if (!navigator.clipboard) {
+  const handleShare = useCallback(async () => {
+    if (navigator?.share) {
+      window.history.replaceState(null, '', shareUrl)
+      await navigator.share({
+        url: shareUrl
+      })
+
+    } else {
+      if (!navigator.clipboard) {
+        toast({
+          title: 'Error',
+          description: 'Clipboard is not supported in your environment.',
+          status: 'error',
+          duration: 3000,
+          position: 'top',
+          isClosable: true,
+        })
+        return
+      }
+
+      window.history.replaceState(null, '', shareUrl)
+      await navigator.clipboard.writeText(shareUrl)
       toast({
-        title: 'Error',
-        description: 'Clipboard is not supported in your environment.',
-        status: 'error',
+        title: 'URL is copied to clipboard.',
+        status: 'success',
         duration: 3000,
         position: 'top',
         isClosable: true,
       })
-      return
     }
-
-    window.history.replaceState(null, '', shareUrl)
-    await navigator.clipboard.writeText(shareUrl)
-    toast({
-      title: 'URL is copied to clipboard.',
-      status: 'success',
-      duration: 3000,
-      position: 'top',
-      isClosable: true,
-    })
-  }
+  }, [shareUrl])
 
   const handleEditorDidMount = (instance: editor.IStandaloneCodeEditor) => {
     editorRef.current = instance
