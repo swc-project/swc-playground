@@ -1,5 +1,4 @@
 import type { ChangeEvent } from 'react'
-import { useTransition, useState } from 'react'
 import useSWR from 'swr'
 import { useAtom } from 'jotai'
 import {
@@ -39,8 +38,6 @@ interface Props {
 
 export default function VersionSelect({ isLoadingSwc }: Props) {
   const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
-  const [deferedSwcVersion, setDeferedSwcVersion] = useState(swcVersion)
-  const [isPending, startTransition] = useTransition()
   const { data: oldSWC, error: errorOfOld } = useSWR(
     '@swc/wasm-web',
     fetchSwcVersions
@@ -55,10 +52,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>
   ) => {
-    setDeferedSwcVersion(event.target.value)
-    startTransition(() => {
-      setSwcVersion(event.target.value)
-    })
+    setSwcVersion(event.target.value)
   }
 
   const isLoading =
@@ -77,7 +71,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
         borderWidth="1px"
       >
         {oldSWC && newSWC ? (
-          <Select value={deferedSwcVersion} onChange={handleCurrentVersionChange}>
+          <Select value={swcVersion} onChange={handleCurrentVersionChange}>
             {mergeVersions(oldSWC.versions, newSWC.versions).map((version) => (
               <option key={version} value={version}>
                 {version}
@@ -86,11 +80,11 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
           </Select>
         ) : (
           <Select>
-            <option>{deferedSwcVersion}</option>
+            <option>{swcVersion}</option>
           </Select>
         )}
         <Flex alignItems="center" my="2" height="8">
-          {(isLoading || isPending) && (
+          {isLoading && (
             <>
               <CircularProgress size="7" isIndeterminate />
               <Text ml="2">Please wait...</Text>
