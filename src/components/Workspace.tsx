@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useDeferredValue } from 'react'
 import { useAtom } from 'jotai'
 import useSWR from 'swr'
 import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
@@ -47,7 +47,9 @@ export default function Workspace() {
   const [swcVersion] = useAtom(swcVersionAtom)
   const { data: swc, error } = useSWR(swcVersion, loadSwc)
   const [code] = useAtom(codeAtom)
+  const deferredCode = useDeferredValue(code)
   const [swcConfig] = useAtom(swcConfigAtom)
+  const deferredSwcConfig = useDeferredValue(swcConfig)
   const [fileName] = useAtom(fileNameAtom)
   const [viewMode, setViewMode] = useState('code')
   const output = useMemo(() => {
@@ -61,12 +63,12 @@ export default function Workspace() {
 
     switch (viewMode) {
       case 'ast':
-        return parse({ code, config: swcConfig, swc })
+        return parse({ deferredCode, config: deferredSwcConfig, swc })
       case 'code':
       default:
-        return transform({ code, fileName, config: swcConfig, swc })
+        return transform({ deferredCode, fileName, config: deferredSwcConfig, swc })
     }
-  }, [code, fileName, swc, error, swcConfig, viewMode])
+  }, [deferredCode, fileName, swc, error, deferredSwcConfig, viewMode])
   const toast = useToast()
 
   useEffect(() => {

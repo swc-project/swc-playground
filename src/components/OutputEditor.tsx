@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, startTransition } from 'react'
 import type { ChangeEvent } from 'react'
 import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
@@ -63,15 +63,17 @@ export default function OutputEditor({
   }, [monaco])
 
   const handleViewModeChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    onViewModeChange(event.target.value)
+    startTransition(() => {
+      onViewModeChange(event.target.value)
+    })
   }
 
   const outputContent = stringifyOutput(output)
   const editorLanguage = output.err
     ? 'text'
     : viewMode === 'code'
-    ? 'javascript'
-    : 'json'
+      ? 'javascript'
+      : 'json'
 
   return (
     <Flex direction="column" gridArea="output" minW={0} minH={0}>
