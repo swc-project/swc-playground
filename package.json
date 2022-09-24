@@ -13,7 +13,7 @@
   "author": "Pig Fang <g-plane@hotmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@chakra-ui/react": "^2.2.4",
+    "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@monaco-editor/react": "^4.4.5",
