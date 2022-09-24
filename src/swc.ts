@@ -452,7 +452,7 @@ export const configSchema: JSONSchema6 = {
                     keep_infinity: { type: 'boolean' },
                     loops: { type: 'boolean' },
                     negate_iife: { type: 'boolean' },
-                    passes: { type: 'integer', minimum: 0 },
+                    passes: { type: 'integer', minimum: 0, default: 2 },
                     properties: { type: 'boolean' },
                     pure_getters: {
                       anyOf: [

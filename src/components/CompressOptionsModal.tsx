@@ -3,6 +3,8 @@ import type { ChangeEvent } from 'react'
 import {
   Button,
   Checkbox,
+  FormControl,
+  FormLabel,
   Grid,
   Modal,
   ModalOverlay,
@@ -11,6 +13,11 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -61,6 +68,14 @@ export default function CompressOptionsModal() {
     )
   }
 
+  const handlePassesChange = (value: number) => {
+    setOptions((options) =>
+      options && typeof options === 'object'
+        ? { ...options, passes: value }
+        : options
+    )
+  }
+
   return (
     <>
       <Button size="xs" onClick={handleOpen}>
@@ -88,18 +103,37 @@ export default function CompressOptionsModal() {
               rowGap="2"
               columnGap="2"
             >
-              {Object.entries(options).map(([key, value]) => (
-                <Checkbox
-                  key={key}
-                  isChecked={value}
-                  onChange={(event) =>
-                    handleOptionChange(key as keyof CompressOptions, event)
-                  }
-                >
-                  {key}
-                </Checkbox>
-              ))}
+              {Object.entries(options)
+                .filter(([, value]) => typeof value === 'boolean')
+                .map(([key, value]) => (
+                  <Checkbox
+                    key={key}
+                    isChecked={value}
+                    onChange={(event) =>
+                      handleOptionChange(key as keyof CompressOptions, event)
+                    }
+                  >
+                    {key}
+                  </Checkbox>
+                ))}
             </Grid>
+            {options && typeof options === 'object' && (
+              <FormControl w={1 / 3}>
+                <FormLabel>Passes</FormLabel>
+                <NumberInput
+                  defaultValue={2}
+                  min={0}
+                  value={options.passes}
+                  onChange={(_, value) => handlePassesChange(value)}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+            )}
           </ModalBody>
 
           <ModalFooter>
