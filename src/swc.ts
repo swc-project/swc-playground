@@ -223,6 +223,7 @@ export interface TransformOptions {
   }
   legacyDecorator?: boolean
   decoratorMetadata?: boolean
+  useDefineForClassFields?: boolean
 }
 
 export interface EnvOptions {
@@ -635,6 +636,7 @@ export const configSchema: JSONSchema6 = {
             },
             legacyDecorator: { type: 'boolean' },
             decoratorMetadata: { type: 'boolean' },
+            useDefineForClassFields: { type: 'boolean' },
           },
           additionalProperties: false,
         },
