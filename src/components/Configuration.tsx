@@ -94,9 +94,10 @@ export default function Configuration() {
   const handleSourceTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    const val = event.target.value;
     setSwcConfig((config) => ({
       ...config,
-      isModule: event.target.value === 'module',
+      isModule: val === 'module' ? true : val === 'script' ? false : 'unknown',
     }))
   }
 
@@ -244,6 +245,7 @@ export default function Configuration() {
             >
               <option value="module">Module</option>
               <option value="script">Script</option>
+              <option value="unknown">Unknown</option>
             </Select>
           </FormControl>
           {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
