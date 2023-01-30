@@ -91,14 +91,20 @@ export default function Configuration() {
     }))
   }
 
-  const handleSourceTypeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const val = event.target.value;
-    setSwcConfig((config) => ({
-      ...config,
-      isModule: val === 'module' ? true : val === 'script' ? false : 'unknown',
-    }))
+  const handleSourceTypeChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLSelectElement>) => {
+    const isModule = (() => {
+      switch (value) {
+        case 'module':
+          return false
+        case 'script':
+          return true
+        default:
+          return 'unknown'
+      }
+    })()
+    setSwcConfig((config) => ({ ...config, isModule }))
   }
 
   const handleToggleJSX = (event: React.ChangeEvent<HTMLInputElement>) => {

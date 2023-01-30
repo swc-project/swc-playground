@@ -39,7 +39,7 @@ export interface Config {
   module?: ModuleOptions
   minify?: boolean
   env?: EnvOptions
-  isModule?: boolean
+  isModule?: boolean | 'unknown'
   sourceMaps?: boolean | 'inline'
   inlineSourcesContent?: boolean
   experimental?: Record<never, never>
