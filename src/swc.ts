@@ -129,7 +129,7 @@ export interface CompressOptions {
   ecma?: number | string
   evaluate?: boolean
   expression?: boolean
-  global_defs?: Record<string, unknown>
+  global_defs?: Record<string, string>
   hoist_funs?: boolean
   hoist_props?: boolean
   hoist_vars?: boolean
@@ -434,7 +434,12 @@ export const configSchema: JSONSchema6 = {
                     },
                     evaluate: { type: 'boolean' },
                     expression: { type: 'boolean' },
-                    global_defs: { type: 'object' },
+                    global_defs: {
+                      type: 'object',
+                      additionalProperties: {
+                        type: 'string',
+                      },
+                    },
                     hoist_funs: { type: 'boolean' },
                     hoist_props: { type: 'boolean' },
                     hoist_vars: { type: 'boolean' },
