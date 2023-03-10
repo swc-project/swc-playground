@@ -257,7 +257,7 @@ export interface EnvOptions {
 
 export type ParseOnlyOptions = ParserOptions & {
   comments?: boolean
-  is_module?: boolean
+  isModule?: boolean | 'unknown'
   target?: EsVersion
 }
 
@@ -329,7 +329,11 @@ export function parse({
 }): ParserResult {
   try {
     return Ok(
-      swc.parseSync(code, { ...config.jsc.parser, target: config.jsc.target })
+      swc.parseSync(code, {
+        ...config.jsc.parser,
+        target: config.jsc.target,
+        isModule: config.isModule,
+      })
     )
   } catch (error) {
     return handleSwcError(error)
