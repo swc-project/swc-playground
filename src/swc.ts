@@ -332,7 +332,7 @@ export function parse({
       swc.parseSync(code, {
         ...config.jsc.parser,
         target: config.jsc.target,
-        isModule: config.isModule,
+        isModule: config.isModule ?? 'unknown',
       })
     )
   } catch (error) {
@@ -745,7 +745,7 @@ export const configSchema: JSONSchema6 = {
       type: 'boolean',
     },
     isModule: {
-      type: 'boolean',
+      oneOf: [{ type: 'boolean' }, { type: 'string', enum: ['unknown'] }],
     },
     env: {
       type: 'object',
