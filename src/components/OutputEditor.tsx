@@ -10,6 +10,8 @@ import {
   useMonacoThemeValue,
 } from '../utils'
 import type {
+  LogOutput,
+  LogResult,
   ParserResult,
   TransformationOutput,
   TransformationResult,
@@ -20,18 +22,24 @@ function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'
 }
 
-function stringifyOutput(output: TransformationResult | ParserResult): string {
+function isLog(value: unknown): value is LogOutput[] {
+  return (value as LogOutput[]) instanceof Array
+}
+
+function stringifyOutput(output: TransformationResult | ParserResult | LogResult): string {
   if (output.err) {
     return stripAnsi(output.val)
   } else if (isTransformedCode(output.val)) {
     return output.val.code
+  } else if (isLog(output.val)) {
+    return output.val.map((log) => `[${log.type}]: ${log.content}`).join('\n')
   } else {
     return JSON.stringify(output.val, null, 2)
   }
 }
 
 interface Props {
-  output: TransformationResult | ParserResult
+  output: TransformationResult | ParserResult | LogResult
   viewMode: string
   onViewModeChange(viewMode: string): void
 }
@@ -67,7 +75,7 @@ export default function OutputEditor({
   }
 
   const outputContent = stringifyOutput(output)
-  const editorLanguage = output.err
+  const editorLanguage = output.err || viewMode === 'log'
     ? 'text'
     : viewMode === 'code'
     ? 'javascript'
@@ -90,6 +98,7 @@ export default function OutputEditor({
           >
             <option value="code">Compiled Code</option>
             <option value="ast">AST</option>
+            <option value="log">Logs</option>
           </Select>
         </Flex>
       </Flex>
