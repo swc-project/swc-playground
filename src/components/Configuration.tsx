@@ -17,18 +17,21 @@ import {
   defaultCompressOptions,
   defaultEnvOptions,
   defaultMangleOptions,
+  parsedSwcConfigAtom,
   swcConfigAtom,
 } from '../state'
-import type { EsVersion, ModuleOptions, ParserOptions } from '../swc'
+import type { ParserOptions } from '../swc'
 import CompressOptionsModal from './CompressOptionsModal'
 import MangleOptionsModal from './MangleOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
-import { useBgColor, useBorderColor } from '../utils'
+import { JSONC_FORMATTING_OPTIONS, useBgColor, useBorderColor } from '../utils'
+import { applyEdits, format, modify } from 'jsonc-parser'
 
 const STORAGE_KEY = 'v1.config'
 
 export default function Configuration() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const bg = useBgColor()
   const borderColor = useBorderColor()
 
@@ -36,17 +39,27 @@ export default function Configuration() {
     const url = new URL(location.href)
     const encodedConfig = url.searchParams.get('config')
     const storedConfig = localStorage.getItem(STORAGE_KEY)
-    if (encodedConfig) {
+    const configJSON = encodedConfig
+      ? ungzip(Base64.toUint8Array(encodedConfig), { to: 'string' })
+      : storedConfig
+    if (!configJSON) {
+      return
+    }
+    if (configJSON.startsWith('{"')) {
+      // pretty format JSON
       setSwcConfig(
-        JSON.parse(ungzip(Base64.toUint8Array(encodedConfig), { to: 'string' }))
+        applyEdits(
+          configJSON,
+          format(configJSON, undefined, JSONC_FORMATTING_OPTIONS)
+        )
       )
-    } else if (storedConfig) {
-      setSwcConfig(JSON.parse(storedConfig))
+    } else {
+      setSwcConfig(configJSON)
     }
   }, [setSwcConfig])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(swcConfig))
+    localStorage.setItem(STORAGE_KEY, swcConfig)
   }, [swcConfig])
 
   const handleLanguageChange = (
@@ -54,41 +67,48 @@ export default function Configuration() {
   ) => {
     setSwcConfig((config) => {
       const jsxOrTsx =
-        config.jsc.parser.syntax === 'typescript'
-          ? config.jsc.parser.tsx
-          : config.jsc.parser.jsx
+        parsedSwcConfig.jsc.parser.syntax === 'typescript'
+          ? parsedSwcConfig.jsc.parser.tsx
+          : parsedSwcConfig.jsc.parser.jsx
       const parserOptions: ParserOptions =
         event.target.value === 'typescript'
           ? { syntax: 'typescript', tsx: jsxOrTsx }
           : { syntax: 'ecmascript', jsx: jsxOrTsx }
 
-      return {
-        ...config,
-        jsc: {
-          ...config.jsc,
-          parser: parserOptions,
-        },
-      }
+      return applyEdits(
+        config,
+        modify(config, ['jsc', 'parser'], parserOptions, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
     })
   }
 
   const handleTargetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: {
-        ...config.jsc,
-        target: event.target.value as EsVersion,
-      },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'target'], event.target.value, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleModuleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      module: {
-        type: event.target.value as ModuleOptions['type'],
-      },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(
+          config,
+          ['module'],
+          { type: event.target.value },
+          {
+            formattingOptions: JSONC_FORMATTING_OPTIONS,
+          }
+        )
+      )
+    )
   }
 
   const handleSourceTypeChange = ({
@@ -104,85 +124,125 @@ export default function Configuration() {
           return 'unknown'
       }
     })()
-    setSwcConfig((config) => ({ ...config, isModule }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['isModule'], isModule, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleJSX = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: {
-        ...config.jsc,
-        parser: { ...config.jsc.parser, jsx: event.target.checked },
-      },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'parser', 'jsx'], event.target.checked, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleTSX = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: {
-        ...config.jsc,
-        parser: { ...config.jsc.parser, tsx: event.target.checked },
-      },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'parser', 'tsx'], event.target.checked, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleMinify = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      minify: event.target.checked,
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['minify'], event.target.checked, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleCompress = (event: React.ChangeEvent<HTMLInputElement>) => {
     const options = event.target.checked ? defaultCompressOptions : false
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: {
-        ...config.jsc,
-        minify: { ...config.jsc.minify, compress: options },
-      },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'minify', 'compress'], options, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleMangle = (event: React.ChangeEvent<HTMLInputElement>) => {
     const options = event.target.checked ? defaultMangleOptions : false
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'minify', 'mangle'], options, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleLoose = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: { ...config.jsc, loose: event.target.checked },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'loose'], event.target.checked, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleEnvTargets = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const options = event.target.checked ? defaultEnvOptions : undefined
-    setSwcConfig((config) => ({ ...config, env: options }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['env'], options, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleEnvTargetsChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSwcConfig((config) => ({
-      ...config,
-      env: { ...config.env, targets: event.target.value },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['env', 'targets'], event.target.value, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
   }
 
   const handleToggleEnvBugfixes = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSwcConfig((config) => ({
-      ...config,
-      env: { ...config.env, bugfixes: event.target.checked ? true : undefined },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(
+          config,
+          ['env', 'bugfixes'],
+          event.target.checked ? true : undefined,
+          { formattingOptions: JSONC_FORMATTING_OPTIONS }
+        )
+      )
+    )
   }
 
   return (
@@ -202,18 +262,18 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-syntax">Language</FormLabel>
             <Select
               id="swc-syntax"
-              value={swcConfig.jsc.parser.syntax}
+              value={parsedSwcConfig.jsc.parser.syntax}
               onInput={handleLanguageChange}
             >
               <option value="ecmascript">JavaScript</option>
               <option value="typescript">TypeScript</option>
             </Select>
           </FormControl>
-          <FormControl isDisabled={swcConfig.env?.targets != null}>
+          <FormControl isDisabled={parsedSwcConfig.env?.targets != null}>
             <FormLabel htmlFor="swc-target">Target</FormLabel>
             <Select
               id="swc-target"
-              value={swcConfig.jsc.target}
+              value={parsedSwcConfig.jsc.target}
               onChange={handleTargetChange}
             >
               <option value="es3">ES3</option>
@@ -232,7 +292,7 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-module">Module</FormLabel>
             <Select
               id="swc-module"
-              value={swcConfig.module?.type}
+              value={parsedSwcConfig.module?.type}
               onChange={handleModuleChange}
             >
               <option value="es6">ES Modules</option>
@@ -246,7 +306,7 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
             <Select
               id="swc-source-type"
-              value={swcConfig.isModule ? 'module' : 'script'}
+              value={parsedSwcConfig.isModule ? 'module' : 'script'}
               onChange={handleSourceTypeChange}
             >
               <option value="module">Module</option>
@@ -254,11 +314,11 @@ export default function Configuration() {
               <option value="unknown">Unknown</option>
             </Select>
           </FormControl>
-          {swcConfig.jsc.parser.syntax === 'ecmascript' ? (
+          {parsedSwcConfig.jsc.parser.syntax === 'ecmascript' ? (
             <FormControl display="flex" alignItems="center">
               <Switch
                 id="swc-jsx"
-                isChecked={swcConfig.jsc.parser.jsx}
+                isChecked={parsedSwcConfig.jsc.parser.jsx}
                 onChange={handleToggleJSX}
               />
               <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
@@ -269,7 +329,7 @@ export default function Configuration() {
             <FormControl display="flex" alignItems="center">
               <Switch
                 id="swc-tsx"
-                isChecked={swcConfig.jsc.parser.tsx}
+                isChecked={parsedSwcConfig.jsc.parser.tsx}
                 onChange={handleToggleTSX}
               />
               <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
@@ -280,7 +340,7 @@ export default function Configuration() {
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-loose"
-              isChecked={swcConfig.jsc.loose}
+              isChecked={parsedSwcConfig.jsc.loose}
               onChange={handleToggleLoose}
             />
             <FormLabel htmlFor="swc-loose" ml="2" mb="0">
@@ -290,7 +350,7 @@ export default function Configuration() {
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-minify"
-              isChecked={swcConfig.minify}
+              isChecked={parsedSwcConfig.minify}
               onChange={handleToggleMinify}
             />
             <FormLabel htmlFor="swc-minify" ml="2" mb="0">
@@ -300,49 +360,49 @@ export default function Configuration() {
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-compress"
-              isChecked={!!swcConfig.jsc?.minify?.compress}
+              isChecked={!!parsedSwcConfig.jsc?.minify?.compress}
               onChange={handleToggleCompress}
             />
             <FormLabel htmlFor="swc-copress" ml="2" mb="0">
               Compress
             </FormLabel>
-            {swcConfig.jsc?.minify?.compress && <CompressOptionsModal />}
+            {parsedSwcConfig.jsc?.minify?.compress && <CompressOptionsModal />}
           </FormControl>
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-mangle"
-              isChecked={!!swcConfig.jsc?.minify?.mangle}
+              isChecked={!!parsedSwcConfig.jsc?.minify?.mangle}
               onChange={handleToggleMangle}
             />
             <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
               Mangle
             </FormLabel>
-            {swcConfig.jsc?.minify?.mangle && <MangleOptionsModal />}
+            {parsedSwcConfig.jsc?.minify?.mangle && <MangleOptionsModal />}
           </FormControl>
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-env-targets"
-              isChecked={swcConfig.env?.targets != null}
+              isChecked={parsedSwcConfig.env?.targets != null}
               onChange={handleToggleEnvTargets}
             />
             <FormLabel htmlFor="swc-env-targets" ml="2" mb="0">
               Env Targets
             </FormLabel>
           </FormControl>
-          {typeof swcConfig.env?.targets === 'string' && (
+          {typeof parsedSwcConfig.env?.targets === 'string' && (
             <>
               <FormControl display="flex" alignItems="center">
                 <Input
                   display="block"
                   placeholder="Browserslist query"
-                  value={swcConfig.env.targets}
+                  value={parsedSwcConfig.env.targets}
                   onChange={handleEnvTargetsChange}
                 />
               </FormControl>
               <FormControl display="flex" alignItems="center">
                 <Switch
                   id="swc-env-bugfixes"
-                  isChecked={swcConfig.env?.bugfixes == true}
+                  isChecked={parsedSwcConfig.env?.bugfixes == true}
                   onChange={handleToggleEnvBugfixes}
                 />
                 <FormLabel htmlFor="swc-env-bugfixes" ml="2" mb="0">

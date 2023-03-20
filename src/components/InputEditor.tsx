@@ -6,14 +6,14 @@ import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
 import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
-import { codeAtom, swcConfigAtom } from '../state'
+import { codeAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import {
   editorOptions,
   parseSWCError,
   useBorderColor,
   useMonacoThemeValue,
 } from '../utils'
-import { swcVersionAtom, type Config } from '../swc'
+import { swcVersionAtom } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
@@ -26,7 +26,7 @@ function getIssueReportUrl({
 }: {
   code: string
   version: string
-  config: Config
+  config: string
   playgroundLink: string
 }): string {
   const reportUrl = new URL(
@@ -34,7 +34,7 @@ function getIssueReportUrl({
   )
 
   reportUrl.searchParams.set('code', code)
-  reportUrl.searchParams.set('config', JSON.stringify(config, null, 2))
+  reportUrl.searchParams.set('config', config)
   reportUrl.searchParams.set('repro-link', playgroundLink)
   reportUrl.searchParams.set('version', version)
 
@@ -48,6 +48,7 @@ interface Props {
 export default function InputEditor({ output }: Props) {
   const [code, setCode] = useAtom(codeAtom)
   const [swcConfig] = useAtom(swcConfigAtom)
+  const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const [swcVersion] = useAtom(swcVersionAtom)
   const monacoTheme = useMonacoThemeValue()
   const borderColor = useBorderColor()
@@ -112,7 +113,7 @@ export default function InputEditor({ output }: Props) {
     url.searchParams.set('version', swcVersion)
     const encodedInput = Base64.fromUint8Array(gzip(code))
     url.searchParams.set('code', encodedInput)
-    const encodedConfig = Base64.fromUint8Array(gzip(JSON.stringify(swcConfig)))
+    const encodedConfig = Base64.fromUint8Array(gzip(swcConfig))
     url.searchParams.set('config', encodedConfig)
     return url.toString()
   }, [code, swcConfig, swcVersion])
@@ -178,7 +179,9 @@ export default function InputEditor({ output }: Props) {
   }
 
   const language =
-    swcConfig.jsc.parser.syntax === 'ecmascript' ? 'javascript' : 'typescript'
+    parsedSwcConfig.jsc.parser.syntax === 'ecmascript'
+      ? 'javascript'
+      : 'typescript'
 
   return (
     <Flex direction="column" gridArea="input" minW={0} minH={0}>

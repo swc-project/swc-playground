@@ -1,4 +1,5 @@
 import { atom } from 'jotai'
+import { parse } from 'jsonc-parser'
 import type { CompressOptions, Config, EnvOptions, MangleOptions } from './swc'
 
 /** @see https://github.com/swc-project/swc/blob/dada2d7d554fa0733a3c65c512777f1548d41a35/crates/swc_ecma_minifier/src/option/mod.rs#L114 */
@@ -64,40 +65,50 @@ export const defaultEnvOptions: EnvOptions = {
 
 export const codeAtom = atom('')
 
-export const swcConfigAtom = atom<Config>({
-  jsc: {
-    parser: {
-      syntax: 'ecmascript',
-      jsx: false,
+export const swcConfigAtom = atom(
+  JSON.stringify(
+    {
+      jsc: {
+        parser: {
+          syntax: 'ecmascript',
+          jsx: false,
+        },
+        target: 'es5',
+        loose: false,
+        minify: {
+          compress: false,
+          mangle: false,
+        },
+      },
+      module: {
+        type: 'es6',
+      },
+      minify: false,
+      isModule: true,
     },
-    target: 'es5',
-    loose: false,
-    minify: {
-      compress: false,
-      mangle: false,
-    },
-  },
-  module: {
-    type: 'es6',
-  },
-  minify: false,
-  isModule: true,
-})
+    null,
+    2
+  )
+)
+
+export const parsedSwcConfigAtom = atom<Config>((get) =>
+  parse(get(swcConfigAtom), undefined, { allowTrailingComma: true })
+)
 
 export const fileNameAtom = atom((get) => {
-  const config = get(swcConfigAtom)
+  const config = get(parsedSwcConfigAtom)
 
-  if (config.jsc.parser.syntax === 'ecmascript') {
-    if (config.jsc.parser.jsx) {
-      return 'input.jsx'
-    } else {
-      return 'input.js'
-    }
-  } else {
+  if (config.jsc.parser.syntax === 'typescript') {
     if (config.jsc.parser.tsx) {
       return 'input.tsx'
     } else {
       return 'input.ts'
+    }
+  } else {
+    if (config.jsc.parser.jsx) {
+      return 'input.jsx'
+    } else {
+      return 'input.js'
     }
   }
 })

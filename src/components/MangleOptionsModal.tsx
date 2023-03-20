@@ -15,31 +15,38 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { swcConfigAtom } from '../state'
+import { applyEdits, modify } from 'jsonc-parser'
+import { parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import type { MangleOptions } from '../swc'
+import { JSONC_FORMATTING_OPTIONS } from '../utils'
 
 export default function MangleOptionsModal() {
-  const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
+  const [, setSwcConfig] = useAtom(swcConfigAtom)
+  const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const [options, setOptions] = useState<MangleOptions | boolean | undefined>(
-    swcConfig.jsc?.minify?.mangle
+    parsedSwcConfig.jsc?.minify?.mangle
   )
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleApply = () => {
-    setSwcConfig((config) => ({
-      ...config,
-      jsc: { ...config.jsc, minify: { ...config.jsc.minify, mangle: options } },
-    }))
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(config, ['jsc', 'minify', 'mangle'], options, {
+          formattingOptions: JSONC_FORMATTING_OPTIONS,
+        })
+      )
+    )
     onClose()
   }
 
   const handleOpen = () => {
-    setOptions(swcConfig.jsc?.minify?.mangle)
+    setOptions(parsedSwcConfig.jsc?.minify?.mangle)
     onOpen()
   }
 
   const handleClose = () => {
-    setOptions(swcConfig.jsc?.minify?.mangle)
+    setOptions(parsedSwcConfig.jsc?.minify?.mangle)
     onClose()
   }
 

@@ -1,4 +1,5 @@
 import { useColorModeValue } from '@chakra-ui/react'
+import type { FormattingOptions } from 'jsonc-parser'
 import type { editor } from 'monaco-editor'
 
 export const editorOptions: editor.IStandaloneEditorConstructionOptions = {
@@ -27,4 +28,9 @@ const RE_SWC_ERROR = /error:\s(.+?)\n\s-->\s.+?:(\d+):(\d+)/gm
 
 export function parseSWCError(message: string) {
   return message.matchAll(RE_SWC_ERROR)
+}
+
+export const JSONC_FORMATTING_OPTIONS: FormattingOptions = {
+  tabSize: 2,
+  insertSpaces: true,
 }

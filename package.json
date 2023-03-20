@@ -21,6 +21,7 @@
     "framer-motion": "^8.5.4",
     "jotai": "^1.13.1",
     "js-base64": "^3.7.4",
+    "jsonc-parser": "^3.2.0",
     "monaco-editor": "^0.34.1",
     "next": "^13.1.6",
     "pako": "^2.1.0",

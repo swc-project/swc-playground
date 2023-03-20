@@ -30,9 +30,7 @@ const editorOptions: editor.IEditorConstructionOptions = {
 
 export default function ConfigEditorModal() {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
-  const [editingConfig, setEditingConfig] = useState(
-    JSON.stringify(swcConfig, null, 2)
-  )
+  const [editingConfig, setEditingConfig] = useState(swcConfig)
   const monacoTheme = useMonacoThemeValue()
   const monaco = useMonaco()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -44,6 +42,8 @@ export default function ConfigEditorModal() {
     }
 
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      allowComments: true,
+      trailingCommas: 'ignore',
       schemas: [
         {
           uri: 'http://server/swcrc-schema.json',
@@ -55,18 +55,18 @@ export default function ConfigEditorModal() {
   }, [monaco])
 
   const handleOpen = () => {
-    setEditingConfig(JSON.stringify(swcConfig, null, 2))
+    setEditingConfig(swcConfig)
     onOpen()
   }
 
   const handleClose = () => {
-    setEditingConfig(JSON.stringify(swcConfig, null, 2))
+    setEditingConfig(swcConfig)
     onClose()
   }
 
   const handleApply = () => {
     try {
-      setSwcConfig(JSON.parse(editingConfig))
+      setSwcConfig(editingConfig)
       onClose()
     } catch (error) {
       toast({

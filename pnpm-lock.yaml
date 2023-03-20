@@ -17,6 +17,7 @@ specifiers:
   framer-motion: ^8.5.4
   jotai: ^1.13.1
   js-base64: ^3.7.4
+  jsonc-parser: ^3.2.0
   monaco-editor: ^0.34.1
   next: ^13.1.6
   pako: ^2.1.0
@@ -41,6 +42,7 @@ dependencies:
   framer-motion: 8.5.4_biqbaboplfbrettd7655fr4n2y
   jotai: 1.13.1_react@18.2.0
   js-base64: 3.7.4
+  jsonc-parser: 3.2.0
   monaco-editor: 0.34.1
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   pako: 2.1.0
@@ -3091,6 +3093,10 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.7
+    dev: false
+
+  /jsonc-parser/3.2.0:
+    resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
     dev: false
 
   /jsx-ast-utils/3.3.3:
