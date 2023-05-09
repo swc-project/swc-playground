@@ -306,9 +306,13 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
             <Select
               id="swc-source-type"
-              value={parsedSwcConfig.isModule === 'unknown'
-                ? 'unknown'
-                : parsedSwcConfig.isModule ? 'module' : 'script'}
+              value={
+                parsedSwcConfig.isModule === 'unknown'
+                  ? 'unknown'
+                  : parsedSwcConfig.isModule
+                  ? 'module'
+                  : 'script'
+              }
               onChange={handleSourceTypeChange}
             >
               <option value="module">Module</option>
