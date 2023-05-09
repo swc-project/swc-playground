@@ -117,9 +117,9 @@ export default function Configuration() {
     const isModule = (() => {
       switch (value) {
         case 'module':
-          return false
-        case 'script':
           return true
+        case 'script':
+          return false
         default:
           return 'unknown'
       }
@@ -306,7 +306,9 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
             <Select
               id="swc-source-type"
-              value={parsedSwcConfig.isModule ? 'module' : 'script'}
+              value={parsedSwcConfig.isModule === 'unknown'
+                ? 'unknown'
+                : parsedSwcConfig.isModule ? 'module' : 'script'}
               onChange={handleSourceTypeChange}
             >
               <option value="module">Module</option>
