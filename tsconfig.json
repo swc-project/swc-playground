@@ -6,7 +6,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "moduleResolution": "bundler"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
