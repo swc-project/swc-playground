@@ -16,7 +16,7 @@ jobs:
           version: 6.32.8
           run_install: true
       - name: Run checker script
-        run: pnpm ts-node-esm scripts/check-swc-update.ts
+        run: pnpm tsx scripts/check-swc-update.mts
       - name: Commit update
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
