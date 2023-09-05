@@ -45,7 +45,9 @@ const Main = styled.main`
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
   const [swcVersion] = useAtom(swcVersionAtom)
-  const { data: swc, error } = useSWR(swcVersion, loadSwc)
+  const { data: swc, error } = useSWR(swcVersion, loadSwc, {
+    revalidateOnFocus: false,
+  })
   const [code] = useAtom(codeAtom)
   const [swcConfig] = useAtom(parsedSwcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)

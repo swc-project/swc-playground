@@ -40,11 +40,13 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
   const { data: oldSWC, error: errorOfOld } = useSWR(
     '@swc/wasm-web',
-    fetchSwcVersions
+    fetchSwcVersions,
+    { revalidateOnFocus: false }
   )
   const { data: newSWC, error: errorOfNew } = useSWR(
     '@swc/binding_core_wasm',
-    fetchSwcVersions
+    fetchSwcVersions,
+    { revalidateOnFocus: false }
   )
   const bg = useBgColor()
   const borderColor = useBorderColor()
