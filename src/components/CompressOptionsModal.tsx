@@ -125,7 +125,7 @@ export default function CompressOptionsModal() {
               <FormControl w={1 / 3}>
                 <FormLabel>Passes</FormLabel>
                 <NumberInput
-                  defaultValue={2}
+                  defaultValue={3}
                   min={0}
                   value={options.passes}
                   onChange={(_, value) => handlePassesChange(value)}
