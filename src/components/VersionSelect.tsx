@@ -1,26 +1,26 @@
-import type { ChangeEvent } from 'react'
-import useSWR from 'swr'
-import { useAtom } from 'jotai'
 import {
   Box,
   CircularProgress,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Link,
   Select,
   Text,
 } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
+import type { ChangeEvent } from 'react'
 import { HiExternalLink } from 'react-icons/hi'
 import semver from 'semver'
+import useSWR from 'swr'
 import { swcVersionAtom } from '../swc'
 import { useBgColor, useBorderColor } from '../utils'
 
 type PackageInfo = {
   tags: {
-    latest: string
-  }
-  versions: string[]
+    latest: string,
+  },
+  versions: string[],
 }
 
 const fetchSwcVersions = (packageName: string): Promise<PackageInfo> =>
@@ -52,13 +52,13 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const borderColor = useBorderColor()
 
   const handleCurrentVersionChange = (
-    event: ChangeEvent<HTMLSelectElement>
+    event: ChangeEvent<HTMLSelectElement>,
   ) => {
     setSwcVersion(event.target.value)
   }
 
-  const isLoading =
-    isLoadingSwc || (!oldSWC && !errorOfOld) || (!newSWC && !errorOfNew)
+  const isLoading = isLoadingSwc || (!oldSWC && !errorOfOld) ||
+    (!newSWC && !errorOfNew)
 
   return (
     <Flex direction="column">
@@ -72,19 +72,23 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
         borderColor={borderColor}
         borderWidth="1px"
       >
-        {oldSWC && newSWC ? (
-          <Select value={swcVersion} onChange={handleCurrentVersionChange}>
-            {mergeVersions(oldSWC.versions, newSWC.versions).map((version) => (
-              <option key={version} value={version}>
-                {version}
-              </option>
-            ))}
-          </Select>
-        ) : (
-          <Select>
-            <option>{swcVersion}</option>
-          </Select>
-        )}
+        {oldSWC && newSWC
+          ? (
+            <Select value={swcVersion} onChange={handleCurrentVersionChange}>
+              {mergeVersions(oldSWC.versions, newSWC.versions).map((
+                version,
+              ) => (
+                <option key={version} value={version}>
+                  {version}
+                </option>
+              ))}
+            </Select>
+          )
+          : (
+            <Select>
+              <option>{swcVersion}</option>
+            </Select>
+          )}
         <Flex alignItems="center" my="2" height="8">
           {isLoading && (
             <>

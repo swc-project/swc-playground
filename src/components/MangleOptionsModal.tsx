@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
 import {
   Button,
   Checkbox,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { applyEdits, modify } from 'jsonc-parser'
+import { useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import type { MangleOptions } from '../swc'
 import { JSONC_FORMATTING_OPTIONS } from '../utils'
@@ -56,7 +56,7 @@ export default function MangleOptionsModal() {
 
   const handleOptionChange = (
     key: keyof MangleOptions,
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
   ) => {
     setOptions((options) =>
       options && typeof options === 'object'
@@ -87,8 +87,7 @@ export default function MangleOptionsModal() {
                   key={key}
                   isChecked={value}
                   onChange={(event) =>
-                    handleOptionChange(key as keyof MangleOptions, event)
-                  }
+                    handleOptionChange(key as keyof MangleOptions, event)}
                 >
                   {key}
                 </Checkbox>

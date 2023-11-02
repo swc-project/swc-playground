@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
 import {
   Button,
   Checkbox,
@@ -7,15 +5,15 @@ import {
   FormLabel,
   Grid,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  NumberInput,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   NumberDecrementStepper,
   NumberIncrementStepper,
+  NumberInput,
   NumberInputField,
   NumberInputStepper,
   Text,
@@ -23,6 +21,8 @@ import {
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { applyEdits, modify } from 'jsonc-parser'
+import { useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import type { CompressOptions } from '../swc'
 import { JSONC_FORMATTING_OPTIONS } from '../utils'
@@ -63,7 +63,7 @@ export default function CompressOptionsModal() {
 
   const handleOptionChange = (
     key: keyof CompressOptions,
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
   ) => {
     setOptions((options) =>
       options && typeof options === 'object'
@@ -114,8 +114,7 @@ export default function CompressOptionsModal() {
                     key={key}
                     isChecked={value}
                     onChange={(event) =>
-                      handleOptionChange(key as keyof CompressOptions, event)
-                    }
+                      handleOptionChange(key as keyof CompressOptions, event)}
                   >
                     {key}
                   </Checkbox>

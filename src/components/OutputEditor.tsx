@@ -1,20 +1,20 @@
+import { Box, Flex, Heading, Select } from '@chakra-ui/react'
+import Editor, { useMonaco } from '@monaco-editor/react'
+import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
 import type { ChangeEvent } from 'react'
-import type { editor } from 'monaco-editor'
-import Editor, { useMonaco } from '@monaco-editor/react'
-import { Box, Flex, Heading, Select } from '@chakra-ui/react'
+import stripAnsi from 'strip-ansi'
+import type {
+  ParserResult,
+  TransformationOutput,
+  TransformationResult,
+} from '../swc'
 import {
   editorOptions as sharedEditorOptions,
   useBgColor,
   useBorderColor,
   useMonacoThemeValue,
 } from '../utils'
-import type {
-  ParserResult,
-  TransformationOutput,
-  TransformationResult,
-} from '../swc'
-import stripAnsi from 'strip-ansi'
 
 function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'

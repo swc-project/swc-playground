@@ -1,27 +1,27 @@
-import { useEffect, useState } from 'react'
 import {
   Button,
   Code,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import type { editor } from 'monaco-editor'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
+import type { editor } from 'monaco-editor'
+import { useEffect, useState } from 'react'
+import { swcConfigAtom } from '../state'
+import { configSchema } from '../swc'
 import {
   editorOptions as sharedEditorOptions,
   useMonacoThemeValue,
 } from '../utils'
-import { swcConfigAtom } from '../state'
-import { configSchema } from '../swc'
 
 const editorOptions: editor.IEditorConstructionOptions = {
   ...sharedEditorOptions,

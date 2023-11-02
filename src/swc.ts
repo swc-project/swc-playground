@@ -1,8 +1,8 @@
 import { atom } from 'jotai'
-import { Ok, Err } from 'ts-results'
-import type { Result } from 'ts-results'
 import type { JSONSchema6 } from 'json-schema'
 import semver from 'semver'
+import { Err, Ok } from 'ts-results'
+import type { Result } from 'ts-results'
 
 interface SwcModule {
   default(): Promise<unknown>
@@ -12,29 +12,29 @@ interface SwcModule {
 
 export interface Config {
   jsc: {
-    parser: ParserOptions
-    target?: EsVersion
-    loose?: boolean
+    parser: ParserOptions,
+    target?: EsVersion,
+    loose?: boolean,
     minify?: {
-      compress?: boolean | CompressOptions
-      mangle?: boolean | MangleOptions
-      format?: Record<string, unknown>
-      ecma?: number | string
-      keepClassnames?: boolean
-      keepFnames?: boolean
-      module?: boolean
-      safari10?: boolean
-      toplevel?: boolean
-      sourceMap?: boolean | TerserSourceMapOption
-      outputPath?: string
-      inlineSourcesContent?: boolean
-      emitSourceMapColumns?: boolean
-    }
-    transform?: TransformOptions
-    externalHelpers?: boolean
-    keepClassNames?: boolean
-    baseUrl?: string
-    paths?: Record<string, string[]>
+      compress?: boolean | CompressOptions,
+      mangle?: boolean | MangleOptions,
+      format?: Record<string, unknown>,
+      ecma?: number | string,
+      keepClassnames?: boolean,
+      keepFnames?: boolean,
+      module?: boolean,
+      safari10?: boolean,
+      toplevel?: boolean,
+      sourceMap?: boolean | TerserSourceMapOption,
+      outputPath?: string,
+      inlineSourcesContent?: boolean,
+      emitSourceMapColumns?: boolean,
+    },
+    transform?: TransformOptions,
+    externalHelpers?: boolean,
+    keepClassNames?: boolean,
+    baseUrl?: string,
+    paths?: Record<string, string[]>,
   }
   module?: ModuleOptions
   minify?: boolean
@@ -48,21 +48,21 @@ export interface Config {
 
 export type ParserOptions =
   | {
-      syntax: 'ecmascript'
-      jsx?: boolean
-      functionBind?: boolean
-      decorators?: boolean
-      decoratorsBeforeExport?: boolean
-      exportDefaultFrom?: boolean
-      importAssertions?: boolean
-      staticBlocks?: boolean
-      privateInObject?: boolean
-    }
+    syntax: 'ecmascript',
+    jsx?: boolean,
+    functionBind?: boolean,
+    decorators?: boolean,
+    decoratorsBeforeExport?: boolean,
+    exportDefaultFrom?: boolean,
+    importAssertions?: boolean,
+    staticBlocks?: boolean,
+    privateInObject?: boolean,
+  }
   | {
-      syntax: 'typescript'
-      tsx?: boolean
-      decorators?: boolean
-    }
+    syntax: 'typescript',
+    tsx?: boolean,
+    decorators?: boolean,
+  }
 
 export type EsVersion =
   | 'es3'
@@ -78,39 +78,39 @@ export type EsVersion =
 
 export type ModuleOptions =
   | {
-      type: 'es6'
-      strict?: boolean
-      strictMode?: boolean
-      lazy?: boolean
-      noInterop?: boolean
-    }
+    type: 'es6',
+    strict?: boolean,
+    strictMode?: boolean,
+    lazy?: boolean,
+    noInterop?: boolean,
+  }
   | {
-      type: 'commonjs'
-      strict?: boolean
-      strictMode?: boolean
-      lazy?: boolean
-      noInterop?: boolean
-    }
+    type: 'commonjs',
+    strict?: boolean,
+    strictMode?: boolean,
+    lazy?: boolean,
+    noInterop?: boolean,
+  }
   | {
-      type: 'amd'
-      moduleId?: string
-      strict?: boolean
-      strictMode?: boolean
-      lazy?: boolean
-      noInterop?: boolean
-    }
+    type: 'amd',
+    moduleId?: string,
+    strict?: boolean,
+    strictMode?: boolean,
+    lazy?: boolean,
+    noInterop?: boolean,
+  }
   | {
-      type: 'umd'
-      globals?: Record<string, string>
-      strict?: boolean
-      strictMode?: boolean
-      lazy?: boolean
-      noInterop?: boolean
-    }
+    type: 'umd',
+    globals?: Record<string, string>,
+    strict?: boolean,
+    strictMode?: boolean,
+    lazy?: boolean,
+    noInterop?: boolean,
+  }
   | {
-      type: 'systemjs'
-      allowTopLevelThis?: boolean
-    }
+    type: 'systemjs',
+    allowTopLevelThis?: boolean,
+  }
 
 export interface CompressOptions {
   arguments?: boolean
@@ -173,9 +173,9 @@ export interface CompressOptions {
 
 export interface MangleOptions {
   props?: {
-    reserved?: string[]
-    undeclared?: boolean
-    regex?: null | string
+    reserved?: string[],
+    undeclared?: boolean,
+    regex?: null | string,
   }
   toplevel?: boolean
   keep_classnames?: boolean
@@ -194,32 +194,32 @@ export interface TerserSourceMapOption {
 
 export interface TransformOptions {
   react?: {
-    runtime?: 'automatic' | 'classic'
-    importSource?: string
-    pragma?: string
-    pragmaFrag?: string
-    throwIfNamespace?: boolean
-    development?: boolean
-    useBuiltins?: boolean
+    runtime?: 'automatic' | 'classic',
+    importSource?: string,
+    pragma?: string,
+    pragmaFrag?: string,
+    throwIfNamespace?: boolean,
+    development?: boolean,
+    useBuiltins?: boolean,
     refresh?: {
-      refreshReg?: string
-      refreshSig?: string
-      emitFullSignatures?: boolean
-    }
+      refreshReg?: string,
+      refreshSig?: string,
+      emitFullSignatures?: boolean,
+    },
   }
   constModules?: {
-    globals?: Record<string, Record<string, string>>
+    globals?: Record<string, Record<string, string>>,
   }
   optimizer?: {
     globals?: {
-      vars?: Record<string, string>
-      envs?: string[] | Record<string, string>
-      typeofs?: Record<string, string>
-    }
-    simplify?: boolean
+      vars?: Record<string, string>,
+      envs?: string[] | Record<string, string>,
+      typeofs?: Record<string, string>,
+    },
+    simplify?: boolean,
     jsonify?: {
-      minCost?: number
-    }
+      minCost?: number,
+    },
   }
   legacyDecorator?: boolean
   decoratorMetadata?: boolean
@@ -231,18 +231,18 @@ export interface EnvOptions {
     | string
     | string[]
     | Record<
-        | 'chrome'
-        | 'opera'
-        | 'edge'
-        | 'firefox'
-        | 'safari'
-        | 'ie'
-        | 'ios'
-        | 'android'
-        | 'node'
-        | 'electron',
-        string
-      >
+      | 'chrome'
+      | 'opera'
+      | 'edge'
+      | 'firefox'
+      | 'safari'
+      | 'ie'
+      | 'ios'
+      | 'android'
+      | 'node'
+      | 'electron',
+      string
+    >
   mode?: 'usage' | 'entry'
   skip?: string[]
   dynamicImport?: boolean
@@ -256,15 +256,15 @@ export interface EnvOptions {
 }
 
 export type ParseOnlyOptions = ParserOptions & {
-  comments?: boolean
-  isModule?: boolean | 'unknown'
-  target?: EsVersion
+  comments?: boolean,
+  isModule?: boolean | 'unknown',
+  target?: EsVersion,
 }
 
 export interface AST {
   type: 'Module' | 'Script'
   body: unknown
-  span: { start: number; end: number; ctxt: number }
+  span: { start: number, end: number, ctxt: number }
 }
 
 export interface TransformationOutput {
@@ -304,10 +304,10 @@ export function transform({
   fileName,
   swc,
 }: {
-  code: string
-  fileName: string
-  config: Config
-  swc: SwcModule
+  code: string,
+  fileName: string,
+  config: Config,
+  swc: SwcModule,
 }): TransformationResult {
   try {
     return Ok(swc.transformSync(code, { ...config, filename: fileName }))
@@ -323,9 +323,9 @@ export function parse({
   config,
   swc,
 }: {
-  code: string
-  config: Config
-  swc: SwcModule
+  code: string,
+  config: Config,
+  swc: SwcModule,
 }): ParserResult {
   try {
     return Ok(

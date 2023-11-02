@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useAtom } from 'jotai'
-import useSWR from 'swr'
-import { Center, CircularProgress, useToast, VStack } from '@chakra-ui/react'
+import { Center, CircularProgress, VStack, useToast } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
+import { useAtom } from 'jotai'
+import { useEffect, useMemo, useState } from 'react'
+import useSWR from 'swr'
 import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, parsedSwcConfigAtom } from '../state'
 import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
 import type { AST } from '../swc'
 
 import Configuration from './Configuration'
-import VersionSelect from './VersionSelect'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
+import VersionSelect from './VersionSelect'
 
 const Main = styled.main`
   display: grid;
@@ -138,7 +138,7 @@ function isRecord(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === 'object' && obj !== null
 }
 
-function isSpan(obj: unknown): obj is { start: number; end: number } {
+function isSpan(obj: unknown): obj is { start: number, end: number } {
   return (
     typeof obj === 'object' && obj !== null && 'start' in obj && 'end' in obj
   )

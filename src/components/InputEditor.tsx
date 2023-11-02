@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useRef } from 'react'
-import type { editor } from 'monaco-editor'
+import { Box, Button, Flex, HStack, Heading, useToast } from '@chakra-ui/react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { Box, Button, Flex, Heading, useToast, HStack } from '@chakra-ui/react'
-import { CgShare, CgFileDocument } from 'react-icons/cg'
 import { Base64 } from 'js-base64'
+import type { editor } from 'monaco-editor'
 import { gzip, ungzip } from 'pako'
+import { useEffect, useMemo, useRef } from 'react'
+import { CgFileDocument, CgShare } from 'react-icons/cg'
 import { codeAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
+import { swcVersionAtom } from '../swc'
+import type { ParserResult, TransformationResult } from '../swc'
 import {
   editorOptions,
   parseSWCError,
   useBorderColor,
   useMonacoThemeValue,
 } from '../utils'
-import { swcVersionAtom } from '../swc'
-import type { ParserResult, TransformationResult } from '../swc'
 
 const STORAGE_KEY = 'v1.code'
 
@@ -24,10 +24,10 @@ function getIssueReportUrl({
   config,
   playgroundLink,
 }: {
-  code: string
-  version: string
-  config: string
-  playgroundLink: string
+  code: string,
+  version: string,
+  config: string,
+  playgroundLink: string,
 }): string {
   const reportUrl = new URL(
     `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
@@ -178,10 +178,9 @@ export default function InputEditor({ output }: Props) {
     }
   }
 
-  const language =
-    parsedSwcConfig.jsc.parser.syntax === 'ecmascript'
-      ? 'javascript'
-      : 'typescript'
+  const language = parsedSwcConfig.jsc.parser.syntax === 'ecmascript'
+    ? 'javascript'
+    : 'typescript'
 
   return (
     <Flex direction="column" gridArea="input" minW={0} minH={0}>

@@ -1,6 +1,3 @@
-import { useEffect } from 'react'
-import type * as React from 'react'
-import { useAtom } from 'jotai'
 import {
   Flex,
   FormControl,
@@ -11,8 +8,12 @@ import {
   Switch,
   VStack,
 } from '@chakra-ui/react'
+import { useAtom } from 'jotai'
 import { Base64 } from 'js-base64'
+import { applyEdits, format, modify } from 'jsonc-parser'
 import { ungzip } from 'pako'
+import { useEffect } from 'react'
+import type * as React from 'react'
 import {
   defaultCompressOptions,
   defaultEnvOptions,
@@ -21,11 +22,10 @@ import {
   swcConfigAtom,
 } from '../state'
 import type { ParserOptions } from '../swc'
-import CompressOptionsModal from './CompressOptionsModal'
-import MangleOptionsModal from './MangleOptionsModal'
-import ConfigEditorModal from './ConfigEditorModal'
 import { JSONC_FORMATTING_OPTIONS, useBgColor, useBorderColor } from '../utils'
-import { applyEdits, format, modify } from 'jsonc-parser'
+import CompressOptionsModal from './CompressOptionsModal'
+import ConfigEditorModal from './ConfigEditorModal'
+import MangleOptionsModal from './MangleOptionsModal'
 
 const STORAGE_KEY = 'v1.config'
 
@@ -63,17 +63,15 @@ export default function Configuration() {
   }, [swcConfig])
 
   const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSwcConfig((config) => {
-      const jsxOrTsx =
-        parsedSwcConfig.jsc.parser.syntax === 'typescript'
-          ? parsedSwcConfig.jsc.parser.tsx
-          : parsedSwcConfig.jsc.parser.jsx
-      const parserOptions: ParserOptions =
-        event.target.value === 'typescript'
-          ? { syntax: 'typescript', tsx: jsxOrTsx }
-          : { syntax: 'ecmascript', jsx: jsxOrTsx }
+      const jsxOrTsx = parsedSwcConfig.jsc.parser.syntax === 'typescript'
+        ? parsedSwcConfig.jsc.parser.tsx
+        : parsedSwcConfig.jsc.parser.jsx
+      const parserOptions: ParserOptions = event.target.value === 'typescript'
+        ? { syntax: 'typescript', tsx: jsxOrTsx }
+        : { syntax: 'ecmascript', jsx: jsxOrTsx }
 
       return applyEdits(
         config,
@@ -203,7 +201,7 @@ export default function Configuration() {
   }
 
   const handleToggleEnvTargets = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const options = event.target.checked ? defaultEnvOptions : undefined
     setSwcConfig((config) =>
@@ -217,7 +215,7 @@ export default function Configuration() {
   }
 
   const handleEnvTargetsChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setSwcConfig((config) =>
       applyEdits(
@@ -230,7 +228,7 @@ export default function Configuration() {
   }
 
   const handleToggleEnvBugfixes = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setSwcConfig((config) =>
       applyEdits(
@@ -306,13 +304,11 @@ export default function Configuration() {
             <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
             <Select
               id="swc-source-type"
-              value={
-                parsedSwcConfig.isModule === 'unknown'
-                  ? 'unknown'
-                  : parsedSwcConfig.isModule
-                  ? 'module'
-                  : 'script'
-              }
+              value={parsedSwcConfig.isModule === 'unknown'
+                ? 'unknown'
+                : parsedSwcConfig.isModule
+                ? 'module'
+                : 'script'}
               onChange={handleSourceTypeChange}
             >
               <option value="module">Module</option>
@@ -320,29 +316,31 @@ export default function Configuration() {
               <option value="unknown">Unknown</option>
             </Select>
           </FormControl>
-          {parsedSwcConfig.jsc.parser.syntax === 'ecmascript' ? (
-            <FormControl display="flex" alignItems="center">
-              <Switch
-                id="swc-jsx"
-                isChecked={parsedSwcConfig.jsc.parser.jsx}
-                onChange={handleToggleJSX}
-              />
-              <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
-                JSX
-              </FormLabel>
-            </FormControl>
-          ) : (
-            <FormControl display="flex" alignItems="center">
-              <Switch
-                id="swc-tsx"
-                isChecked={parsedSwcConfig.jsc.parser.tsx}
-                onChange={handleToggleTSX}
-              />
-              <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
-                TSX
-              </FormLabel>
-            </FormControl>
-          )}
+          {parsedSwcConfig.jsc.parser.syntax === 'ecmascript'
+            ? (
+              <FormControl display="flex" alignItems="center">
+                <Switch
+                  id="swc-jsx"
+                  isChecked={parsedSwcConfig.jsc.parser.jsx}
+                  onChange={handleToggleJSX}
+                />
+                <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
+                  JSX
+                </FormLabel>
+              </FormControl>
+            )
+            : (
+              <FormControl display="flex" alignItems="center">
+                <Switch
+                  id="swc-tsx"
+                  isChecked={parsedSwcConfig.jsc.parser.tsx}
+                  onChange={handleToggleTSX}
+                />
+                <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
+                  TSX
+                </FormLabel>
+              </FormControl>
+            )}
           <FormControl display="flex" alignItems="center">
             <Switch
               id="swc-loose"
