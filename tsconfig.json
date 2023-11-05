@@ -1,6 +1,7 @@
 {
   "extends": "@gplane/tsconfig",
   "compilerOptions": {
+    "module": "esnext",
     "target": "esnext",
     "noEmit": true,
     "lib": ["dom", "dom.iterable", "esnext"],
