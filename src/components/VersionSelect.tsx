@@ -51,6 +51,9 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const bg = useBgColor()
   const borderColor = useBorderColor()
 
+  const versions = mergeVersions(oldSWC?.versions ?? [], newSWC?.versions ?? [])
+    .filter((version, index) => index === 0 || !version.includes('nightly'))
+
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -75,9 +78,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
         {oldSWC && newSWC
           ? (
             <Select value={swcVersion} onChange={handleCurrentVersionChange}>
-              {mergeVersions(oldSWC.versions, newSWC.versions).map((
-                version,
-              ) => (
+              {versions.map((version) => (
                 <option key={version} value={version}>
                   {version}
                 </option>
