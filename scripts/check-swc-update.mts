@@ -9,9 +9,12 @@ const {
 } = (await response.json()) as { tags: { latest: string } }
 
 const envFile = await fs.readFile('.env', 'utf8')
-const current = /NEXT_PUBLIC_SWC_VERSION=(?<current>\w+)$/.exec(envFile)?.groups
+const current = /^NEXT_PUBLIC_SWC_VERSION=(?<current>\S+)\s*$/.exec(envFile)?.groups
   ?.current
-if (current && current !== latest) {
+if (!current) {
+  throw new Error(`NEXT_PUBLIC_SWC_VERSION not found in .env:\n\n${envFile}`)
+}
+if (current !== latest) {
   await fs.writeFile(
     '.env',
     envFile.replace(
