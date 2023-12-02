@@ -52,7 +52,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const borderColor = useBorderColor()
 
   const versions = mergeVersions(oldSWC?.versions ?? [], newSWC?.versions ?? [])
-    .filter((version, index) => index === 0 || !version.includes('nightly'))
+    .filter((version, index) => index === 0 || !version.includes('nightly') || version === swcVersion)
 
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>,
