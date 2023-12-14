@@ -207,9 +207,21 @@ export default function Configuration() {
     setSwcConfig((config) =>
       applyEdits(
         config,
-        modify(config, ['env'], options, {
-          formattingOptions: JSONC_FORMATTING_OPTIONS,
-        })
+        [
+          ...modify(config, ['env'], options, {
+            formattingOptions: JSONC_FORMATTING_OPTIONS,
+          }),
+          ...modify(
+            config,
+            ['jsc', 'target'],
+            event.target.checked ? undefined : 'es5',
+            {
+              formattingOptions: JSONC_FORMATTING_OPTIONS,
+              getInsertionIndex: (properties) =>
+                properties.indexOf('parser') + 1,
+            }
+          ),
+        ]
       )
     )
   }
