@@ -249,7 +249,7 @@ export interface EnvOptions {
   loose?: boolean
   include?: string[]
   exclude?: string[]
-  coreJs?: 2 | 3 | '2' | '3'
+  coreJs?: 2 | 3 | string
   shippedProposals?: boolean
   forceAllTransforms?: boolean
   bugfixes?: boolean
@@ -780,7 +780,7 @@ export const configSchema: JSONSchema6 = {
         coreJs: {
           oneOf: [
             { type: 'integer', enum: [2, 3] },
-            { type: 'string', enum: ['2', '3'] },
+            { type: 'string' },
           ],
         },
         shippedProposals: { type: 'boolean' },
