@@ -18,10 +18,7 @@ import type { editor } from 'monaco-editor'
 import { useEffect, useState } from 'react'
 import { swcConfigAtom } from '../state'
 import { configSchema } from '../swc'
-import {
-  editorOptions as sharedEditorOptions,
-  useMonacoThemeValue,
-} from '../utils'
+import { editorOptions as sharedEditorOptions, useMonacoThemeValue } from '../utils'
 
 const editorOptions: editor.IEditorConstructionOptions = {
   ...sharedEditorOptions,

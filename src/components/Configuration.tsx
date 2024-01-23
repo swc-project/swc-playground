@@ -217,8 +217,7 @@ export default function Configuration() {
             event.target.checked ? undefined : 'es5',
             {
               formattingOptions: JSONC_FORMATTING_OPTIONS,
-              getInsertionIndex: (properties) =>
-                properties.indexOf('parser') + 1,
+              getInsertionIndex: (properties) => properties.indexOf('parser') + 1,
             }
           ),
         ]

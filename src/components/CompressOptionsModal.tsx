@@ -99,8 +99,8 @@ export default function CompressOptionsModal() {
 
           <ModalBody>
             <Text mb="4">
-              Not all options are shown here. You can also configure by closing
-              this dialog then clicking the &quot;Edit as JSON&quot; button.
+              Not all options are shown here. You can also configure by closing this dialog then
+              clicking the &quot;Edit as JSON&quot; button.
             </Text>
             <Grid
               templateColumns={['1fr', '1fr', 'repeat(3, 1fr)']}
@@ -113,8 +113,7 @@ export default function CompressOptionsModal() {
                   <Checkbox
                     key={key}
                     isChecked={value}
-                    onChange={(event) =>
-                      handleOptionChange(key as keyof CompressOptions, event)}
+                    onChange={(event) => handleOptionChange(key as keyof CompressOptions, event)}
                   >
                     {key}
                   </Checkbox>

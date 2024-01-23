@@ -1,13 +1,4 @@
-import {
-  Box,
-  CircularProgress,
-  Flex,
-  HStack,
-  Heading,
-  Link,
-  Select,
-  Text,
-} from '@chakra-ui/react'
+import { Box, CircularProgress, Flex, HStack, Heading, Link, Select, Text } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import type { ChangeEvent } from 'react'
 import { HiExternalLink } from 'react-icons/hi'

@@ -9,12 +9,7 @@ import { CgFileDocument, CgShare } from 'react-icons/cg'
 import { codeAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import { swcVersionAtom } from '../swc'
 import type { ParserResult, TransformationResult } from '../swc'
-import {
-  editorOptions,
-  parseSWCError,
-  useBorderColor,
-  useMonacoThemeValue,
-} from '../utils'
+import { editorOptions, parseSWCError, useBorderColor, useMonacoThemeValue } from '../utils'
 
 const STORAGE_KEY = 'v1.code'
 

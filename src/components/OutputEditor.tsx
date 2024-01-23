@@ -4,11 +4,7 @@ import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
 import type { ChangeEvent } from 'react'
 import stripAnsi from 'strip-ansi'
-import type {
-  ParserResult,
-  TransformationOutput,
-  TransformationResult,
-} from '../swc'
+import type { ParserResult, TransformationOutput, TransformationResult } from '../swc'
 import {
   editorOptions as sharedEditorOptions,
   useBgColor,

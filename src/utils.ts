@@ -3,8 +3,7 @@ import type { FormattingOptions } from 'jsonc-parser'
 import type { editor } from 'monaco-editor'
 
 export const editorOptions: editor.IStandaloneEditorConstructionOptions = {
-  fontFamily:
-    '"Cascadia Code", "Jetbrains Mono", "Fira Code", "Menlo", "Consolas", monospace',
+  fontFamily: '"Cascadia Code", "Jetbrains Mono", "Fira Code", "Menlo", "Consolas", monospace',
   fontLigatures: true,
   fontSize: 14,
   lineHeight: 24,

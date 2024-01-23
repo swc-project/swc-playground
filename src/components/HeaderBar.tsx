@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Link,
-  useColorMode,
-  useColorModeValue,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, HStack, Link, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { CgExternal, CgMoon, CgSun } from 'react-icons/cg'
