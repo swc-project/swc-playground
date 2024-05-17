@@ -85,7 +85,7 @@ export default function OutputEditor({
             onChange={handleViewModeChange}
           >
             <option value="code">Compiled Code</option>
-            <option value="ast">AST</option>
+            <option value="ast">JSON AST</option>
           </Select>
         </Flex>
       </Flex>
