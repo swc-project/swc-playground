@@ -285,7 +285,7 @@ export function getPackageName(version: string) {
 
 export async function loadSwc(version: string): Promise<SwcModule> {
   const packageName = getPackageName(version)
-  const entryFileName = semver.gt(version, '1.2.165')
+  const entryFileName = semver.gt(version, '1.2.165') && semver.lt(version, '1.6.7')
     ? 'wasm-web.js'
     : 'wasm.js'
   const swcModule: SwcModule = await import(
