@@ -8,8 +8,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "tsc -p . && eslint --ext=ts,tsx src",
-    "fmt": "dprint fmt",
-    "update-schema": "curl --output src/schema.json https://swc.rs/schema.json"
+    "fmt": "dprint fmt"
   },
   "author": "Pig Fang <g-plane@hotmail.com>",
   "license": "MIT",

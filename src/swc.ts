@@ -2,8 +2,6 @@ import { atom } from 'jotai'
 import semver from 'semver'
 import { Err, Ok } from 'ts-results'
 import type { Result } from 'ts-results'
-import configSchema from './schema.json';
-export { configSchema }
 
 interface SwcModule {
   default(): Promise<unknown>
