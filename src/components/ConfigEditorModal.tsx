@@ -17,7 +17,6 @@ import { useAtom } from 'jotai'
 import type { editor } from 'monaco-editor'
 import { useEffect, useState } from 'react'
 import { swcConfigAtom } from '../state'
-import { configSchema } from '../swc'
 import { editorOptions as sharedEditorOptions, useMonacoThemeValue } from '../utils'
 
 const editorOptions: editor.IEditorConstructionOptions = {
@@ -41,11 +40,11 @@ export default function ConfigEditorModal() {
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       allowComments: true,
       trailingCommas: 'ignore',
+      enableSchemaRequest: true,
       schemas: [
         {
-          uri: 'http://server/swcrc-schema.json',
+          uri: 'https://swc.rs/schema.json',
           fileMatch: ['.swcrc'],
-          schema: configSchema,
         },
       ],
     })
