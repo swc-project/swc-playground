@@ -117,7 +117,8 @@ export default function Workspace() {
     if (encodedInput) {
       setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
     }
-  }, [setCode])
+    setIsStripTypes(url.searchParams.has('strip-types'))
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, code)
@@ -130,8 +131,11 @@ export default function Workspace() {
     url.searchParams.set('code', encodedInput)
     const encodedConfig = Base64.fromUint8Array(gzip(swcConfigJSON))
     url.searchParams.set('config', encodedConfig)
+    if (isStripTypes) {
+      url.searchParams.set('strip-types', '')
+    }
     return url.toString()
-  }, [code, swcConfigJSON, swcVersion])
+  }, [code, swcConfigJSON, swcVersion, isStripTypes])
 
   const issueReportUrl = useMemo(
     () =>
