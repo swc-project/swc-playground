@@ -1,7 +1,7 @@
+import type * as SwcStripTypes from '@swc/wasm-typescript-esm'
 import { atom } from 'jotai'
 import semver from 'semver'
-import { Err, Ok } from 'ts-results'
-import type { Result } from 'ts-results'
+import { Err, Ok, type Result } from 'ts-results'
 
 interface SwcModule {
   default(): Promise<unknown>
@@ -282,7 +282,11 @@ export function getPackageName(version: string) {
     : '@swc/wasm-web'
 }
 
-export async function loadSwc(version: string): Promise<SwcModule> {
+export async function loadSwc(version: string): Promise<[SwcModule, typeof SwcStripTypes]> {
+  return Promise.all([loadSwcCore(version), loadSwcStripTypes(version)])
+}
+
+async function loadSwcCore(version: string): Promise<SwcModule> {
   const packageName = getPackageName(version)
   const entryFileName = semver.gt(version, '1.2.165') && semver.lt(version, '1.6.7')
     ? 'wasm-web.js'
@@ -290,6 +294,15 @@ export async function loadSwc(version: string): Promise<SwcModule> {
   const swcModule: SwcModule = await import(
     /* webpackIgnore: true */
     `https://cdn.jsdelivr.net/npm/${packageName}@${version}/${entryFileName}`
+  )
+  await swcModule.default()
+  return swcModule
+}
+
+async function loadSwcStripTypes(version: string): Promise<typeof SwcStripTypes> {
+  const swcModule: typeof SwcStripTypes = await import(
+    /* webpackIgnore: true */
+    `https://cdn.jsdelivr.net/npm/@swc/wasm-typescript-esm@${version}/wasm.js`
   )
   await swcModule.default()
   return swcModule
@@ -346,5 +359,28 @@ function handleSwcError(error: unknown): Err<string> {
     return Err(`${error.toString()}\n\n${error.stack}`)
   } else {
     return Err(String(error))
+  }
+}
+
+export function stripTypes({
+  code,
+  config,
+  fileName,
+  swc,
+}: {
+  code: string,
+  config: Config,
+  fileName: string,
+  swc: typeof SwcStripTypes,
+}): Result<SwcStripTypes.TransformOutput, string> {
+  try {
+    return Ok(
+      swc.transformSync(code, {
+        filename: fileName,
+        module: config.module?.type === 'es6',
+      })
+    )
+  } catch (error) {
+    return handleSwcError(error)
   }
 }

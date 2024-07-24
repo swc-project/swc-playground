@@ -6,9 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Err } from 'ts-results'
 import { codeAtom, fileNameAtom, parsedSwcConfigAtom } from '../state'
-import { loadSwc, parse, swcVersionAtom, transform } from '../swc'
-import type { AST } from '../swc'
-
+import { type AST, loadSwc, parse, stripTypes, swcVersionAtom, transform } from '../swc'
 import Configuration from './Configuration'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
@@ -52,6 +50,7 @@ export default function Workspace() {
   const [swcConfig] = useAtom(parsedSwcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
   const [viewMode, setViewMode] = useState('code')
+  const [isStripTypes, setIsStripTypes] = useState(false)
   const output = useMemo(() => {
     if (error) {
       return Err(String(error))
@@ -63,12 +62,14 @@ export default function Workspace() {
 
     switch (viewMode) {
       case 'ast':
-        return parse({ code, config: swcConfig, swc })
+        return parse({ code, config: swcConfig, swc: swc[0] })
       case 'code':
       default:
-        return transform({ code, fileName, config: swcConfig, swc })
+        return isStripTypes
+          ? stripTypes({ code, fileName, config: swcConfig, swc: swc[1] })
+          : transform({ code, fileName, config: swcConfig, swc: swc[0] })
     }
-  }, [code, fileName, swc, error, swcConfig, viewMode])
+  }, [code, fileName, swc, error, swcConfig, viewMode, isStripTypes])
   const toast = useToast()
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function Workspace() {
   return (
     <Main>
       <VStack spacing={4} alignItems="unset" gridArea="sidebar">
-        <Configuration />
+        <Configuration stripTypes={isStripTypes} onStripTypesChange={setIsStripTypes} />
         <VersionSelect isLoadingSwc={!swc && !error} />
       </VStack>
       <InputEditor output={output} />

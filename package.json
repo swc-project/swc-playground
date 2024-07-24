@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@gplane/tsconfig": "^6.1.0",
+    "@swc/wasm-typescript-esm": "^1.7.1",
     "@types/node": "^20.8.6",
     "@types/pako": "^2.0.1",
     "@types/react": "^18.2.28",

@@ -29,7 +29,12 @@ import MangleOptionsModal from './MangleOptionsModal'
 
 const STORAGE_KEY = 'v1.config'
 
-export default function Configuration() {
+interface Props {
+  stripTypes: boolean
+  onStripTypesChange(value: boolean): void
+}
+
+export default function Configuration(props: Props) {
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const bg = useBgColor()
@@ -426,6 +431,16 @@ export default function Configuration() {
               </FormControl>
             </>
           )}
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="strip-types"
+              isChecked={props.stripTypes}
+              onChange={(event) => props.onStripTypesChange(event.target.checked)}
+            />
+            <FormLabel htmlFor="strip-types" ml="2" mb="0">
+              Strip Types Only
+            </FormLabel>
+          </FormControl>
         </VStack>
         <ConfigEditorModal />
       </Flex>
