@@ -63,8 +63,6 @@ export const defaultEnvOptions: EnvOptions = {
   targets: '',
 }
 
-export const codeAtom = atom('')
-
 export const swcConfigAtom = atom(
   JSON.stringify(
     {

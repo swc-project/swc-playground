@@ -1,55 +1,26 @@
-import { Box, Button, Flex, HStack, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, HStack, Heading } from '@chakra-ui/react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
-import { Base64 } from 'js-base64'
 import type { editor } from 'monaco-editor'
-import { gzip, ungzip } from 'pako'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { CgFileDocument, CgShare } from 'react-icons/cg'
-import { codeAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
-import { swcVersionAtom } from '../swc'
-import type { ParserResult, TransformationResult } from '../swc'
+import { parsedSwcConfigAtom } from '../state'
 import { editorOptions, parseSWCError, useBorderColor, useMonacoThemeValue } from '../utils'
 
-const STORAGE_KEY = 'v1.code'
-
-function getIssueReportUrl({
-  code,
-  version,
-  config,
-  playgroundLink,
-}: {
-  code: string,
-  version: string,
-  config: string,
-  playgroundLink: string,
-}): string {
-  const reportUrl = new URL(
-    `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
-  )
-
-  reportUrl.searchParams.set('code', code)
-  reportUrl.searchParams.set('config', config)
-  reportUrl.searchParams.set('repro-link', playgroundLink)
-  reportUrl.searchParams.set('version', version)
-
-  return reportUrl.toString()
-}
-
 interface Props {
-  output: TransformationResult | ParserResult
+  code: string
+  error: string | null
+  onCodeChange(code: string): void
+  onReportIssue(): void
+  onShare(): void
 }
 
-export default function InputEditor({ output }: Props) {
-  const [code, setCode] = useAtom(codeAtom)
-  const [swcConfig] = useAtom(swcConfigAtom)
+export default function InputEditor(props: Props) {
   const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
-  const [swcVersion] = useAtom(swcVersionAtom)
   const monacoTheme = useMonacoThemeValue()
   const borderColor = useBorderColor()
   const monaco = useMonaco()
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
-  const toast = useToast()
 
   useEffect(() => {
     monaco?.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
@@ -65,8 +36,8 @@ export default function InputEditor({ output }: Props) {
       return
     }
 
-    if (output.err) {
-      const markers = Array.from(parseSWCError(output.val)).map(
+    if (props.error) {
+      const markers = Array.from(parseSWCError(props.error)).map(
         ([_, message, line, col]): editor.IMarkerData => {
           const lineNumber = Number.parseInt(line!),
             column = Number.parseInt(col!)
@@ -86,82 +57,7 @@ export default function InputEditor({ output }: Props) {
     }
 
     return () => monaco.editor.setModelMarkers(model, 'swc', [])
-  }, [output, monaco])
-
-  useEffect(() => {
-    const url = new URL(location.href)
-    const encodedInput = url.searchParams.get('code')
-    const storedInput = localStorage.getItem(STORAGE_KEY)
-    if (encodedInput) {
-      setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
-    } else if (storedInput) {
-      setCode(storedInput)
-    }
-  }, [setCode])
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, code)
-  }, [code])
-
-  const shareUrl = useMemo(() => {
-    const url = new URL(location.href)
-    url.searchParams.set('version', swcVersion)
-    const encodedInput = Base64.fromUint8Array(gzip(code))
-    url.searchParams.set('code', encodedInput)
-    const encodedConfig = Base64.fromUint8Array(gzip(swcConfig))
-    url.searchParams.set('config', encodedConfig)
-    return url.toString()
-  }, [code, swcConfig, swcVersion])
-
-  const issueReportUrl = useMemo(
-    () =>
-      getIssueReportUrl({
-        code,
-        config: swcConfig,
-        version: swcVersion,
-        playgroundLink: shareUrl,
-      }),
-    [code, swcConfig, swcVersion, shareUrl]
-  )
-
-  const handleIssueReportClick = () => {
-    if (code.length > 2000) {
-      toast({
-        title: 'Code too long',
-        description:
-          'Your input is too large to share. Please copy the code and paste it into the issue.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-      return
-    }
-    window.open(issueReportUrl, '_blank')
-  }
-
-  const handleShare = async () => {
-    if (!navigator.clipboard) {
-      toast({
-        title: 'Error',
-        description: 'Clipboard is not supported in your environment.',
-        status: 'error',
-        duration: 3000,
-        position: 'top',
-        isClosable: true,
-      })
-      return
-    }
-
-    window.history.replaceState(null, '', shareUrl)
-    await navigator.clipboard.writeText(shareUrl)
-    toast({
-      title: 'URL is copied to clipboard.',
-      status: 'success',
-      duration: 3000,
-      position: 'top',
-      isClosable: true,
-    })
-  }
+  }, [props.error, monaco])
 
   const handleEditorDidMount = (instance: editor.IStandaloneCodeEditor) => {
     editorRef.current = instance
@@ -169,7 +65,7 @@ export default function InputEditor({ output }: Props) {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value != null) {
-      setCode(value)
+      props.onCodeChange(value)
     }
   }
 
@@ -187,11 +83,11 @@ export default function InputEditor({ output }: Props) {
           <Button
             size="xs"
             leftIcon={<CgFileDocument />}
-            onClick={handleIssueReportClick}
+            onClick={props.onReportIssue}
           >
             Report Issue
           </Button>
-          <Button size="xs" leftIcon={<CgShare />} onClick={handleShare}>
+          <Button size="xs" leftIcon={<CgShare />} onClick={props.onShare}>
             Share
           </Button>
         </HStack>
@@ -203,7 +99,7 @@ export default function InputEditor({ output }: Props) {
         borderWidth="1px"
       >
         <Editor
-          value={code}
+          value={props.code}
           language={language}
           defaultLanguage={language}
           theme={monacoTheme}

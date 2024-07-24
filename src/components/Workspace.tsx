@@ -2,15 +2,40 @@ import { Center, CircularProgress, VStack, useToast } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
+import { Base64 } from 'js-base64'
+import { gzip, ungzip } from 'pako'
 import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Err } from 'ts-results'
-import { codeAtom, fileNameAtom, parsedSwcConfigAtom } from '../state'
+import { fileNameAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
 import { type AST, loadSwc, parse, stripTypes, swcVersionAtom, transform } from '../swc'
 import Configuration from './Configuration'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
 import VersionSelect from './VersionSelect'
+
+const STORAGE_KEY = 'v1.code'
+
+function getIssueReportUrl({
+  code,
+  version,
+  config,
+  playgroundLink,
+}: {
+  code: string,
+  version: string,
+  config: string,
+  playgroundLink: string,
+}): string {
+  const reportUrl = new URL(
+    `https://github.com/swc-project/swc/issues/new?assignees=&labels=C-bug&template=bug_report.yml`
+  )
+  reportUrl.searchParams.set('code', code)
+  reportUrl.searchParams.set('config', config)
+  reportUrl.searchParams.set('repro-link', playgroundLink)
+  reportUrl.searchParams.set('version', version)
+  return reportUrl.toString()
+}
 
 const Main = styled.main`
   display: grid;
@@ -46,7 +71,8 @@ export default function Workspace() {
   const { data: swc, error } = useSWR(swcVersion, loadSwc, {
     revalidateOnFocus: false,
   })
-  const [code] = useAtom(codeAtom)
+  const [code, setCode] = useState(localStorage.getItem(STORAGE_KEY) ?? '')
+  const [swcConfigJSON] = useAtom(swcConfigAtom)
   const [swcConfig] = useAtom(parsedSwcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
   const [viewMode, setViewMode] = useState('code')
@@ -85,6 +111,78 @@ export default function Workspace() {
     }
   }, [error, toast])
 
+  useEffect(() => {
+    const url = new URL(location.href)
+    const encodedInput = url.searchParams.get('code')
+    if (encodedInput) {
+      setCode(ungzip(Base64.toUint8Array(encodedInput), { to: 'string' }))
+    }
+  }, [setCode])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, code)
+  }, [code])
+
+  const shareUrl = useMemo(() => {
+    const url = new URL(location.href)
+    url.searchParams.set('version', swcVersion)
+    const encodedInput = Base64.fromUint8Array(gzip(code))
+    url.searchParams.set('code', encodedInput)
+    const encodedConfig = Base64.fromUint8Array(gzip(swcConfigJSON))
+    url.searchParams.set('config', encodedConfig)
+    return url.toString()
+  }, [code, swcConfigJSON, swcVersion])
+
+  const issueReportUrl = useMemo(
+    () =>
+      getIssueReportUrl({
+        code,
+        config: swcConfigJSON,
+        version: swcVersion,
+        playgroundLink: shareUrl,
+      }),
+    [code, swcConfigJSON, swcVersion, shareUrl]
+  )
+
+  const handleReportIssue = () => {
+    if (code.length > 2000) {
+      toast({
+        title: 'Code too long',
+        description:
+          'Your input is too large to share. Please copy the code and paste it into the issue.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
+    window.open(issueReportUrl, '_blank')
+  }
+
+  const handleShare = async () => {
+    if (!navigator.clipboard) {
+      toast({
+        title: 'Error',
+        description: 'Clipboard is not supported in your environment.',
+        status: 'error',
+        duration: 3000,
+        position: 'top',
+        isClosable: true,
+      })
+      return
+    }
+
+    window.history.replaceState(null, '', shareUrl)
+    await navigator.clipboard.writeText(shareUrl)
+    toast({
+      title: 'URL is copied to clipboard.',
+      status: 'success',
+      duration: 3000,
+      position: 'top',
+      isClosable: true,
+    })
+  }
+
   const isLoadingMonaco = !monaco
   if (isLoadingMonaco && !swc) {
     return (
@@ -109,7 +207,13 @@ export default function Workspace() {
         <Configuration stripTypes={isStripTypes} onStripTypesChange={setIsStripTypes} />
         <VersionSelect isLoadingSwc={!swc && !error} />
       </VStack>
-      <InputEditor output={output} />
+      <InputEditor
+        code={code}
+        onCodeChange={setCode}
+        error={output.err ? output.val : null}
+        onReportIssue={handleReportIssue}
+        onShare={handleShare}
+      />
       <OutputEditor
         output={output}
         viewMode={viewMode}
