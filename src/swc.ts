@@ -1,5 +1,4 @@
 import type * as SwcStripTypes from '@swc/wasm-typescript-esm'
-import { atom } from 'jotai'
 import semver from 'semver'
 import { Err, Ok, type Result } from 'ts-results'
 
@@ -269,11 +268,6 @@ export interface AST {
 export interface TransformationOutput {
   code: string
 }
-
-export const swcVersionAtom = atom(
-  new URLSearchParams(location.search).get('version') ??
-    process.env.NEXT_PUBLIC_SWC_VERSION
-)
 
 /** SWC renamed npm package since v1.2.166. */
 export function getPackageName(version: string) {

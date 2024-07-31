@@ -9,7 +9,7 @@ import semver from 'semver'
 import useSWR from 'swr'
 import { Err } from 'ts-results'
 import { fileNameAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
-import { type AST, loadSwc, parse, stripTypes, swcVersionAtom, transform } from '../swc'
+import { type AST, loadSwc, parse, stripTypes, transform } from '../swc'
 import Configuration from './Configuration'
 import InputEditor from './InputEditor'
 import OutputEditor from './OutputEditor'
@@ -68,11 +68,14 @@ const Main = styled.main`
 
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
-  const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
+  const [swcVersion, setSwcVersion] = useState(() =>
+    new URLSearchParams(location.search).get('version') ??
+      process.env.NEXT_PUBLIC_SWC_VERSION
+  )
   const { data: swc, error } = useSWR(swcVersion, loadSwc, {
     revalidateOnFocus: false,
   })
-  const [code, setCode] = useState(localStorage.getItem(STORAGE_KEY) ?? '')
+  const [code, setCode] = useState(() => localStorage.getItem(STORAGE_KEY) ?? '')
   const [swcConfigJSON] = useAtom(swcConfigAtom)
   const [swcConfig] = useAtom(parsedSwcConfigAtom)
   const [fileName] = useAtom(fileNameAtom)
@@ -216,7 +219,11 @@ export default function Workspace() {
   return (
     <Main>
       <VStack spacing={4} alignItems="unset" gridArea="sidebar">
-        <Configuration stripTypes={isStripTypes} onStripTypesChange={setIsStripTypes} />
+        <Configuration
+          swcVersion={swcVersion}
+          stripTypes={isStripTypes}
+          onStripTypesChange={setIsStripTypes}
+        />
         <VersionSelect
           isLoadingSwc={!swc && !error}
           swcVersion={swcVersion}

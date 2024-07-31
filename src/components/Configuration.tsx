@@ -22,7 +22,7 @@ import {
   parsedSwcConfigAtom,
   swcConfigAtom,
 } from '../state'
-import { type ParserOptions, swcVersionAtom } from '../swc'
+import { type ParserOptions } from '../swc'
 import { JSONC_FORMATTING_OPTIONS, useBgColor, useBorderColor } from '../utils'
 import CompressOptionsModal from './CompressOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
@@ -31,12 +31,12 @@ import MangleOptionsModal from './MangleOptionsModal'
 const STORAGE_KEY = 'v1.config'
 
 interface Props {
+  swcVersion: string
   stripTypes: boolean
   onStripTypesChange(value: boolean): void
 }
 
 export default function Configuration(props: Props) {
-  const [swcVersion] = useAtom(swcVersionAtom)
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const bg = useBgColor()
@@ -438,7 +438,7 @@ export default function Configuration(props: Props) {
               id="strip-types"
               isChecked={props.stripTypes}
               onChange={(event) => props.onStripTypesChange(event.target.checked)}
-              disabled={semver.lt(swcVersion, '1.7.1')}
+              disabled={semver.lt(props.swcVersion, '1.7.1')}
             />
             <FormLabel htmlFor="strip-types" ml="2" mb="0">
               Strip Types Only
