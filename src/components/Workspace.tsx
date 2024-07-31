@@ -91,7 +91,7 @@ export default function Workspace() {
         return parse({ code, config: swcConfig, swc: swc[0] })
       case 'code':
       default:
-        return isStripTypes
+        return isStripTypes && swc[1]
           ? stripTypes({ code, fileName, config: swcConfig, swc: swc[1] })
           : transform({ code, fileName, config: swcConfig, swc: swc[0] })
     }

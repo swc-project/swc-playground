@@ -14,6 +14,7 @@ import { applyEdits, format, modify } from 'jsonc-parser'
 import { ungzip } from 'pako'
 import { useEffect } from 'react'
 import type * as React from 'react'
+import semver from 'semver'
 import {
   defaultCompressOptions,
   defaultEnvOptions,
@@ -21,7 +22,7 @@ import {
   parsedSwcConfigAtom,
   swcConfigAtom,
 } from '../state'
-import type { ParserOptions } from '../swc'
+import { type ParserOptions, swcVersionAtom } from '../swc'
 import { JSONC_FORMATTING_OPTIONS, useBgColor, useBorderColor } from '../utils'
 import CompressOptionsModal from './CompressOptionsModal'
 import ConfigEditorModal from './ConfigEditorModal'
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function Configuration(props: Props) {
+  const [swcVersion] = useAtom(swcVersionAtom)
   const [swcConfig, setSwcConfig] = useAtom(swcConfigAtom)
   const [parsedSwcConfig] = useAtom(parsedSwcConfigAtom)
   const bg = useBgColor()
@@ -436,6 +438,7 @@ export default function Configuration(props: Props) {
               id="strip-types"
               isChecked={props.stripTypes}
               onChange={(event) => props.onStripTypesChange(event.target.checked)}
+              disabled={semver.lt(swcVersion, '1.7.1')}
             />
             <FormLabel htmlFor="strip-types" ml="2" mb="0">
               Strip Types Only
