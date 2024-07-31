@@ -282,13 +282,13 @@ export function getPackageName(version: string) {
     : '@swc/wasm-web'
 }
 
-export async function loadSwc(
+export function loadSwc(
   version: string,
-): Promise<[SwcModule, typeof SwcStripTypes | undefined]> {
-  if (semver.gte(version, '1.7.1')) {
-    return Promise.all([loadSwcCore(version), loadSwcStripTypes(version)])
-  }
-  return [await loadSwcCore(version), undefined]
+): Promise<[SwcModule, typeof SwcStripTypes | null]> {
+  return Promise.all([
+    loadSwcCore(version),
+    semver.gte(version, '1.7.1') ? loadSwcStripTypes(version) : null,
+  ])
 }
 
 async function loadSwcCore(version: string): Promise<SwcModule> {
