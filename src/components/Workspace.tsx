@@ -5,6 +5,7 @@ import { useAtom } from 'jotai'
 import { Base64 } from 'js-base64'
 import { gzip, ungzip } from 'pako'
 import { useEffect, useMemo, useState } from 'react'
+import semver from 'semver'
 import useSWR from 'swr'
 import { Err } from 'ts-results'
 import { fileNameAtom, parsedSwcConfigAtom, swcConfigAtom } from '../state'
@@ -67,7 +68,7 @@ const Main = styled.main`
 
 export default function Workspace() {
   const { data: monaco } = useSWR('monaco', () => loader.init())
-  const [swcVersion] = useAtom(swcVersionAtom)
+  const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
   const { data: swc, error } = useSWR(swcVersion, loadSwc, {
     revalidateOnFocus: false,
   })
@@ -148,7 +149,7 @@ export default function Workspace() {
     [code, swcConfigJSON, swcVersion, shareUrl]
   )
 
-  const handleReportIssue = () => {
+  function handleReportIssue() {
     if (code.length > 2000) {
       toast({
         title: 'Code too long',
@@ -163,7 +164,7 @@ export default function Workspace() {
     window.open(issueReportUrl, '_blank')
   }
 
-  const handleShare = async () => {
+  async function handleShare() {
     if (!navigator.clipboard) {
       toast({
         title: 'Error',
@@ -185,6 +186,13 @@ export default function Workspace() {
       position: 'top',
       isClosable: true,
     })
+  }
+
+  function handleSwcVersionChange(version: string) {
+    setSwcVersion(version)
+    if (semver.lt(version, '1.7.1')) {
+      setIsStripTypes(false)
+    }
   }
 
   const isLoadingMonaco = !monaco
@@ -209,7 +217,11 @@ export default function Workspace() {
     <Main>
       <VStack spacing={4} alignItems="unset" gridArea="sidebar">
         <Configuration stripTypes={isStripTypes} onStripTypesChange={setIsStripTypes} />
-        <VersionSelect isLoadingSwc={!swc && !error} />
+        <VersionSelect
+          isLoadingSwc={!swc && !error}
+          swcVersion={swcVersion}
+          onSwcVersionChange={handleSwcVersionChange}
+        />
       </VStack>
       <InputEditor
         code={code}

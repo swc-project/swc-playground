@@ -1,10 +1,8 @@
 import { Box, CircularProgress, Flex, HStack, Heading, Link, Select, Text } from '@chakra-ui/react'
-import { useAtom } from 'jotai'
 import type { ChangeEvent } from 'react'
 import { HiExternalLink } from 'react-icons/hi'
 import semver from 'semver'
 import useSWR from 'swr'
-import { swcVersionAtom } from '../swc'
 import { useBgColor, useBorderColor } from '../utils'
 
 type PackageInfo = {
@@ -25,10 +23,11 @@ function mergeVersions(...versions: string[][]): string[] {
 
 interface Props {
   isLoadingSwc: boolean
+  swcVersion: string
+  onSwcVersionChange: (version: string) => void
 }
 
-export default function VersionSelect({ isLoadingSwc }: Props) {
-  const [swcVersion, setSwcVersion] = useAtom(swcVersionAtom)
+export default function VersionSelect({ isLoadingSwc, swcVersion, onSwcVersionChange }: Props) {
   const { data: oldSWC, error: errorOfOld } = useSWR(
     '@swc/wasm-web',
     fetchSwcVersions,
@@ -50,7 +49,7 @@ export default function VersionSelect({ isLoadingSwc }: Props) {
   const handleCurrentVersionChange = (
     event: ChangeEvent<HTMLSelectElement>,
   ) => {
-    setSwcVersion(event.target.value)
+    onSwcVersionChange(event.target.value)
   }
 
   const isLoading = isLoadingSwc || (!oldSWC && !errorOfOld) ||
