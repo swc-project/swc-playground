@@ -376,7 +376,7 @@ export function stripTypes({
     return Ok(
       swc.transformSync(code, {
         filename: fileName,
-        module: config.module?.type === 'es6',
+        module: typeof config.isModule === 'boolean' ? config.isModule : undefined,
       })
     )
   } catch (error) {
