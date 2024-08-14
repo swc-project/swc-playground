@@ -222,6 +222,7 @@ export interface TransformOptions {
   legacyDecorator?: boolean
   decoratorMetadata?: boolean
   useDefineForClassFields?: boolean
+  verbatimModuleSyntax?: boolean
 }
 
 export interface EnvOptions {
