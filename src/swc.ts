@@ -73,6 +73,8 @@ export type EsVersion =
   | 'es2020'
   | 'es2021'
   | 'es2022'
+  | 'es2023'
+  | 'es2024'
 
 export type ModuleOptions =
   | {
