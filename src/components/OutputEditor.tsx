@@ -4,7 +4,12 @@ import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
 import type { ChangeEvent } from 'react'
 import stripAnsi from 'strip-ansi'
-import type { ParserResult, TransformationOutput, TransformationResult } from '../swc'
+import type {
+  OutputStructure,
+  ParserResult,
+  TransformationOutput,
+  TransformationResult,
+} from '../swc'
 import {
   editorOptions as sharedEditorOptions,
   useBgColor,
@@ -16,10 +21,31 @@ function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'
 }
 
-function stringifyOutput(output: TransformationResult | ParserResult): string {
+function containsOutput(value: unknown): value is OutputStructure {
+  return typeof (value as OutputStructure).output === 'string'
+}
+
+function stringifyOutput(output: TransformationResult | ParserResult, viewMode: string): string {
   if (output.err) {
     return stripAnsi(output.val)
-  } else if (isTransformedCode(output.val)) {
+  }
+
+  if (viewMode === 'dts') {
+    if (!containsOutput(output.val)) {
+      return [
+        '// Make sure `jsc.parser.syntax` is set to `"typescript"` ',
+        '// Make sure `jsc.experimental.emitIsolatedDts` is set to `true` ',
+      ].join('\n')
+    }
+    try {
+      const { __swc_isolated_declarations__ } = JSON.parse(output.val.output)
+      return __swc_isolated_declarations__
+    } catch {
+      return output.val.output
+    }
+  }
+
+  if (isTransformedCode(output.val)) {
     return output.val.code
   } else {
     return JSON.stringify(output.val, null, 2)
@@ -62,12 +88,29 @@ export default function OutputEditor({
     onViewModeChange(event.target.value)
   }
 
-  const outputContent = stringifyOutput(output)
-  const editorLanguage = output.err
-    ? 'text'
-    : viewMode === 'code'
-    ? 'javascript'
-    : 'json'
+  const outputContent = stringifyOutput(output, viewMode)
+
+  let path = 'error.log'
+  let editorLanguage = 'text'
+
+  if (!output.err) {
+    switch (viewMode) {
+      case 'code':
+        editorLanguage = 'javascript'
+        path = 'output.js'
+        break
+      case 'dts':
+        editorLanguage = 'typescript'
+        path = 'output.d.ts'
+        break
+      case 'ast':
+        editorLanguage = 'json'
+        path = 'output.json'
+        break
+      default:
+        throw Error('unreachable')
+    }
+  }
 
   return (
     <Flex direction="column" gridArea="output" minW={0} minH={0}>
@@ -85,6 +128,7 @@ export default function OutputEditor({
             onChange={handleViewModeChange}
           >
             <option value="code">Compiled Code</option>
+            <option value="dts">Isolated Declarations</option>
             <option value="ast">JSON AST</option>
           </Select>
         </Flex>
@@ -94,7 +138,7 @@ export default function OutputEditor({
           value={outputContent}
           language={editorLanguage}
           defaultLanguage="javascript"
-          path={viewMode === 'code' ? 'output.js' : 'output.json'}
+          path={path}
           theme={monacoTheme}
           options={editorOptions}
         />
