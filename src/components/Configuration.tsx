@@ -261,6 +261,22 @@ export default function Configuration(props: Props) {
     )
   }
 
+  const handleToggleIsolatedDts = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setSwcConfig((config) =>
+      applyEdits(
+        config,
+        modify(
+          config,
+          ['jsc', 'experimental', 'emitIsolatedDts'],
+          event.target.checked ? true : false,
+          { formattingOptions: JSONC_FORMATTING_OPTIONS }
+        )
+      )
+    )
+  }
+
   return (
     <Flex direction="column">
       <Heading size="md" mb="8px">
@@ -444,6 +460,18 @@ export default function Configuration(props: Props) {
             />
             <FormLabel htmlFor="strip-types" ml="2" mb="0">
               Strip Types Only
+            </FormLabel>
+          </FormControl>
+          <FormControl display="flex" alignItems="center">
+            <Switch
+              id="emit-isolated-dts"
+              isChecked={!!(parsedSwcConfig.jsc?.experimental as Record<string, unknown>)
+                ?.emitIsolatedDts}
+              onChange={handleToggleIsolatedDts}
+              disabled={semver.lt(props.swcVersion, '1.10.0')}
+            />
+            <FormLabel htmlFor="emit-isolated-dts" ml="2" mb="0">
+              Emit Isolated .d.ts
             </FormLabel>
           </FormControl>
         </VStack>
