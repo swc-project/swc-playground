@@ -38,8 +38,7 @@ function stringifyOutput(output: TransformationResult | ParserResult, viewMode: 
       ].join('\n')
     }
     try {
-      const { __swc_isolated_declarations__ } = JSON.parse(output.val.output)
-      return __swc_isolated_declarations__
+      return JSON.parse(output.val.output).__swc_isolated_declarations__
     } catch {
       return output.val.output
     }
