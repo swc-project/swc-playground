@@ -270,7 +270,7 @@ export default function Configuration(props: Props) {
         modify(
           config,
           ['jsc', 'experimental', 'emitIsolatedDts'],
-          event.target.checked ? true : false,
+          !!event.target.checked,
           { formattingOptions: JSONC_FORMATTING_OPTIONS }
         )
       )
