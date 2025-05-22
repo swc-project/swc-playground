@@ -25,29 +25,45 @@ function containsOutput(value: unknown): value is OutputStructure {
   return typeof (value as OutputStructure).output === 'string'
 }
 
-function stringifyOutput(output: TransformationResult | ParserResult, viewMode: string): string {
+type Output = Record<'text' | 'language' | 'path', string>
+
+function handleOutput(output: TransformationResult | ParserResult): Output {
   if (output.err) {
-    return stripAnsi(output.val)
+    const text = stripAnsi(output.val)
+    return {
+      text,
+      language: 'text',
+      path: 'error.log',
+    }
   }
 
-  if (viewMode === 'dts') {
-    if (!containsOutput(output.val)) {
-      return [
-        '// Make sure `jsc.parser.syntax` is set to `"typescript"` ',
-        '// Make sure `jsc.experimental.emitIsolatedDts` is set to `true` ',
-      ].join('\n')
-    }
+  if (containsOutput(output.val)) {
     try {
-      return JSON.parse(output.val.output).__swc_isolated_declarations__
-    } catch {
-      return output.val.output
-    }
+      const text = JSON.parse(output.val.output).__swc_isolated_declarations__
+      if (typeof text === 'string') {
+        return {
+          text,
+          language: 'typescript',
+          path: 'output.d.ts',
+        }
+      }
+    } catch {}
   }
 
   if (isTransformedCode(output.val)) {
-    return output.val.code
+    const text = output.val.code
+    return {
+      text,
+      language: 'javascript',
+      path: 'output.js',
+    }
   } else {
-    return JSON.stringify(output.val, null, 2)
+    const text = JSON.stringify(output.val, null, 2)
+    return {
+      text,
+      language: 'json',
+      path: 'output.json',
+    }
   }
 }
 
@@ -87,29 +103,7 @@ export default function OutputEditor({
     onViewModeChange(event.target.value)
   }
 
-  const outputContent = stringifyOutput(output, viewMode)
-
-  let path = 'error.log'
-  let editorLanguage = 'text'
-
-  if (!output.err) {
-    switch (viewMode) {
-      case 'code':
-        editorLanguage = 'javascript'
-        path = 'output.js'
-        break
-      case 'dts':
-        editorLanguage = 'typescript'
-        path = 'output.d.ts'
-        break
-      case 'ast':
-        editorLanguage = 'json'
-        path = 'output.json'
-        break
-      default:
-        throw Error('unreachable')
-    }
-  }
+  const { text: outputContent, path, language: editorLanguage } = handleOutput(output)
 
   return (
     <Flex direction="column" gridArea="output" minW={0} minH={0}>
@@ -127,7 +121,6 @@ export default function OutputEditor({
             onChange={handleViewModeChange}
           >
             <option value="code">Compiled Code</option>
-            <option value="dts">Isolated Declarations</option>
             <option value="ast">JSON AST</option>
           </Select>
         </Flex>
