@@ -33,6 +33,7 @@ export interface Config {
     keepClassNames?: boolean,
     baseUrl?: string,
     paths?: Record<string, string[]>,
+    experimental?: Record<never, never>,
   }
   module?: ModuleOptions
   minify?: boolean
@@ -40,7 +41,6 @@ export interface Config {
   isModule?: boolean | 'unknown'
   sourceMaps?: boolean | 'inline'
   inlineSourcesContent?: boolean
-  experimental?: Record<never, never>
   filename?: string
 }
 
@@ -270,6 +270,10 @@ export interface AST {
 
 export interface TransformationOutput {
   code: string
+}
+
+export interface OutputStructure {
+  output: string
 }
 
 /** SWC renamed npm package since v1.2.166. */

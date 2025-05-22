@@ -4,7 +4,12 @@ import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
 import type { ChangeEvent } from 'react'
 import stripAnsi from 'strip-ansi'
-import type { ParserResult, TransformationOutput, TransformationResult } from '../swc'
+import type {
+  OutputStructure,
+  ParserResult,
+  TransformationOutput,
+  TransformationResult,
+} from '../swc'
 import {
   editorOptions as sharedEditorOptions,
   useBgColor,
@@ -16,13 +21,49 @@ function isTransformedCode(value: unknown): value is TransformationOutput {
   return typeof (value as TransformationOutput).code === 'string'
 }
 
-function stringifyOutput(output: TransformationResult | ParserResult): string {
+function containsOutput(value: unknown): value is OutputStructure {
+  return typeof (value as OutputStructure).output === 'string'
+}
+
+type Output = Record<'text' | 'language' | 'path', string>
+
+function handleOutput(output: TransformationResult | ParserResult): Output {
   if (output.err) {
-    return stripAnsi(output.val)
-  } else if (isTransformedCode(output.val)) {
-    return output.val.code
+    const text = stripAnsi(output.val)
+    return {
+      text,
+      language: 'text',
+      path: 'error.log',
+    }
+  }
+
+  if (containsOutput(output.val)) {
+    try {
+      const text = JSON.parse(output.val.output).__swc_isolated_declarations__
+      if (typeof text === 'string') {
+        return {
+          text,
+          language: 'typescript',
+          path: 'output.d.ts',
+        }
+      }
+    } catch {}
+  }
+
+  if (isTransformedCode(output.val)) {
+    const text = output.val.code
+    return {
+      text,
+      language: 'javascript',
+      path: 'output.js',
+    }
   } else {
-    return JSON.stringify(output.val, null, 2)
+    const text = JSON.stringify(output.val, null, 2)
+    return {
+      text,
+      language: 'json',
+      path: 'output.json',
+    }
   }
 }
 
@@ -62,12 +103,7 @@ export default function OutputEditor({
     onViewModeChange(event.target.value)
   }
 
-  const outputContent = stringifyOutput(output)
-  const editorLanguage = output.err
-    ? 'text'
-    : viewMode === 'code'
-    ? 'javascript'
-    : 'json'
+  const { text: outputContent, path, language: editorLanguage } = handleOutput(output)
 
   return (
     <Flex direction="column" gridArea="output" minW={0} minH={0}>
@@ -94,7 +130,7 @@ export default function OutputEditor({
           value={outputContent}
           language={editorLanguage}
           defaultLanguage="javascript"
-          path={viewMode === 'code' ? 'output.js' : 'output.json'}
+          path={path}
           theme={monacoTheme}
           options={editorOptions}
         />
