@@ -468,7 +468,8 @@ export default function Configuration(props: Props) {
               isChecked={!!(parsedSwcConfig.jsc?.experimental as Record<string, unknown>)
                 ?.emitIsolatedDts}
               onChange={handleToggleIsolatedDts}
-              disabled={semver.lt(props.swcVersion, '1.10.0')}
+              disabled={semver.lt(props.swcVersion, '1.10.0') ||
+                parsedSwcConfig.jsc?.parser?.syntax !== 'typescript'}
             />
             <FormLabel htmlFor="emit-isolated-dts" ml="2" mb="0">
               Emit Isolated .d.ts
