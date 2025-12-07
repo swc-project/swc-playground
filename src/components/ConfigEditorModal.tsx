@@ -1,16 +1,16 @@
 import {
   Button,
   Code,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
   Text,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
@@ -29,8 +29,7 @@ export default function ConfigEditorModal() {
   const [editingConfig, setEditingConfig] = useState(swcConfig)
   const monacoTheme = useMonacoThemeValue()
   const monaco = useMonaco()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const toast = useToast()
+  const { open, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     if (!monaco) {
@@ -65,14 +64,8 @@ export default function ConfigEditorModal() {
       setSwcConfig(editingConfig)
       onClose()
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: String(error),
-        status: 'error',
-        duration: 5000,
-        position: 'top',
-        isClosable: true,
-      })
+      console.error('Error applying config:', error)
+      alert(`Error: ${String(error)}`)
     }
   }
 
@@ -87,15 +80,17 @@ export default function ConfigEditorModal() {
       <Button mt="3" onClick={handleOpen}>
         Edit as JSON
       </Button>
-      <Modal size="3xl" isCentered isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            SWC Configuration (<Code>.swcrc</Code>)
-          </ModalHeader>
-          <ModalCloseButton />
+      <DialogRoot size="xl" placement="center" open={open} onOpenChange={(e) => !e.open && handleClose()}>
+        <DialogBackdrop />
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              SWC Configuration (<Code>.swcrc</Code>)
+            </DialogTitle>
+          </DialogHeader>
+          <DialogCloseTrigger />
 
-          <ModalBody>
+          <DialogBody>
             <Text mb="4">
               You can paste your config here, or just manually type directly.
             </Text>
@@ -108,16 +103,16 @@ export default function ConfigEditorModal() {
               height="40vh"
               onChange={handleEditorChange}
             />
-          </ModalBody>
+          </DialogBody>
 
-          <ModalFooter>
+          <DialogFooter>
             <Button colorScheme="blue" mr={3} onClick={handleApply}>
               Apply
             </Button>
             <Button onClick={handleClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   )
 }
