@@ -1,4 +1,4 @@
-import { Center, CircularProgress, VStack, useToast } from '@chakra-ui/react'
+import { Center, Spinner, VStack } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import { loader } from '@monaco-editor/react'
 import { useAtom } from 'jotai'
@@ -100,20 +100,6 @@ export default function Workspace() {
           : transform({ code, fileName, config: swcConfig, swc: swc[0] })
     }
   }, [code, fileName, swc, error, swcConfig, viewMode, isStripTypes])
-  const toast = useToast()
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: 'Failed to load swc.',
-        description: String(error),
-        status: 'error',
-        duration: 5000,
-        position: 'top',
-        isClosable: true,
-      })
-    }
-  }, [error, toast])
 
   useEffect(() => {
     const url = new URL(location.href)
@@ -154,14 +140,7 @@ export default function Workspace() {
 
   function handleReportIssue() {
     if (code.length > 2000) {
-      toast({
-        title: 'Code too long',
-        description:
-          'Your input is too large to share. Please copy the code and paste it into the issue.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
+      alert('Code too long: Your input is too large to share. Please copy the code and paste it into the issue.')
       return
     }
     window.open(issueReportUrl, '_blank')
@@ -169,26 +148,13 @@ export default function Workspace() {
 
   async function handleShare() {
     if (!navigator.clipboard) {
-      toast({
-        title: 'Error',
-        description: 'Clipboard is not supported in your environment.',
-        status: 'error',
-        duration: 3000,
-        position: 'top',
-        isClosable: true,
-      })
+      alert('Error: Clipboard is not supported in your environment.')
       return
     }
 
     window.history.replaceState(null, '', shareUrl)
     await navigator.clipboard.writeText(shareUrl)
-    toast({
-      title: 'URL is copied to clipboard.',
-      status: 'success',
-      duration: 3000,
-      position: 'top',
-      isClosable: true,
-    })
+    alert('URL is copied to clipboard.')
   }
 
   function handleSwcVersionChange(version: string) {
@@ -202,7 +168,7 @@ export default function Workspace() {
   if (isLoadingMonaco && !swc) {
     return (
       <Center width="full" height="88vh" display="flex" flexDirection="column">
-        <CircularProgress isIndeterminate mb="3" />
+        <Spinner mb="3" />
         <div>
           Loading swc {swcVersion}
           {isLoadingMonaco && ' and editor'}...
@@ -218,7 +184,7 @@ export default function Workspace() {
 
   return (
     <Main>
-      <VStack spacing={4} alignItems="unset" gridArea="sidebar">
+      <VStack gap={4} alignItems="unset" gridArea="sidebar">
         <Configuration
           swcVersion={swcVersion}
           stripTypes={isStripTypes}
