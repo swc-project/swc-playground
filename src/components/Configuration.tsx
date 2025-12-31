@@ -1,11 +1,11 @@
 import {
+  Field,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Input,
-  Select,
-  Switch,
+  NativeSelectRoot,
+  NativeSelectField,
+  SwitchRoot,
   VStack,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
@@ -289,192 +289,200 @@ export default function Configuration(props: Props) {
         borderColor={borderColor}
         borderWidth="1px"
       >
-        <VStack spacing="2">
-          <FormControl>
-            <FormLabel htmlFor="swc-syntax">Language</FormLabel>
-            <Select
-              id="swc-syntax"
-              value={parsedSwcConfig.jsc.parser.syntax}
-              onInput={handleLanguageChange}
-            >
-              <option value="ecmascript">JavaScript</option>
-              <option value="typescript">TypeScript</option>
-            </Select>
-          </FormControl>
-          <FormControl isDisabled={parsedSwcConfig.env?.targets != null}>
-            <FormLabel htmlFor="swc-target">Target</FormLabel>
-            <Select
-              id="swc-target"
-              value={parsedSwcConfig.jsc.target}
-              onChange={handleTargetChange}
-            >
-              <option value="es3">ES3</option>
-              <option value="es5">ES5</option>
-              <option value="es2015">ES2015</option>
-              <option value="es2016">ES2016</option>
-              <option value="es2017">ES2017</option>
-              <option value="es2018">ES2018</option>
-              <option value="es2019">ES2019</option>
-              <option value="es2020">ES2020</option>
-              <option value="es2021">ES2021</option>
-              <option value="es2022">ES2022</option>
-              <option value="es2023">ES2023</option>
-              <option value="es2024">ES2024</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="swc-module">Module</FormLabel>
-            <Select
-              id="swc-module"
-              value={parsedSwcConfig.module?.type}
-              onChange={handleModuleChange}
-            >
-              <option value="es6">ES Modules</option>
-              <option value="commonjs">CommonJS</option>
-              <option value="amd">AMD</option>
-              <option value="umd">UMD</option>
-              <option value="systemjs">SystemJS</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="swc-source-type">Source Type</FormLabel>
-            <Select
-              id="swc-source-type"
-              value={parsedSwcConfig.isModule === 'unknown'
-                ? 'unknown'
-                : parsedSwcConfig.isModule
-                ? 'module'
-                : 'script'}
-              onChange={handleSourceTypeChange}
-            >
-              <option value="module">Module</option>
-              <option value="script">Script</option>
-              <option value="unknown">Unknown</option>
-            </Select>
-          </FormControl>
+        <VStack gap="2">
+          <Field.Root>
+            <Field.Label htmlFor="swc-syntax">Language</Field.Label>
+            <NativeSelectRoot>
+              <NativeSelectField
+                id="swc-syntax"
+                value={parsedSwcConfig.jsc.parser.syntax}
+                onInput={handleLanguageChange}
+              >
+                <option value="ecmascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field.Root>
+          <Field.Root disabled={parsedSwcConfig.env?.targets != null}>
+            <Field.Label htmlFor="swc-target">Target</Field.Label>
+            <NativeSelectRoot>
+              <NativeSelectField
+                id="swc-target"
+                value={parsedSwcConfig.jsc.target}
+                onChange={handleTargetChange}
+              >
+                <option value="es3">ES3</option>
+                <option value="es5">ES5</option>
+                <option value="es2015">ES2015</option>
+                <option value="es2016">ES2016</option>
+                <option value="es2017">ES2017</option>
+                <option value="es2018">ES2018</option>
+                <option value="es2019">ES2019</option>
+                <option value="es2020">ES2020</option>
+                <option value="es2021">ES2021</option>
+                <option value="es2022">ES2022</option>
+                <option value="es2023">ES2023</option>
+                <option value="es2024">ES2024</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field.Root>
+          <Field.Root>
+            <Field.Label htmlFor="swc-module">Module</Field.Label>
+            <NativeSelectRoot>
+              <NativeSelectField
+                id="swc-module"
+                value={parsedSwcConfig.module?.type}
+                onChange={handleModuleChange}
+              >
+                <option value="es6">ES Modules</option>
+                <option value="commonjs">CommonJS</option>
+                <option value="amd">AMD</option>
+                <option value="umd">UMD</option>
+                <option value="systemjs">SystemJS</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field.Root>
+          <Field.Root>
+            <Field.Label htmlFor="swc-source-type">Source Type</Field.Label>
+            <NativeSelectRoot>
+              <NativeSelectField
+                id="swc-source-type"
+                value={parsedSwcConfig.isModule === 'unknown'
+                  ? 'unknown'
+                  : parsedSwcConfig.isModule
+                  ? 'module'
+                  : 'script'}
+                onChange={handleSourceTypeChange}
+              >
+                <option value="module">Module</option>
+                <option value="script">Script</option>
+                <option value="unknown">Unknown</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
+          </Field.Root>
           {parsedSwcConfig.jsc.parser.syntax === 'ecmascript'
             ? (
-              <FormControl display="flex" alignItems="center">
-                <Switch
+              <Field.Root display="flex" alignItems="center">
+                <SwitchRoot
                   id="swc-jsx"
-                  isChecked={parsedSwcConfig.jsc.parser.jsx}
-                  onChange={handleToggleJSX}
+                  checked={parsedSwcConfig.jsc.parser.jsx}
+                  onCheckedChange={(e) => handleToggleJSX({ target: { checked: e.checked } } as any)}
                 />
-                <FormLabel htmlFor="swc-jsx" ml="2" mb="0">
+                <Field.Label htmlFor="swc-jsx" ml="2" mb="0">
                   JSX
-                </FormLabel>
-              </FormControl>
+                </Field.Label>
+              </Field.Root>
             )
             : (
-              <FormControl display="flex" alignItems="center">
-                <Switch
+              <Field.Root display="flex" alignItems="center">
+                <SwitchRoot
                   id="swc-tsx"
-                  isChecked={parsedSwcConfig.jsc.parser.tsx}
-                  onChange={handleToggleTSX}
+                  checked={parsedSwcConfig.jsc.parser.tsx}
+                  onCheckedChange={(e) => handleToggleTSX({ target: { checked: e.checked } } as any)}
                 />
-                <FormLabel htmlFor="swc-tsx" ml="2" mb="0">
+                <Field.Label htmlFor="swc-tsx" ml="2" mb="0">
                   TSX
-                </FormLabel>
-              </FormControl>
+                </Field.Label>
+              </Field.Root>
             )}
-          <FormControl display="flex" alignItems="center">
-            <Switch
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="swc-loose"
-              isChecked={parsedSwcConfig.jsc.loose}
-              onChange={handleToggleLoose}
+              checked={parsedSwcConfig.jsc.loose}
+              onCheckedChange={(e) => handleToggleLoose({ target: { checked: e.checked } } as any)}
             />
-            <FormLabel htmlFor="swc-loose" ml="2" mb="0">
+            <Field.Label htmlFor="swc-loose" ml="2" mb="0">
               Loose
-            </FormLabel>
-          </FormControl>
-          <FormControl display="flex" alignItems="center">
-            <Switch
+            </Field.Label>
+          </Field.Root>
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="swc-minify"
-              isChecked={parsedSwcConfig.minify}
-              onChange={handleToggleMinify}
+              checked={parsedSwcConfig.minify}
+              onCheckedChange={(e) => handleToggleMinify({ target: { checked: e.checked } } as any)}
             />
-            <FormLabel htmlFor="swc-minify" ml="2" mb="0">
+            <Field.Label htmlFor="swc-minify" ml="2" mb="0">
               Minify
-            </FormLabel>
-          </FormControl>
-          <FormControl display="flex" alignItems="center">
-            <Switch
+            </Field.Label>
+          </Field.Root>
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="swc-compress"
-              isChecked={!!parsedSwcConfig.jsc?.minify?.compress}
-              onChange={handleToggleCompress}
+              checked={!!parsedSwcConfig.jsc?.minify?.compress}
+              onCheckedChange={(e) => handleToggleCompress({ target: { checked: e.checked } } as any)}
             />
-            <FormLabel htmlFor="swc-copress" ml="2" mb="0">
+            <Field.Label htmlFor="swc-copress" ml="2" mb="0">
               Compress
-            </FormLabel>
+            </Field.Label>
             {parsedSwcConfig.jsc?.minify?.compress && <CompressOptionsModal />}
-          </FormControl>
-          <FormControl display="flex" alignItems="center">
-            <Switch
+          </Field.Root>
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="swc-mangle"
-              isChecked={!!parsedSwcConfig.jsc?.minify?.mangle}
-              onChange={handleToggleMangle}
+              checked={!!parsedSwcConfig.jsc?.minify?.mangle}
+              onCheckedChange={(e) => handleToggleMangle({ target: { checked: e.checked } } as any)}
             />
-            <FormLabel htmlFor="swc-mangle" ml="2" mb="0">
+            <Field.Label htmlFor="swc-mangle" ml="2" mb="0">
               Mangle
-            </FormLabel>
+            </Field.Label>
             {parsedSwcConfig.jsc?.minify?.mangle && <MangleOptionsModal />}
-          </FormControl>
-          <FormControl display="flex" alignItems="center">
-            <Switch
+          </Field.Root>
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="swc-env-targets"
-              isChecked={parsedSwcConfig.env?.targets != null}
-              onChange={handleToggleEnvTargets}
+              checked={parsedSwcConfig.env?.targets != null}
+              onCheckedChange={(e) => handleToggleEnvTargets({ target: { checked: e.checked } } as any)}
             />
-            <FormLabel htmlFor="swc-env-targets" ml="2" mb="0">
+            <Field.Label htmlFor="swc-env-targets" ml="2" mb="0">
               Env Targets
-            </FormLabel>
-          </FormControl>
+            </Field.Label>
+          </Field.Root>
           {typeof parsedSwcConfig.env?.targets === 'string' && (
             <>
-              <FormControl display="flex" alignItems="center">
+              <Field.Root display="flex" alignItems="center">
                 <Input
                   display="block"
                   placeholder="Browserslist query"
                   value={parsedSwcConfig.env.targets}
                   onChange={handleEnvTargetsChange}
                 />
-              </FormControl>
-              <FormControl display="flex" alignItems="center">
-                <Switch
+              </Field.Root>
+              <Field.Root display="flex" alignItems="center">
+                <SwitchRoot
                   id="swc-env-bugfixes"
-                  isChecked={parsedSwcConfig.env?.bugfixes == true}
-                  onChange={handleToggleEnvBugfixes}
+                  checked={parsedSwcConfig.env?.bugfixes == true}
+                  onCheckedChange={(e) => handleToggleEnvBugfixes({ target: { checked: e.checked } } as any)}
                 />
-                <FormLabel htmlFor="swc-env-bugfixes" ml="2" mb="0">
+                <Field.Label htmlFor="swc-env-bugfixes" ml="2" mb="0">
                   Bugfixes
-                </FormLabel>
-              </FormControl>
+                </Field.Label>
+              </Field.Root>
             </>
           )}
-          <FormControl display="flex" alignItems="center">
-            <Switch
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="strip-types"
-              isChecked={props.stripTypes}
-              onChange={(event) => props.onStripTypesChange(event.target.checked)}
+              checked={props.stripTypes}
+              onCheckedChange={(e) => props.onStripTypesChange(e.checked)}
               disabled={semver.lt(props.swcVersion, '1.7.1')}
             />
-            <FormLabel htmlFor="strip-types" ml="2" mb="0">
+            <Field.Label htmlFor="strip-types" ml="2" mb="0">
               Strip Types Only
-            </FormLabel>
-          </FormControl>
-          <FormControl display="flex" alignItems="center">
-            <Switch
+            </Field.Label>
+          </Field.Root>
+          <Field.Root display="flex" alignItems="center">
+            <SwitchRoot
               id="emit-isolated-dts"
-              isChecked={!!(parsedSwcConfig.jsc?.experimental as Record<string, unknown>)
+              checked={!!(parsedSwcConfig.jsc?.experimental as Record<string, unknown>)
                 ?.emitIsolatedDts}
-              onChange={handleToggleIsolatedDts}
+              onCheckedChange={(e) => handleToggleIsolatedDts({ target: { checked: e.checked } } as any)}
               disabled={semver.lt(props.swcVersion, '1.10.0') ||
                 parsedSwcConfig.jsc?.parser?.syntax !== 'typescript'}
             />
-            <FormLabel htmlFor="emit-isolated-dts" ml="2" mb="0">
+            <Field.Label htmlFor="emit-isolated-dts" ml="2" mb="0">
               Emit Isolated .d.ts
-            </FormLabel>
-          </FormControl>
+            </Field.Label>
+          </Field.Root>
         </VStack>
         <ConfigEditorModal />
       </Flex>
