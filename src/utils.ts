@@ -1,4 +1,3 @@
-import { useColorModeValue } from '@chakra-ui/react'
 import type { FormattingOptions } from 'jsonc-parser'
 import type { editor } from 'monaco-editor'
 
@@ -12,15 +11,15 @@ export const editorOptions: editor.IStandaloneEditorConstructionOptions = {
 }
 
 export function useMonacoThemeValue() {
-  return useColorModeValue('light', 'vs-dark')
+  return 'light'
 }
 
 export function useBorderColor() {
-  return useColorModeValue('gray.400', 'gray.600')
+  return 'gray.400'
 }
 
 export function useBgColor() {
-  return useColorModeValue('white', 'gray.700')
+  return 'white'
 }
 
 const RE_SWC_ERROR = /error:\s(.+?)\n\s-->\s.+?:(\d+):(\d+)/gm

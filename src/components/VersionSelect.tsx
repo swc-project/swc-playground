@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Flex, HStack, Heading, Link, Select, Text } from '@chakra-ui/react'
+import { Box, Spinner, Flex, HStack, Heading, Link, NativeSelectRoot, NativeSelectField, Text } from '@chakra-ui/react'
 import type { ChangeEvent } from 'react'
 import { HiExternalLink } from 'react-icons/hi'
 import semver from 'semver'
@@ -69,33 +69,37 @@ export default function VersionSelect({ isLoadingSwc, swcVersion, onSwcVersionCh
       >
         {oldSWC && newSWC
           ? (
-            <Select value={swcVersion} onChange={handleCurrentVersionChange}>
-              {versions.map((version) => (
-                <option key={version} value={version}>
-                  {version}
-                </option>
-              ))}
-            </Select>
+            <NativeSelectRoot>
+              <NativeSelectField value={swcVersion} onChange={handleCurrentVersionChange}>
+                {versions.map((version) => (
+                  <option key={version} value={version}>
+                    {version}
+                  </option>
+                ))}
+              </NativeSelectField>
+            </NativeSelectRoot>
           )
           : (
-            <Select>
-              <option>{swcVersion}</option>
-            </Select>
+            <NativeSelectRoot>
+              <NativeSelectField>
+                <option>{swcVersion}</option>
+              </NativeSelectField>
+            </NativeSelectRoot>
           )}
         <Flex alignItems="center" my="2" height="8">
           {isLoading && (
             <>
-              <CircularProgress size="7" isIndeterminate />
+              <Spinner size="sm" />
               <Text ml="2">Please wait...</Text>
             </>
           )}
         </Flex>
         <Flex px="2">
           <Text>More links:</Text>
-          <HStack spacing="4" ml="1">
+          <HStack gap="4" ml="1">
             <Link
               href="https://swc.rs/"
-              isExternal
+              target="_blank" rel="noopener noreferrer"
               display="flex"
               alignItems="center"
             >
@@ -106,7 +110,7 @@ export default function VersionSelect({ isLoadingSwc, swcVersion, onSwcVersionCh
             </Link>
             <Link
               href="https://github.com/swc-project/swc"
-              isExternal
+              target="_blank" rel="noopener noreferrer"
               display="flex"
               alignItems="center"
             >
