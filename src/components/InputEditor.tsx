@@ -79,15 +79,16 @@ export default function InputEditor(props: Props) {
         <Heading size="md" mb="8px">
           Input
         </Heading>
-        <HStack spacing="10px">
+        <HStack gap="10px">
           <Button
             size="xs"
-            leftIcon={<CgFileDocument />}
             onClick={props.onReportIssue}
           >
+            <CgFileDocument />
             Report Issue
           </Button>
-          <Button size="xs" leftIcon={<CgShare />} onClick={props.onShare}>
+          <Button size="xs" onClick={props.onShare}>
+            <CgShare />
             Share
           </Button>
         </HStack>
