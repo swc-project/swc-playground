@@ -1,13 +1,16 @@
 import {
   Button,
-  Checkbox,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  CheckboxRoot,
+  CheckboxControl,
+  CheckboxLabel,
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
   Text,
   VStack,
   useDisclosure,
@@ -26,7 +29,7 @@ export default function MangleOptionsModal() {
   const [options, setOptions] = useState<MangleOptions | boolean | undefined>(
     parsedSwcConfig.jsc?.minify?.mangle
   )
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { open, onOpen, onClose } = useDisclosure()
 
   const handleApply = () => {
     setSwcConfig((config) =>
@@ -70,38 +73,41 @@ export default function MangleOptionsModal() {
       <Button size="xs" onClick={handleOpen}>
         More
       </Button>
-      <Modal isCentered isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Mangle Options</ModalHeader>
-          <ModalCloseButton />
+      <DialogRoot placement="center" open={open} onOpenChange={(e) => !e.open && handleClose()}>
+        <DialogBackdrop />
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mangle Options</DialogTitle>
+          </DialogHeader>
+          <DialogCloseTrigger />
 
-          <ModalBody>
+          <DialogBody>
             <Text mb="4">
               Not all options are shown here. You can also configure by closing this dialog then
               clicking the &quot;Edit as JSON&quot; button.
             </Text>
             <VStack align="flex-start">
               {Object.entries(options).map(([key, value]) => (
-                <Checkbox
+                <CheckboxRoot
                   key={key}
-                  isChecked={value}
-                  onChange={(event) => handleOptionChange(key as keyof MangleOptions, event)}
+                  checked={value}
+                  onCheckedChange={(e) => handleOptionChange(key as keyof MangleOptions, { target: { checked: e.checked } } as any)}
                 >
-                  {key}
-                </Checkbox>
+                  <CheckboxControl />
+                  <CheckboxLabel>{key}</CheckboxLabel>
+                </CheckboxRoot>
               ))}
             </VStack>
-          </ModalBody>
+          </DialogBody>
 
-          <ModalFooter>
+          <DialogFooter>
             <Button colorScheme="blue" mr={3} onClick={handleApply}>
               Apply
             </Button>
             <Button onClick={handleClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   )
 }

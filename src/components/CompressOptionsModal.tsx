@@ -1,21 +1,20 @@
 import {
   Button,
-  Checkbox,
-  FormControl,
-  FormLabel,
+  CheckboxRoot,
+  CheckboxControl,
+  CheckboxLabel,
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  Field,
   Grid,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  NumberInputInput,
+  NumberInputRoot,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -33,7 +32,7 @@ export default function CompressOptionsModal() {
   const [options, setOptions] = useState<CompressOptions | boolean | undefined>(
     parsedSwcConfig.jsc?.minify?.compress
   )
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { open, onOpen, onClose } = useDisclosure()
 
   const handleApply = () => {
     setSwcConfig((config) =>
@@ -85,19 +84,21 @@ export default function CompressOptionsModal() {
       <Button size="xs" onClick={handleOpen}>
         More
       </Button>
-      <Modal
-        isCentered
+      <DialogRoot
+        placement="center"
         scrollBehavior="inside"
         size="xl"
-        isOpen={isOpen}
-        onClose={handleClose}
+        open={open}
+        onOpenChange={(e) => !e.open && handleClose()}
       >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Compress Options</ModalHeader>
-          <ModalCloseButton />
+        <DialogBackdrop />
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Compress Options</DialogTitle>
+          </DialogHeader>
+          <DialogCloseTrigger />
 
-          <ModalBody>
+          <DialogBody>
             <Text mb="4">
               Not all options are shown here. You can also configure by closing this dialog then
               clicking the &quot;Edit as JSON&quot; button.
@@ -110,42 +111,39 @@ export default function CompressOptionsModal() {
               {Object.entries(options)
                 .filter(([, value]) => typeof value === 'boolean')
                 .map(([key, value]) => (
-                  <Checkbox
+                  <CheckboxRoot
                     key={key}
-                    isChecked={value}
-                    onChange={(event) => handleOptionChange(key as keyof CompressOptions, event)}
+                    checked={value}
+                    onCheckedChange={(e) => handleOptionChange(key as keyof CompressOptions, { target: { checked: e.checked } } as any)}
                   >
-                    {key}
-                  </Checkbox>
+                    <CheckboxControl />
+                    <CheckboxLabel>{key}</CheckboxLabel>
+                  </CheckboxRoot>
                 ))}
             </Grid>
             {options && typeof options === 'object' && (
-              <FormControl w={1 / 3}>
-                <FormLabel>Passes</FormLabel>
-                <NumberInput
-                  defaultValue={3}
+              <Field.Root w={1 / 3}>
+                <Field.Label>Passes</Field.Label>
+                <NumberInputRoot
+                  defaultValue="3"
                   min={0}
-                  value={options.passes}
-                  onChange={(_, value) => handlePassesChange(value)}
+                  value={options.passes?.toString()}
+                  onValueChange={(details) => handlePassesChange(details.valueAsNumber)}
                 >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </FormControl>
+                  <NumberInputInput />
+                </NumberInputRoot>
+              </Field.Root>
             )}
-          </ModalBody>
+          </DialogBody>
 
-          <ModalFooter>
+          <DialogFooter>
             <Button colorScheme="blue" mr={3} onClick={handleApply}>
               Apply
             </Button>
             <Button onClick={handleClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   )
 }
