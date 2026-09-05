@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Select } from '@chakra-ui/react'
+import { Box, Flex, Heading, NativeSelectRoot, NativeSelectField } from '@chakra-ui/react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 import { useEffect } from 'react'
@@ -113,16 +113,16 @@ export default function OutputEditor({
         </Heading>
         <Flex alignItems="center">
           View:
-          <Select
-            size="xs"
-            ml="1"
-            bg={bg}
-            value={viewMode}
-            onChange={handleViewModeChange}
-          >
-            <option value="code">Compiled Code</option>
-            <option value="ast">JSON AST</option>
-          </Select>
+          <NativeSelectRoot size="xs" ml="1">
+            <NativeSelectField
+              bg={bg}
+              value={viewMode}
+              onChange={handleViewModeChange}
+            >
+              <option value="code">Compiled Code</option>
+              <option value="ast">JSON AST</option>
+            </NativeSelectField>
+          </NativeSelectRoot>
         </Flex>
       </Flex>
       <Box height="full" borderColor={borderColor} borderWidth="1px">
